@@ -76,7 +76,7 @@
     .header{position:absolute;z-index:30;top:50px;left:0;right:0}
     .nav{height:72px;border:1px solid rgba(255,255,255,.20);border-radius:20px;background:rgba(6,25,41,.46);backdrop-filter:blur(18px) saturate(140%);display:flex;align-items:center;justify-content:space-between;padding:8px 10px 8px 14px;box-shadow:0 18px 50px rgba(0,0,0,.16)}
     .brand{display:flex;align-items:center;gap:10px}
-    .brand img{width:50px;height:50px;object-fit:contain}
+    .brand img{width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.22))}
     .brand-text{display:flex;flex-direction:column;font-family:"Barlow Condensed";text-transform:uppercase;line-height:.86}
     .brand-text strong{color:#fff;font-size:1.2rem}
     .brand-text span{color:#8FD2FF;font-size:.72rem;letter-spacing:.14em;margin-top:5px}
@@ -117,7 +117,7 @@
 
 
     .about,.proof,.booking,.store,.location,.faq{position:relative;isolation:isolate;overflow:hidden}
-    .about::before{content:"";position:absolute;right:-92px;top:26px;width:320px;height:320px;background:url('assets/huachipato-crest.png') center/contain no-repeat;opacity:.085;filter:grayscale(1) saturate(0) contrast(.72) drop-shadow(0 18px 28px rgba(0,0,0,.10));mix-blend-mode:multiply;pointer-events:none;z-index:0}
+    .about::before{content:"";position:absolute;right:-92px;top:26px;width:320px;height:320px;background:url('assets/huachipato-crest-vector.png') center/contain no-repeat;opacity:.075;filter:grayscale(1) saturate(0) contrast(.72) drop-shadow(0 18px 28px rgba(0,0,0,.10));mix-blend-mode:multiply;pointer-events:none;z-index:0}
     .about>.container,.proof>.container,.booking>.container,.store>.container,.location>.container,.faq>.container{position:relative;z-index:1}
     .method{position:relative;isolation:isolate;overflow:hidden}
     .method::before{content:"";position:absolute;inset:-40px;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 760'%3E%3Cg fill='none' stroke='white' stroke-opacity='.42' stroke-width='2'%3E%3Crect x='55' y='55' width='1090' height='650' rx='22'/%3E%3Cline x1='600' y1='55' x2='600' y2='705'/%3E%3Ccircle cx='600' cy='380' r='88'/%3E%3Ccircle cx='600' cy='380' r='4' fill='white'/%3E%3Crect x='55' y='220' width='145' height='320' rx='8'/%3E%3Crect x='1000' y='220' width='145' height='320' rx='8'/%3E%3Crect x='55' y='302' width='52' height='156' rx='6'/%3E%3Crect x='1093' y='302' width='52' height='156' rx='6'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:cover;z-index:0}
@@ -453,7 +453,7 @@
   <header class="header">
     <div class="container nav">
       <a class="brand" href="#inicio">
-        <img src="assets/huachipato-crest.png" alt="Escudo Huachipato Huechuraba">
+        <img src="assets/huachipato-crest-3d.png" alt="Escudo Huachipato Huechuraba">
         <span class="brand-text"><strong>Huachipato</strong><span>Huechuraba</span></span>
       </a>
       <nav class="navlinks" aria-label="Navegación principal">
