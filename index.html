@@ -241,17 +241,17 @@
 
   <script>
     const SPRITE_PARTS=[
-      'assets/sections-sprite-part-01.txt',
-      'assets/sections-sprite-part-02.txt',
-      'assets/sections-sprite-part-03.txt',
-      'assets/sections-sprite-part-04.txt',
-      'assets/sections-sprite-part-05.txt',
-      'assets/sections-sprite-part-06.txt',
-      'assets/sections-sprite-part-07.txt',
-      'assets/sections-sprite-part-08.txt',
-      'assets/sections-sprite-part-09.txt'
+      'assets/sections-sprite-part-01.txt?v=15',
+      'assets/sections-sprite-part-02.txt?v=15',
+      'assets/sections-sprite-part-03.txt?v=15',
+      'assets/sections-sprite-part-04.txt?v=15',
+      'assets/sections-sprite-part-05.txt?v=15',
+      'assets/sections-sprite-part-06.txt?v=15',
+      'assets/sections-sprite-part-07.txt?v=15',
+      'assets/sections-sprite-part-08.txt?v=15',
+      'assets/sections-sprite-part-09.txt?v=15'
     ];
-    Promise.all(SPRITE_PARTS.map(src=>fetch(src,{cache:'force-cache'}).then(r=>{
+    Promise.all(SPRITE_PARTS.map(src=>fetch(src,{cache:'no-store'}).then(r=>{
       if(!r.ok) throw new Error(`No se pudo cargar ${src}`);
       return r.text();
     }))).then(parts=>{
