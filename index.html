@@ -42,6 +42,7 @@
   }
   </script>
 
+  <link rel="preload" as="image" href="assets/hero-huachipato-1536.avif" type="image/avif" imagesrcset="assets/hero-huachipato-768.avif 768w, assets/hero-huachipato-1536.avif 1536w" imagesizes="100vw" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -263,6 +264,189 @@
       .footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column}
       .instagram-row{align-items:flex-start;flex-direction:column}
     }
+  
+    /* HERO CINEMATOGRÁFICO V25 */
+    .hero.hero-cinematic{
+      position:relative;
+      display:block;
+      min-height:clamp(720px,92vh,980px);
+      width:100%;
+      overflow:hidden;
+      isolation:isolate;
+      color:#fff;
+      background:#071521;
+    }
+    .hero.hero-cinematic::before,
+    .hero.hero-cinematic::after{display:none}
+    .hero.hero-cinematic .hero-media{
+      position:absolute;
+      inset:0;
+      z-index:-2;
+      overflow:hidden;
+      background:#071521;
+    }
+    .hero.hero-cinematic .hero-media picture,
+    .hero.hero-cinematic .hero-media img{
+      display:block;
+      width:100%;
+      height:100%;
+    }
+    .hero.hero-cinematic .hero-media img{
+      object-fit:cover;
+      object-position:center center;
+      transform:none;
+    }
+    .hero.hero-cinematic .hero-cinematic-overlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg,
+          rgba(3,13,23,.88) 0%,
+          rgba(3,14,24,.76) 16%,
+          rgba(3,15,26,.55) 29%,
+          rgba(3,15,26,.25) 41%,
+          rgba(3,15,26,.07) 53%,
+          rgba(3,15,26,0) 66%),
+        linear-gradient(180deg,
+          rgba(4,15,25,.08) 0%,
+          rgba(4,15,25,.02) 62%,
+          rgba(4,15,25,.24) 100%);
+    }
+    .hero.hero-cinematic .hero-cinematic-shell{
+      min-height:inherit;
+      display:flex;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    .hero.hero-cinematic .hero-cinematic-copy{
+      width:min(40%,520px);
+      padding:120px 0 64px;
+    }
+    .hero.hero-cinematic h1{
+      margin:0;
+      max-width:6.8ch;
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:clamp(4.8rem,7.4vw,8rem);
+      font-weight:900;
+      line-height:.79;
+      letter-spacing:-.04em;
+      text-transform:uppercase;
+      color:#fff;
+      text-shadow:0 14px 34px rgba(0,0,0,.26);
+    }
+    .hero.hero-cinematic h1 span{display:block;color:inherit}
+    .hero.hero-cinematic .hero-values{
+      margin:24px 0 5px;
+      max-width:none;
+      font-size:clamp(.92rem,1.05vw,1.08rem);
+      line-height:1.4;
+      font-weight:750;
+      letter-spacing:.015em;
+      color:rgba(235,245,251,.96);
+      text-shadow:0 5px 18px rgba(0,0,0,.28);
+    }
+    .hero.hero-cinematic .hero-future{
+      margin:0;
+      max-width:none;
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:clamp(1.45rem,2vw,2rem);
+      line-height:1;
+      font-weight:800;
+      color:#8FD2FF;
+      text-shadow:0 5px 18px rgba(0,0,0,.25);
+    }
+    .hero.hero-cinematic .hero-cinematic-cta{
+      margin-top:28px;
+      min-height:54px;
+      padding:0 23px;
+      border-radius:999px;
+      background:#fff;
+      color:#071827;
+      border:1px solid rgba(255,255,255,.92);
+      box-shadow:0 16px 38px rgba(0,0,0,.22);
+      font-size:.8rem;
+      font-weight:900;
+      letter-spacing:.035em;
+    }
+    .hero.hero-cinematic .hero-cinematic-cta:hover{
+      background:#EAF5FC;
+      transform:translateY(-2px);
+    }
+
+    @media(max-width:1100px){
+      .hero.hero-cinematic .hero-cinematic-copy{width:min(44%,470px)}
+      .hero.hero-cinematic .hero-media img{object-position:56% center}
+    }
+
+    @media(max-width:900px){
+      .hero.hero-cinematic{
+        min-height:86svh;
+        background:#071521;
+      }
+      .hero.hero-cinematic .hero-media{
+        inset:0 0 auto 0;
+        height:49svh;
+      }
+      .hero.hero-cinematic .hero-media img{
+        object-fit:cover;
+        object-position:67% center;
+      }
+      .hero.hero-cinematic .hero-cinematic-overlay{
+        background:
+          linear-gradient(180deg,
+            rgba(3,14,24,.03) 0%,
+            rgba(3,14,24,.02) 58%,
+            rgba(7,21,33,.34) 82%,
+            #071521 100%);
+      }
+      .hero.hero-cinematic .hero-cinematic-shell{
+        min-height:86svh;
+        display:block;
+        padding-top:calc(49svh + 22px);
+      }
+      .hero.hero-cinematic .hero-cinematic-copy{
+        width:min(100%,520px);
+        padding:0 0 36px;
+      }
+      .hero.hero-cinematic h1{
+        max-width:8ch;
+        font-size:clamp(3.7rem,11vw,5.5rem);
+        line-height:.82;
+      }
+      .hero.hero-cinematic .hero-values{margin-top:16px}
+      .hero.hero-cinematic .hero-cinematic-cta{margin-top:20px}
+    }
+
+    @media(max-width:600px){
+      .hero.hero-cinematic{min-height:88svh}
+      .hero.hero-cinematic .hero-media{height:47svh}
+      .hero.hero-cinematic .hero-media img{object-position:68% 50%}
+      .hero.hero-cinematic .hero-cinematic-shell{
+        min-height:88svh;
+        padding-top:calc(47svh + 20px);
+      }
+      .hero.hero-cinematic .hero-cinematic-copy{
+        width:100%;
+        padding-bottom:30px;
+      }
+      .hero.hero-cinematic h1{
+        font-size:clamp(3.45rem,16vw,4.55rem);
+        line-height:.82;
+      }
+      .hero.hero-cinematic .hero-values{
+        font-size:.83rem;
+        margin-top:14px;
+      }
+      .hero.hero-cinematic .hero-future{font-size:1.35rem}
+      .hero.hero-cinematic .hero-cinematic-cta{
+        min-height:50px;
+        padding:0 18px;
+        font-size:.74rem;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -312,23 +496,37 @@
   </aside>
 
   <main>
-    <section class="hero" id="inicio">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <div class="hero-badge"><i></i> Escuela oficial · Huechuraba</div>
-          <h1>Fútbol formativo.<span>Mentalidad competitiva.</span></h1>
-          <p>Entrenamiento para niños y jóvenes de Sub-7 a Sub-15, con una metodología clara, disciplina y competencia real.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#clase">Reservar clase gratis</a>
-            <a class="btn btn-ghost" href="#metodo">Ver cómo entrenamos</a>
-          </div>
-        </div>
 
-        <div class="hero-stats">
-          <div class="hero-stat"><small>Días</small><strong>Lunes + Miércoles</strong></div>
-          <div class="hero-stat"><small>Horario</small><strong>18:00 — 19:30</strong></div>
-          <div class="hero-stat"><small>Categorías</small><strong>Sub-7 — Sub-15</strong></div>
-          <div class="hero-stat"><small>Sede</small><strong>Los Libertadores 6788</strong></div>
+    <section class="hero hero-cinematic" id="inicio">
+      <div class="hero-media">
+        <picture>
+          <source
+            type="image/avif"
+            srcset="assets/hero-huachipato-768.avif 768w, assets/hero-huachipato-1536.avif 1536w"
+            sizes="100vw">
+          <source
+            type="image/webp"
+            srcset="assets/hero-huachipato-768.webp 768w, assets/hero-huachipato-1536.webp 1536w"
+            sizes="100vw">
+          <img
+            src="assets/hero-huachipato-1536.webp"
+            srcset="assets/hero-huachipato-768.webp 768w, assets/hero-huachipato-1536.webp 1536w"
+            sizes="100vw"
+            width="1536"
+            height="614"
+            fetchpriority="high"
+            decoding="async"
+            alt="Equipo de Huachipato Huechuraba en cancha junto a su pancarta y trofeo">
+        </picture>
+        <div class="hero-cinematic-overlay" aria-hidden="true"></div>
+      </div>
+
+      <div class="container hero-cinematic-shell">
+        <div class="hero-cinematic-copy">
+          <h1><span>MÁS QUE</span><span>FÚTBOL</span></h1>
+          <p class="hero-values">Disciplina · Amistad · Valores</p>
+          <p class="hero-future">Un mejor futuro.</p>
+          <a class="btn hero-cinematic-cta" href="#clase">PRIMERA CLASE GRATIS</a>
         </div>
       </div>
     </section>
