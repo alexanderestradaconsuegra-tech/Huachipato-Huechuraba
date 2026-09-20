@@ -117,7 +117,7 @@
 
 
     .about,.proof,.booking,.store,.location,.faq{position:relative;isolation:isolate;overflow:hidden}
-    .about::before,.proof::before,.booking::before,.store::before,.location::before,.faq::before{content:"";position:absolute;right:-92px;top:26px;width:320px;height:320px;background:url('assets/huachipato-crest.png') center/contain no-repeat;opacity:.045;filter:grayscale(1) brightness(0) drop-shadow(0 18px 28px rgba(0,0,0,.16));pointer-events:none;z-index:0}
+    .about::before,.booking::before,.store::before,.location::before,.faq::before{content:"";position:absolute;right:-92px;top:26px;width:320px;height:320px;background:url('assets/huachipato-crest.png') center/contain no-repeat;opacity:.085;filter:grayscale(1) saturate(0) contrast(.72) drop-shadow(0 18px 28px rgba(0,0,0,.10));mix-blend-mode:multiply;pointer-events:none;z-index:0}
     .about>.container,.proof>.container,.booking>.container,.store>.container,.location>.container,.faq>.container{position:relative;z-index:1}
     .method,.tracking{position:relative;isolation:isolate;overflow:hidden}
     .method::before,.tracking::before{content:"";position:absolute;inset:-40px;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 760'%3E%3Cg fill='none' stroke='white' stroke-opacity='.42' stroke-width='2'%3E%3Crect x='55' y='55' width='1090' height='650' rx='22'/%3E%3Cline x1='600' y1='55' x2='600' y2='705'/%3E%3Ccircle cx='600' cy='380' r='88'/%3E%3Ccircle cx='600' cy='380' r='4' fill='white'/%3E%3Crect x='55' y='220' width='145' height='320' rx='8'/%3E%3Crect x='1000' y='220' width='145' height='320' rx='8'/%3E%3Crect x='55' y='302' width='52' height='156' rx='6'/%3E%3Crect x='1093' y='302' width='52' height='156' rx='6'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:cover;z-index:0}
@@ -200,6 +200,14 @@
     .faq-q span:last-child{transition:.2s ease;color:var(--blue);font-size:1.15rem}
 
     .instagram{background:var(--navy);color:#fff;padding:26px 0}
+
+    .instagram{position:relative;overflow:hidden}
+    .instagram::before{content:"";position:absolute;right:max(18px,calc((100vw - var(--max))/2));top:50%;width:116px;height:116px;transform:translateY(-50%);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='white' stroke-width='7'%3E%3Crect x='14' y='14' width='72' height='72' rx='22'/%3E%3Ccircle cx='50' cy='50' r='17'/%3E%3Ccircle cx='72' cy='28' r='4' fill='white' stroke='none'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:contain;opacity:.13;pointer-events:none}
+    .instagram-row{position:relative;z-index:1}
+    .instagram-brandline{display:flex;align-items:center;gap:13px}
+    .instagram-mark{width:38px;height:38px;flex:0 0 auto;color:#fff}
+    .instagram-mark svg{width:100%;height:100%;display:block}
+
     .instagram-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
     .instagram-row strong{font-family:"Barlow Condensed";font-size:1.7rem;text-transform:uppercase}
     .instagram-row span{display:block;color:#A9BBC7;font-size:.8rem;margin-top:3px}
@@ -223,7 +231,7 @@
     }
     @media(max-width:720px){
       .container{width:min(calc(100% - 28px),var(--max))}
-      .about::before,.proof::before,.booking::before,.store::before,.location::before,.faq::before{width:230px;height:230px;right:-76px;top:16px}
+      .about::before,.booking::before,.store::before,.location::before,.faq::before{width:230px;height:230px;right:-76px;top:16px}.proof-card::after{width:145px;height:145px;right:-24px;bottom:-20px}.instagram::before{width:90px;height:90px;right:-8px;opacity:.09}
       .section{padding:68px 0}
       .ticker{height:30px}.ticker-row{font-size:.56rem;gap:20px;padding-right:20px}
       .header{top:42px}
@@ -253,8 +261,8 @@
 <body>
   <div class="ticker" aria-label="Información destacada">
     <div class="ticker-track">
-      <div class="ticker-row"><span>Huachipato Huechuraba</span><b>◆</b><span>Temporada 2026</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
-      <div class="ticker-row" aria-hidden="true"><span>Huachipato Huechuraba</span><b>◆</b><span>Temporada 2026</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
+      <div class="ticker-row"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
+      <div class="ticker-row" aria-hidden="true"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
     </div>
   </div>
 
@@ -480,7 +488,7 @@
 
     <section class="instagram">
       <div class="container instagram-row">
-        <div><strong>Síguenos en Instagram</strong><span>@escuela.huachipato.huechuraba</span></div>
+        <div class="instagram-brandline"><span class="instagram-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><div><strong>Síguenos en Instagram</strong><span>@escuela.huachipato.huechuraba</span></div></div>
         <a class="btn btn-light" href="https://www.instagram.com/escuela.huachipato.huechuraba/" target="_blank" rel="noopener">Abrir Instagram</a>
       </div>
     </section>
