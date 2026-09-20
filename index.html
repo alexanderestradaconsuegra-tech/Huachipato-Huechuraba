@@ -246,7 +246,10 @@
       'assets/sections-sprite-part-03.txt',
       'assets/sections-sprite-part-04.txt',
       'assets/sections-sprite-part-05.txt',
-      'assets/sections-sprite-part-06.txt'
+      'assets/sections-sprite-part-06.txt',
+      'assets/sections-sprite-part-07.txt',
+      'assets/sections-sprite-part-08.txt',
+      'assets/sections-sprite-part-09.txt'
     ];
     Promise.all(SPRITE_PARTS.map(src=>fetch(src,{cache:'force-cache'}).then(r=>{
       if(!r.ok) throw new Error(`No se pudo cargar ${src}`);
