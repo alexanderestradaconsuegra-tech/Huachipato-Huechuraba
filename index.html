@@ -142,19 +142,19 @@
     .session-card h3{margin:0 0 7px;font-size:.92rem;text-transform:uppercase}
     .session-card p{margin:0;color:#AAB7C1;font-size:.8rem;line-height:1.52}
 
-    .pathway{position:relative;overflow:hidden;background:linear-gradient(180deg,#0A1621,#0E2232);color:#fff}
-    .pathway:before{content:"";position:absolute;inset:-60px;opacity:.10;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 760'%3E%3Cg fill='none' stroke='white' stroke-opacity='.46' stroke-width='2'%3E%3Crect x='55' y='55' width='1090' height='650' rx='22'/%3E%3Cline x1='600' y1='55' x2='600' y2='705'/%3E%3Ccircle cx='600' cy='380' r='88'/%3E%3Ccircle cx='600' cy='380' r='4' fill='white'/%3E%3Crect x='55' y='220' width='145' height='320' rx='8'/%3E%3Crect x='1000' y='220' width='145' height='320' rx='8'/%3E%3C/g%3E%3C/svg%3E");background-size:cover;background-position:center}
+    .pathway{position:relative;overflow:hidden;background:linear-gradient(135deg,#F4F8FB 0%,#EAF3F9 52%,#F9FBFC 100%);color:var(--ink);border-top:1px solid #DDE7EE;border-bottom:1px solid #DDE7EE}
     .pathway>.container{position:relative;z-index:1}
-    .pathway-head{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:end;margin-bottom:30px}
-    .pathway .eyebrow{color:#7CCAF5}.pathway .title{margin-bottom:0}.pathway .lead{color:#AAB8C3;margin:0;max-width:610px}
+    .pathway-head{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:end;margin-bottom:30px}
+    .pathway .eyebrow{color:var(--blue)}.pathway .title{margin-bottom:0;color:var(--navy)}.pathway .lead{color:var(--muted);margin:0;max-width:610px}
     .path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .path-step{position:relative;min-height:230px;padding:22px;border-radius:20px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(8px);overflow:hidden}
-    .path-step:after{content:"";position:absolute;left:22px;right:22px;bottom:22px;height:2px;background:linear-gradient(90deg,#66BDF0,rgba(102,189,240,.08))}
-    .path-n{font-family:"Barlow Condensed";font-size:3.6rem;line-height:.85;font-weight:900;color:rgba(143,210,255,.26)}
-    .path-step h3{font-family:"Barlow Condensed";font-size:1.65rem;line-height:.95;text-transform:uppercase;margin:18px 0 8px}
-    .path-step p{margin:0;color:#AEBCC6;font-size:.78rem;line-height:1.55}
-    .path-note{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border-radius:16px;background:rgba(0,85,165,.20);border:1px solid rgba(111,194,241,.16)}
-    .path-note strong{font-size:.82rem}.path-note span{font-size:.72rem;color:#B9C9D4}
+    .path-step{position:relative;min-height:230px;padding:22px;border-radius:20px;background:#fff;border:1px solid #DCE6ED;box-shadow:0 14px 34px rgba(23,50,72,.06);overflow:hidden}
+    .path-step:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#0055A5,#68BCEB)}
+    .path-step:after{content:"";position:absolute;left:22px;right:22px;bottom:22px;height:2px;background:linear-gradient(90deg,#0B73C9,rgba(11,115,201,.08))}
+    .path-n{font-family:"Barlow Condensed";font-size:3.6rem;line-height:.85;font-weight:900;color:#D8EAF6}
+    .path-step h3{font-family:"Barlow Condensed";font-size:1.65rem;line-height:.95;text-transform:uppercase;margin:18px 0 8px;color:var(--navy)}
+    .path-step p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.55}
+    .path-note{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border-radius:16px;background:#DDEFFA;border:1px solid #CAE4F4;color:var(--navy)}
+    .path-note strong{font-size:.82rem}.path-note span{font-size:.72rem;color:#456476}
 
     .booking{background:#fff}
     .booking-shell{display:grid;grid-template-columns:.88fr 1.12fr;border:1px solid var(--line);border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
@@ -210,7 +210,6 @@
     .instagram{background:var(--navy);color:#fff;padding:26px 0}
 
     .instagram{position:relative;overflow:hidden}
-    .instagram::before{content:"";position:absolute;right:max(18px,calc((100vw - var(--max))/2));top:50%;width:116px;height:116px;transform:translateY(-50%);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='white' stroke-width='7'%3E%3Crect x='14' y='14' width='72' height='72' rx='22'/%3E%3Ccircle cx='50' cy='50' r='17'/%3E%3Ccircle cx='72' cy='28' r='4' fill='white' stroke='none'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:contain;opacity:.13;pointer-events:none}
     .instagram-row{position:relative;z-index:1}
     .instagram-brandline{display:flex;align-items:center;gap:13px}
     .instagram-mark{width:38px;height:38px;flex:0 0 auto;color:#fff}
@@ -239,7 +238,7 @@
     }
     @media(max-width:720px){
       .container{width:min(calc(100% - 28px),var(--max))}
-      .about::before{width:230px;height:230px;right:-76px;top:16px}.proof-card::after{width:145px;height:145px;right:-24px;bottom:-20px}.instagram::before{width:90px;height:90px;right:-8px;opacity:.09}
+      .about::before{width:230px;height:230px;right:-76px;top:16px}.proof-card::after{width:145px;height:145px;right:-24px;bottom:-20px}
       .section{padding:68px 0}
       .ticker{height:30px}.ticker-row{font-size:.56rem;gap:20px;padding-right:20px}
       .header{top:42px}
@@ -405,16 +404,16 @@
     <section class="section pathway" id="proceso">
       <div class="container">
         <div class="pathway-head">
-          <div><div class="eyebrow">La ruta del jugador</div><h2 class="title">De llegar a la cancha<br>a sentirse parte.</h2></div>
-          <p class="lead">Sin fotos ni promesas vacías: mostramos de forma simple cómo vive un jugador su proceso dentro de la escuela, desde la primera clase hasta la competencia.</p>
+          <div><div class="eyebrow">El proceso del jugador</div><h2 class="title">Un camino claro<br>para crecer en la cancha.</h2></div>
+          <p class="lead">Desde la primera clase hasta la competencia, cada etapa tiene un propósito: que el jugador se adapte, aprenda, gane confianza y avance a su ritmo dentro del equipo.</p>
         </div>
         <div class="path-grid">
-          <article class="path-step"><div class="path-n">01</div><h3>Primera clase</h3><p>Conoce el entorno, al staff y la dinámica de entrenamiento antes de tomar una decisión.</p></article>
-          <article class="path-step"><div class="path-n">02</div><h3>Integración</h3><p>Se incorpora a su categoría y comienza a entender hábitos, roles y principios de juego.</p></article>
-          <article class="path-step"><div class="path-n">03</div><h3>Desarrollo</h3><p>Trabaja técnica, táctica, carácter y toma de decisiones con objetivos adecuados a su etapa.</p></article>
-          <article class="path-step"><div class="path-n">04</div><h3>Competencia</h3><p>Aplica lo aprendido en partidos y torneos, aprendiendo a competir como parte de un equipo.</p></article>
+          <article class="path-step"><div class="path-n">01</div><h3>Conocer la escuela</h3><p>El jugador vive una primera experiencia de entrenamiento y la familia conoce nuestra forma de trabajo.</p></article>
+          <article class="path-step"><div class="path-n">02</div><h3>Adaptarse al equipo</h3><p>Se integra a su categoría, crea vínculos y aprende la dinámica, los hábitos y los valores del grupo.</p></article>
+          <article class="path-step"><div class="path-n">03</div><h3>Aprender y evolucionar</h3><p>Desarrolla técnica, comprensión del juego, confianza y toma de decisiones de acuerdo con su etapa.</p></article>
+          <article class="path-step"><div class="path-n">04</div><h3>Competir con confianza</h3><p>Lleva lo trabajado a partidos y torneos, aprendiendo a competir, colaborar y representar al equipo.</p></article>
         </div>
-        <div class="path-note"><strong>Formación + competencia, sin saltarse etapas.</strong><span>Sub-7 · Sub-9 · Sub-11 · Sub-13 · Sub-15</span></div>
+        <div class="path-note"><strong>Cada etapa importa. Cada jugador avanza a su ritmo.</strong><span>Sub-7 · Sub-9 · Sub-11 · Sub-13 · Sub-15</span></div>
       </div>
     </section>
 
