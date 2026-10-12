@@ -460,6 +460,78 @@
       .header{transition:none!important}
     }
 
+    /* PULIDO PREMIUM V29 — misma identidad, mejor ejecución */
+    body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    ::selection{background:var(--blue);color:#fff}
+    .title,.hero h1,.booking-copy h2{text-wrap:balance}
+    .lead,.about-panel p,.proof-card p,.session-card p,.path-step p{text-wrap:pretty}
+
+    /* Corrección: la sombra del menú móvil cerrado se veía en el borde derecho */
+    .mobile-menu{visibility:hidden;transition:transform .24s ease,visibility 0s linear .24s}
+    .mobile-menu.open{visibility:visible;transition:transform .24s ease,visibility 0s}
+
+    .eyebrow{display:flex;align-items:center;gap:10px;width:fit-content}
+    .eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:currentColor;flex:0 0 auto}
+
+    .navlinks a{position:relative;padding:6px 0}
+    .navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:#8FD2FF;transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+    .navlinks a:hover::after{transform:scaleX(1)}
+
+    .btn{transition:transform .2s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
+    .btn:active{transform:translateY(0) scale(.98)}
+    .btn-primary:hover{background:#0A66C2}
+    .btn-dark:hover{background:#0D2234}
+    .btn-light:hover{background:#EAF4FB}
+    .btn-ghost:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.38)}
+    .hero-actions .btn-primary::after,.about-cta .btn-primary::after,.form .btn-primary::after{content:"\2192";display:inline-block;transition:transform .2s ease}
+    .hero-actions .btn-primary:hover::after,.about-cta .btn-primary:hover::after,.form .btn-primary:hover::after{transform:translateX(4px)}
+
+    .proof-card .year{font-size:3.6rem}
+    .proof-card .year::after{content:"";display:block;width:36px;height:3px;border-radius:3px;background:currentColor;margin-top:12px;opacity:.4}
+    .proof-card.current{background:radial-gradient(120% 90% at 100% 0%,#0E3556 0%,var(--graphic-navy) 62%)}
+
+    .session-card{position:relative;overflow:hidden}
+    .session-card::after{content:"";position:absolute;left:0;bottom:0;height:3px;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#0B73C9,#8FD2FF)}
+    .session-card:nth-child(1)::after{width:22%}
+    .session-card:nth-child(2)::after{width:44%}
+    .session-card:nth-child(3)::after{width:33%}
+
+    /* Corrección: la línea inferior de cada paso cruzaba el texto */
+    .path-step{padding-bottom:52px}
+    .path-step:after{bottom:22px;transition:width .35s cubic-bezier(.22,1,.36,1)}
+
+    .booking-copy{position:relative;overflow:hidden}
+    .booking-copy>*{position:relative;z-index:1}
+    .booking-copy::after{content:"";position:absolute;right:-70px;bottom:-70px;width:300px;height:300px;background:url('assets/huachipato-crest-vector.webp') center/contain no-repeat;opacity:.08;filter:grayscale(1);mix-blend-mode:multiply;pointer-events:none}
+    .booking-bullets{gap:14px;margin-top:28px}
+    .booking-bullet{align-items:center;font-size:.92rem;font-weight:600}
+    .booking-bullet b{width:30px;height:30px;font-size:.78rem;position:relative}
+    .booking-bullet:not(:last-child) b::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:14px;background:#B9D4E8;transform:translateX(-50%)}
+    .form .btn[type=submit]{width:100%;min-height:54px;font-size:.9rem}
+    .field input:hover,.field select:hover{border-color:#B9C7D2}
+
+    .product-art{background:radial-gradient(80% 70% at 50% 40%,#fff 0%,#F0F3F6 100%)}
+    .product-art img{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+
+    .faq-item{transition:border-color .25s ease,box-shadow .25s ease}
+    .faq-item:hover{border-color:#C9D6E0}
+    .faq-item.open{border-color:#9CC6E6;box-shadow:0 14px 30px -22px rgba(0,85,165,.5)}
+    .faq-q{transition:color .2s ease}
+    .faq-q:hover{color:var(--blue)}
+
+    @media(hover:hover){
+      .proof-card,.session-card,.path-step,.product{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,border-color .25s ease,background-color .25s ease}
+      .proof-card:hover,.session-card:hover,.path-step:hover,.product:hover{transform:translateY(-4px)}
+      .proof-card:hover{box-shadow:0 24px 44px -24px rgba(6,21,34,.35)!important}
+      .path-step:hover,.product:hover{box-shadow:0 24px 44px -28px rgba(6,21,34,.32);border-color:#C5DAEA}
+      .path-step:hover:after{width:92px}
+      .session-card:hover{border-color:rgba(143,210,255,.35);background:#0C1A27}
+      .product:hover .product-art img{transform:scale(1.05)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .proof-card,.session-card,.path-step,.product,.product-art img,.btn,.navlinks a::after{transition:none!important;transform:none!important}
+    }
+
   </style>
 </head>
 <body>
@@ -834,6 +906,13 @@
             if(entry.isIntersecting){
               entry.target.classList.add('is-visible');
               obs.unobserve(entry.target);
+              (function(el){
+                /* Terminada la entrada, se libera el elemento para que los efectos hover funcionen */
+                setTimeout(function(){
+                  el.classList.remove('reveal-on-scroll','is-visible');
+                  el.style.removeProperty('--reveal-delay');
+                },1200);
+              })(entry.target);
             }
           });
         },{
