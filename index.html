@@ -8,8 +8,10 @@
   <meta name="description" content="Huachipato Huechuraba, escuela de fútbol en Huechuraba, Santiago. Categorías Sub-7 a Sub-15, entrenamientos lunes y miércoles, clase de prueba y formación integral para niños y jóvenes." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://huachipato-huechuraba.vercel.app/" />
-  <link rel="icon" type="image/png" href="assets/huachipato-crest.png" />
-  <link rel="apple-touch-icon" href="assets/huachipato-crest.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="preload" as="image" href="assets/hero-team-1920.webp" type="image/webp" fetchpriority="high" media="(min-width:721px) and (max-width:1920px) and (max-resolution:1.49dppx)" />
+  <link rel="preload" as="image" href="assets/hero-team-4k.webp" type="image/webp" fetchpriority="high" media="(max-width:720px), (min-width:1921px), (min-resolution:1.5dppx)" />
 
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CL" />
@@ -38,7 +40,16 @@
       "addressRegion":"Región Metropolitana",
       "addressCountry":"CL"
     },
-    "areaServed":"Huechuraba, Santiago, Chile"
+    "areaServed":"Huechuraba, Santiago, Chile",
+    "logo":"https://huachipato-huechuraba.vercel.app/assets/huachipato-crest.png",
+    "image":"https://huachipato-huechuraba.vercel.app/og-huachipato.jpg",
+    "sameAs":["https://www.instagram.com/escuela.huachipato.huechuraba/"],
+    "openingHoursSpecification":[{
+      "@type":"OpeningHoursSpecification",
+      "dayOfWeek":["Monday","Wednesday"],
+      "opens":"18:00",
+      "closes":"19:30"
+    }]
   }
   </script>
 
@@ -99,6 +110,7 @@
     .mobile-menu .btn{margin-top:auto;width:100%}
 
     .hero{position:relative;min-height:820px;color:#fff;background:url('assets/hero-team-4k.webp') center 42%/cover no-repeat;display:flex;align-items:flex-end;isolation:isolate}
+    @media(min-width:721px) and (max-width:1920px) and (max-resolution:1.49dppx){.hero{background-image:url('assets/hero-team-1920.webp')}}
     .hero:before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(3,15,26,.76) 0%,rgba(3,17,29,.52) 34%,rgba(3,17,29,.08) 66%),linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.10) 54%,rgba(3,15,26,.72) 100%)}
     .hero:after{content:"";position:absolute;inset:auto 0 0;height:220px;z-index:-1;background:linear-gradient(180deg,transparent,rgba(4,18,31,.74))}
     .hero-inner{padding:190px 0 38px}
@@ -349,6 +361,14 @@
     }
 
   
+    /* MEJORAS NO VISUALES V28 */
+    section[id]{scroll-margin-top:96px}
+    :focus-visible{outline:2px solid #8FD2FF;outline-offset:3px}
+    .field input:focus-visible,.field select:focus-visible{outline:none}
+    .skip-link{position:absolute;left:12px;top:-60px;z-index:100;padding:10px 14px;border-radius:10px;background:#fff;color:var(--navy);font-weight:800;font-size:.8rem}
+    .skip-link:focus{top:12px}
+    .field input:user-invalid{border-color:#D14343}
+
     /* MOTION SYSTEM V27 — suave, una sola vez */
     .header{
       transition:top .34s cubic-bezier(.22,1,.36,1),background-color .34s ease,transform .34s cubic-bezier(.22,1,.36,1);
@@ -440,11 +460,221 @@
       .header{transition:none!important}
     }
 
+    /* PULIDO PREMIUM V29 — misma identidad, mejor ejecución */
+    body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    ::selection{background:var(--blue);color:#fff}
+    .title,.hero h1,.booking-copy h2{text-wrap:balance}
+    .lead,.about-panel p,.proof-card p,.session-card p,.path-step p{text-wrap:pretty}
+
+    /* Corrección: la sombra del menú móvil cerrado se veía en el borde derecho */
+    .mobile-menu{visibility:hidden;transition:transform .24s ease,visibility 0s linear .24s}
+    .mobile-menu.open{visibility:visible;transition:transform .24s ease,visibility 0s}
+
+    .eyebrow{display:flex;align-items:center;gap:10px;width:fit-content}
+    .eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:currentColor;flex:0 0 auto}
+
+    .navlinks a{position:relative;padding:6px 0}
+    .navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:#8FD2FF;transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+    .navlinks a:hover::after{transform:scaleX(1)}
+
+    .btn{transition:transform .2s ease,background-color .2s ease,color .2s ease,border-color .2s ease}
+    .btn:active{transform:translateY(0) scale(.98)}
+    .btn-primary:hover{background:#0A66C2}
+    .btn-dark:hover{background:#0D2234}
+    .btn-light:hover{background:#EAF4FB}
+    .btn-ghost:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.38)}
+    .hero-actions .btn-primary::after,.about-cta .btn-primary::after,.form .btn-primary::after{content:"\2192";display:inline-block;transition:transform .2s ease}
+    .hero-actions .btn-primary:hover::after,.about-cta .btn-primary:hover::after,.form .btn-primary:hover::after{transform:translateX(4px)}
+
+    .proof-card .year{font-size:3.6rem}
+    .proof-card .year::after{content:"";display:block;width:36px;height:3px;border-radius:3px;background:currentColor;margin-top:12px;opacity:.4}
+    .proof-card.current{background:radial-gradient(120% 90% at 100% 0%,#0E3556 0%,var(--graphic-navy) 62%)}
+
+    .session-card{position:relative;overflow:hidden}
+    .session-card::after{content:"";position:absolute;left:0;bottom:0;height:3px;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#0B73C9,#8FD2FF)}
+    .session-card:nth-child(1)::after{width:22%}
+    .session-card:nth-child(2)::after{width:44%}
+    .session-card:nth-child(3)::after{width:33%}
+
+    /* Corrección: la línea inferior de cada paso cruzaba el texto */
+    .path-step{padding-bottom:52px}
+    .path-step:after{bottom:22px;transition:width .35s cubic-bezier(.22,1,.36,1)}
+
+    .booking-copy{position:relative;overflow:hidden}
+    .booking-copy>*{position:relative;z-index:1}
+    .booking-copy::after{content:"";position:absolute;right:-70px;bottom:-70px;width:300px;height:300px;background:url('assets/huachipato-crest-vector.webp') center/contain no-repeat;opacity:.08;filter:grayscale(1);mix-blend-mode:multiply;pointer-events:none}
+    .booking-bullets{gap:14px;margin-top:28px}
+    .booking-bullet{align-items:center;font-size:.92rem;font-weight:600}
+    .booking-bullet b{width:30px;height:30px;font-size:.78rem;position:relative}
+    .booking-bullet:not(:last-child) b::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:14px;background:#B9D4E8;transform:translateX(-50%)}
+    .form .btn[type=submit]{width:100%;min-height:54px;font-size:.9rem}
+    .field input:hover,.field select:hover{border-color:#B9C7D2}
+
+    .product-art{background:radial-gradient(80% 70% at 50% 40%,#fff 0%,#F0F3F6 100%)}
+    .product-art img{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+
+    .faq-item{transition:border-color .25s ease,box-shadow .25s ease}
+    .faq-item:hover{border-color:#C9D6E0}
+    .faq-item.open{border-color:#9CC6E6;box-shadow:0 14px 30px -22px rgba(0,85,165,.5)}
+    .faq-q{transition:color .2s ease}
+    .faq-q:hover{color:var(--blue)}
+
+    @media(hover:hover){
+      .proof-card,.session-card,.path-step,.product{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,border-color .25s ease,background-color .25s ease}
+      .proof-card:hover,.session-card:hover,.path-step:hover,.product:hover{transform:translateY(-4px)}
+      .proof-card:hover{box-shadow:0 24px 44px -24px rgba(6,21,34,.35)!important}
+      .path-step:hover,.product:hover{box-shadow:0 24px 44px -28px rgba(6,21,34,.32);border-color:#C5DAEA}
+      .path-step:hover:after{width:92px}
+      .session-card:hover{border-color:rgba(143,210,255,.35);background:#0C1A27}
+      .product:hover .product-art img{transform:scale(1.05)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .proof-card,.session-card,.path-step,.product,.product-art img,.btn{transition:none!important;transform:none!important}
+      .navlinks a::after{transition:none!important}
+    }
+
+    /* PREMIUM V30 — legibilidad, navegación activa, móvil y formulario */
+    a,button,.btn{touch-action:manipulation}
+    .eyebrow{font-size:.74rem}
+    .hero-stat small{font-size:.64rem}.hero-stat strong{font-size:.9rem}
+    .proof-tags span{font-size:.7rem}
+    .proof-card p,.session-card p{font-size:.88rem;line-height:1.6}
+    .session-card small{font-size:.7rem}
+    .value small{font-size:.66rem}.value strong{font-size:.86rem}
+    .path-step p{font-size:.86rem;line-height:1.6}
+    .product p{font-size:.84rem}
+    .field label{font-size:.7rem}
+    .form-note{font-size:.8rem}
+    .faq-q{font-size:.95rem}.faq-a{font-size:.9rem;line-height:1.65}
+    .path-note strong{font-size:.9rem}.path-note span{font-size:.78rem}
+    footer p,footer a{font-size:.84rem}.footer-bottom{font-size:.76rem}
+    .session-time,.proof-card .year,.hero-stat strong,.path-n{font-variant-numeric:tabular-nums}
+
+    .menu-btn svg,.mobile-close svg{display:block}
+    .mobile-close{display:grid;place-items:center;color:var(--navy)}
+    .mobile-links a{display:flex;align-items:center;justify-content:space-between}
+    .mobile-links a::after{content:"";width:7px;height:7px;border-right:2px solid #A3B1BC;border-top:2px solid #A3B1BC;transform:rotate(45deg);margin-right:4px}
+
+    .navlinks a.is-active{color:#fff}
+    .navlinks a.is-active::after{transform:scaleX(1)}
+
+    .field select{appearance:none;-webkit-appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230055A5' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px}
+    .field-help{font-size:.74rem;color:var(--smoke)}
+    .form-status{margin:0;max-height:0;opacity:0;overflow:hidden;font-size:.84rem;line-height:1.5;color:#1C6B3E;transition:max-height .3s ease,opacity .3s ease,margin .3s ease}
+    .form-status.show{max-height:80px;opacity:1;margin-top:12px}
+    .form-status a{font-weight:700;text-decoration:underline}
+    .form .btn.is-sent{background:#1C7C47}
+    .form .btn.is-sent::after{content:"\2713"}
+
+    .map{position:relative}
+    .map iframe{display:block;filter:grayscale(1) contrast(1.04);transition:filter .45s ease}
+    .map:hover iframe,.map:focus-within iframe{filter:none}
+
+    .footer-grid{grid-template-columns:1.4fr .8fr .8fr .8fr}
+    .footer-links{display:flex;flex-direction:column;gap:2px}
+    .footer-links a:hover,footer p a:hover{color:#fff}
+    .footer-bottom{align-items:center}
+    .footer-social{display:flex;gap:8px}
+    .footer-social a{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:#C9D3DA;transition:background-color .2s ease,color .2s ease,border-color .2s ease}
+    .footer-social a:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.24)}
+    .footer-social svg{width:19px;height:19px;display:block}
+
+    .loc-card{gap:28px}
+    .loc-data small{font-size:.66rem}.loc-data strong{font-size:.92rem}
+    .footer-brand{align-items:flex-start}
+    .mobile-cta{display:none}
+    @media(max-width:980px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:720px){
+      .hero-stat small{font-size:.6rem}.hero-stat strong{font-size:.76rem}
+      .footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}
+      .footer-bottom{flex-direction:row}
+      .wa-float{display:none}
+      .mobile-cta{display:flex;gap:10px;position:fixed;z-index:60;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:8px;border-radius:20px;background:rgba(4,17,28,.9);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border:1px solid rgba(255,255,255,.1);box-shadow:0 18px 40px rgba(2,10,18,.28);transform:translateY(calc(100% + 24px));transition:transform .32s cubic-bezier(.22,1,.36,1)}
+      .mobile-cta.show{transform:translateY(0)}
+      .mobile-cta .btn{flex:1;min-height:48px}
+      .mobile-cta-wa{width:48px;height:48px;flex:0 0 48px;border-radius:14px;background:var(--green);color:#fff;display:grid;place-items:center}
+      .mobile-cta-wa svg{width:24px;height:24px;display:block}
+      footer{padding-bottom:32px}
+    }
+    @media(prefers-reduced-motion:reduce){.mobile-cta,.form-status,.map iframe{transition:none!important}}
+
+    /* TORNEOS V31 */
+    .proof-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .proof-logo{flex:0 0 auto;display:grid;place-items:center;height:58px;padding:9px 12px;border-radius:14px;background:var(--graphic-navy)}
+    .proof-logo img{height:40px;width:auto}
+    .proof-card.current .proof-logo{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+    .next-tournament{margin-top:14px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px;padding:18px 24px 18px 18px;border-radius:var(--radius-card);background:var(--warm-bone);border:1px solid var(--hairline)}
+    .nt-logo{width:96px;height:96px;border-radius:16px;background:#fff;border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .nt-logo img{width:auto;height:76px;max-width:none}
+    .nt-kicker{display:block;font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#2E9B1F}
+    .nt-copy h3{font-family:"Barlow Condensed";font-size:2rem;line-height:.95;text-transform:uppercase;margin:4px 0 6px;color:var(--graphic-navy)}
+    .nt-copy p{margin:0;font-size:.88rem;line-height:1.55;color:#536674;max-width:560px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--graphic-black);color:#fff;font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+    .nt-badge i{width:8px;height:8px;border-radius:50%;background:#5BE33C;box-shadow:0 0 0 0 rgba(91,227,60,.6);animation:ntPulse 1.8s ease-out infinite}
+    @keyframes ntPulse{70%{box-shadow:0 0 0 8px rgba(91,227,60,0)}100%{box-shadow:0 0 0 0 rgba(91,227,60,0)}}
+    @media(max-width:720px){
+      .proof-logo{height:50px;padding:8px 10px}.proof-logo img{height:34px}
+      .next-tournament{grid-template-columns:auto 1fr;gap:16px;padding:16px}
+      .nt-logo{width:76px;height:76px}.nt-logo img{height:60px}
+      .nt-copy h3{font-size:1.7rem}
+      .nt-badge{grid-column:1/-1;justify-self:start}
+    }
+    @media(prefers-reduced-motion:reduce){.nt-badge i{animation:none}}
+
+    /* GALERÍA V32 */
+    .gallery{background:var(--graphic-navy);color:#fff}
+    .gallery .eyebrow{color:#8FD2FF}
+    .gallery .lead{color:#A9BBC7;margin:0;max-width:520px}
+    .gallery-head{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:28px}
+    .gallery-grid{display:grid;gap:12px}
+    .g-row{display:flex;gap:12px}
+    .g-item{position:relative;display:block;padding:0;border:0;border-radius:var(--radius-card);overflow:hidden;background:#0A1B2A;cursor:zoom-in;color:#fff;text-align:left;aspect-ratio:var(--ar);min-width:0}
+    .g-row .g-item{flex:var(--ar) 1 0}
+    .g-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.22,1,.36,1),filter .4s ease}
+    .g-item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(3,12,20,.72));pointer-events:none;transition:opacity .3s ease}
+    .g-cap{position:absolute;left:16px;bottom:14px;z-index:1;display:inline-flex;align-items:center;gap:8px;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+    .g-cap::before{content:"";width:16px;height:2px;border-radius:2px;background:#8FD2FF}
+    .g-01 .g-cap{left:24px;bottom:22px;font-size:.82rem}
+    @media(hover:hover){
+      .g-item:hover img{transform:scale(1.045)}
+    }
+    .lightbox{padding:0;border:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:transparent;color:#fff;overflow:hidden}
+    .lightbox[open]{display:grid;place-items:center}
+    .lightbox:focus{outline:none}
+    .lightbox::backdrop{background:rgba(2,8,14,.94)}
+    .lb-figure{margin:0;width:100%;height:100%;display:grid;place-items:center;align-content:center;gap:14px;padding:72px 76px 28px}
+    .lb-figure img{max-width:100%;max-height:calc(100dvh - 150px);width:auto;height:auto;border-radius:14px;opacity:0;transform:scale(.985);transition:opacity .28s ease,transform .28s cubic-bezier(.22,1,.36,1)}
+    .lb-figure img.is-in{opacity:1;transform:none}
+    .lb-figure figcaption{display:flex;gap:14px;align-items:center;font-size:.84rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#DCE6EC}
+    .lb-count{color:#8FA3B1;font-weight:600;font-variant-numeric:tabular-nums}
+    .lb-btn{position:absolute;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;transition:background-color .2s ease}
+    .lb-btn:hover{background:rgba(255,255,255,.18)}
+    .lb-close{top:16px;right:16px}
+    .lb-prev{left:16px;top:50%;transform:translateY(-50%)}
+    .lb-next{right:16px;top:50%;transform:translateY(-50%)}
+    @media(max-width:980px){.gallery-head{flex-direction:column;align-items:flex-start}}
+    @media(max-width:720px){
+      .gallery-grid{grid-template-columns:1fr 1fr;gap:8px}
+      .g-row{display:contents}
+      .g-item{border-radius:16px;aspect-ratio:1.2}
+      .g-01{grid-column:1/-1;aspect-ratio:2.4}
+      .g-02{grid-row:span 2;aspect-ratio:auto}
+      .g-05,.g-06{grid-column:1/-1;aspect-ratio:1.6}
+      .g-cap{left:12px;bottom:10px;font-size:.64rem}
+      .g-01 .g-cap{left:14px;bottom:12px;font-size:.7rem}
+      .lb-figure{padding:64px 12px 84px}
+      .lb-figure img{max-height:calc(100dvh - 180px);border-radius:10px}
+      .lb-prev,.lb-next{top:auto;bottom:18px;transform:none}
+      .lb-prev{left:calc(50% - 60px)}.lb-next{right:calc(50% - 60px)}
+    }
+    @media(prefers-reduced-motion:reduce){.g-item img,.lb-figure img{transition:none!important}}
+
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#clase">Ir a reservar clase</a>
   <div class="ticker" aria-label="Información destacada">
-    <div class="ticker-track">
+    <div class="ticker-track" aria-hidden="true">
       <div class="ticker-row"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
       <div class="ticker-row" aria-hidden="true"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
     </div>
@@ -465,15 +695,15 @@
         <a href="#ubicacion">Ubicación</a>
       </nav>
       <a class="btn btn-light" href="#clase">Clase de prueba</a>
-      <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
     </div>
   </header>
 
   <div class="mobile-backdrop" id="mobileBackdrop"></div>
-  <aside class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <aside class="mobile-menu" id="mobileMenu" aria-hidden="true" inert>
     <div class="mobile-menu-head">
       <div class="mobile-menu-brand"><img src="assets/huachipato-crest-3d.webp" alt=""><strong>Huachipato Huechuraba</strong></div>
-      <button class="mobile-close" id="mobileClose" aria-label="Cerrar menú">✕</button>
+      <button class="mobile-close" id="mobileClose" type="button" aria-label="Cerrar menú"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <nav class="mobile-links">
       <a href="#inicio">Inicio</a>
@@ -483,6 +713,7 @@
       <a href="#clase">Clase gratis</a>
       <a href="#indumentaria">Indumentaria</a>
       <a href="#ubicacion">Ubicación</a>
+      <a href="#galeria">Galería</a>
       <a href="#faq">Preguntas frecuentes</a>
     </nav>
     <a class="btn btn-primary" data-wa="Hola, quiero información sobre Huachipato Huechuraba." target="_blank" rel="noopener">Hablar por WhatsApp</a>
@@ -549,17 +780,26 @@
             <div class="proof-tags"><span>Sub-7</span><span>Sub-9</span><span>Sub-11</span><span>Sub-13</span><span>Sub-15</span></div>
           </article>
           <article class="proof-card">
-            <span class="year">2025</span>
+            <div class="proof-top"><span class="year">2025</span><span class="proof-logo"><img src="assets/torneo-amigos-por-el-futbol.webp" alt="Liga Amigos por el Fútbol" width="768" height="430" loading="lazy" decoding="async"></span></div>
             <h3>4 de 5 categorías campeonas</h3>
-            <p>En la primera edición de la liga anual Amigos por el Fútbol, Huachipato Huechuraba se coronó campeón en cuatro de las cinco categorías participantes.</p>
-            <div class="proof-tags"><span>Liga Amigos por el Fútbol</span><span>4 títulos</span></div>
+            <p>En la primera edición de la liga anual Amigos por el Fútbol, Huachipato Huechuraba se coronó campeón en cuatro de las cinco categorías y subcampeón en la quinta: copa en todas las categorías.</p>
+            <div class="proof-tags"><span>4 títulos</span><span>1 subcampeonato</span><span>Copa en 5 de 5</span></div>
           </article>
           <article class="proof-card current">
-            <span class="year">2026</span>
+            <div class="proof-top"><span class="year">2026</span><span class="proof-logo"><img src="assets/torneo-amigos-por-el-futbol.webp" alt="Liga Amigos por el Fútbol" width="768" height="430" loading="lazy" decoding="async"></span></div>
             <h3>Actualmente en competencia</h3>
-            <p>La escuela continúa compitiendo durante la temporada 2026, defendiendo el trabajo construido y sumando nuevas experiencias formativas y competitivas.</p>
-            <div class="proof-tags"><span>Temporada activa</span><span>Sub-7 a Sub-15</span></div>
+            <p>La escuela compite durante la temporada 2026 en la liga Amigos por el Fútbol, defendiendo el trabajo construido y sumando nuevas experiencias formativas y competitivas.</p>
+            <div class="proof-tags"><span>Temporada activa</span><span>Liga Amigos por el Fútbol</span></div>
           </article>
+        </div>
+        <div class="next-tournament">
+          <div class="nt-logo"><img src="assets/torneo-goat-league.webp" alt="GOAT League" width="558" height="640" loading="lazy" decoding="async"></div>
+          <div class="nt-copy">
+            <span class="nt-kicker">Próximo desafío</span>
+            <h3>GOAT League</h3>
+            <p>Huachipato Huechuraba se prepara para competir en la GOAT League, el nuevo torneo que está por comenzar.</p>
+          </div>
+          <span class="nt-badge"><i aria-hidden="true"></i>Muy pronto</span>
         </div>
       </div>
     </section>
@@ -594,6 +834,20 @@
       </div>
     </section>
 
+    <section class="section gallery" id="galeria" aria-labelledby="galeria-title">
+      <div class="container">
+        <div class="gallery-head">
+          <div><div class="eyebrow">En la cancha</div><h2 class="title" id="galeria-title">Así se vive<br>Huachipato Huechuraba.</h2></div>
+          <p class="lead">Partidos, torneos y celebraciones de nuestras categorías. Un equipo que crece unido, dentro y fuera de la cancha.</p>
+        </div>
+        <div class="gallery-grid">
+          <button class="g-item g-01" type="button" style="--ar:2.597" data-full="assets/galeria-01-lg.webp" data-index="0" aria-label="Ampliar foto: Familia Huachipato Huechuraba"><img src="assets/galeria-01-sm.webp" srcset="assets/galeria-01-sm.webp 1000w, assets/galeria-01-lg.webp 2000w" sizes="(max-width:720px) 100vw, 1180px" alt="Plantel de Huachipato Huechuraba con su lienzo y una copa en la cancha" loading="lazy" decoding="async"><span class="g-cap">Familia Huachipato Huechuraba</span></button>
+          <div class="g-row"><button class="g-item g-02" type="button" style="--ar:0.563" data-full="assets/galeria-02-lg.webp" data-index="1" aria-label="Ampliar foto: Día de partido"><img src="assets/galeria-02-sm.webp" srcset="assets/galeria-02-sm.webp 507w, assets/galeria-02-lg.webp 1013w" sizes="(max-width:720px) 50vw, 460px" alt="Jugador de Huachipato Huechuraba disputando un partido" loading="lazy" decoding="async"><span class="g-cap">Día de partido</span></button><button class="g-item g-03" type="button" style="--ar:1.333" data-full="assets/galeria-03-lg.webp" data-index="2" aria-label="Ampliar foto: Copa Acción Total"><img src="assets/galeria-03-sm.webp" srcset="assets/galeria-03-sm.webp 900w, assets/galeria-03-lg.webp 1024w" sizes="(max-width:720px) 50vw, 460px" alt="Jugadores con medallas junto a la copa del torneo Acción Total" loading="lazy" decoding="async"><span class="g-cap">Copa Acción Total</span></button><button class="g-item g-04" type="button" style="--ar:1.227" data-full="assets/galeria-04-sm.webp" data-index="3" aria-label="Ampliar foto: Equipo y staff"><img src="assets/galeria-04-sm.webp" srcset="assets/galeria-04-sm.webp 806w" sizes="(max-width:720px) 50vw, 460px" alt="Equipo de Huachipato Huechuraba junto a su entrenador" loading="lazy" decoding="async"><span class="g-cap">Equipo y staff</span></button></div>
+          <div class="g-row"><button class="g-item g-05" type="button" style="--ar:1.664" data-full="assets/galeria-05-lg.webp" data-index="4" aria-label="Ampliar foto: Celebrar juntos"><img src="assets/galeria-05-sm.webp" srcset="assets/galeria-05-sm.webp 900w, assets/galeria-05-lg.webp 1797w" sizes="(max-width:720px) 50vw, 460px" alt="Jugadores celebrando un gol" loading="lazy" decoding="async"><span class="g-cap">Celebrar juntos</span></button><button class="g-item g-06" type="button" style="--ar:1.522" data-full="assets/galeria-06-lg.webp" data-index="5" aria-label="Ampliar foto: Partido a partido"><img src="assets/galeria-06-sm.webp" srcset="assets/galeria-06-sm.webp 900w, assets/galeria-06-lg.webp 1800w" sizes="(max-width:720px) 50vw, 460px" alt="Jugadores esperando un balón detenido durante un partido" loading="lazy" decoding="async"><span class="g-cap">Partido a partido</span></button></div>
+        </div>
+      </div>
+    </section>
+
     <section class="section booking" id="clase">
       <div class="container booking-shell">
         <div class="booking-copy">
@@ -610,14 +864,15 @@
         <form class="form" id="trialForm">
           <div class="form-head"><h3>Reservar clase</h3><div class="cat-pill" id="autoCat">Categoría: —</div></div>
           <div class="fields">
-            <div class="field"><label for="playerName">Jugador</label><input id="playerName" required placeholder="Nombre del jugador"></div>
+            <div class="field"><label for="playerName">Jugador</label><input id="playerName" required autocomplete="off" maxlength="60" placeholder="Nombre del jugador"></div>
             <div class="field"><label for="birthDate">Fecha de nacimiento</label><input id="birthDate" type="date" required></div>
-            <div class="field"><label for="guardianName">Apoderado</label><input id="guardianName" required placeholder="Nombre del apoderado"></div>
-            <div class="field"><label for="guardianPhone">WhatsApp</label><input id="guardianPhone" required inputmode="tel" placeholder="+56 9 ..."></div>
+            <div class="field"><label for="guardianName">Apoderado</label><input id="guardianName" required autocomplete="name" maxlength="60" placeholder="Nombre del apoderado"></div>
+            <div class="field"><label for="guardianPhone">WhatsApp</label><input id="guardianPhone" required type="tel" inputmode="tel" autocomplete="tel" pattern="^\+?[0-9 ]{8,18}$" title="Número de WhatsApp, ej: +56 9 1234 5678" placeholder="+56 9 ..." aria-describedby="phoneHelp"><small class="field-help" id="phoneHelp">Te confirmamos la clase por este número.</small></div>
             <div class="field full"><label for="trialDate">Próxima fecha</label><select id="trialDate" required></select></div>
           </div>
-          <p class="form-note">La categoría es una referencia para temporada 2026 y puede ser confirmada por la escuela.</p>
+          <p class="form-note">La categoría es una referencia para temporada <span id="seasonYear">2026</span> y puede ser confirmada por la escuela.</p>
           <button class="btn btn-primary" type="submit">Solicitar clase gratis</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -629,9 +884,9 @@
           <p class="lead">Consulta disponibilidad y tallas directamente por WhatsApp.</p>
         </div>
         <div class="store-grid">
-          <article class="product"><div class="product-art"><img src="assets/uniforme-principal.webp" alt="Uniforme principal"></div><h3>Uniforme principal</h3><p>Azul y negro.</p><a class="btn btn-primary" data-product="Uniforme principal azul y negro" target="_blank" rel="noopener">Solicitar</a></article>
-          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-blanco.webp" alt="Uniforme secundario blanco"></div><h3>Secundario blanco</h3><p>Blanco y azul.</p><a class="btn btn-dark" data-product="Uniforme secundario blanco" target="_blank" rel="noopener">Solicitar</a></article>
-          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-verde.jpg" alt="Uniforme secundario verde"></div><h3>Secundario verde</h3><p>Verde y negro.</p><a class="btn btn-dark" data-product="Uniforme secundario verde" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-principal.webp" alt="Uniforme principal" loading="lazy" decoding="async"></div><h3>Uniforme principal</h3><p>Azul y negro.</p><a class="btn btn-primary" data-product="Uniforme principal azul y negro" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-blanco.webp" alt="Uniforme secundario blanco" loading="lazy" decoding="async"></div><h3>Secundario blanco</h3><p>Blanco y azul.</p><a class="btn btn-dark" data-product="Uniforme secundario blanco" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-verde.jpg" alt="Uniforme secundario verde" loading="lazy" decoding="async"></div><h3>Secundario verde</h3><p>Verde y negro.</p><a class="btn btn-dark" data-product="Uniforme secundario verde" target="_blank" rel="noopener">Solicitar</a></article>
         </div>
       </div>
     </section>
@@ -667,7 +922,7 @@
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Cómo se define la categoría del jugador?</span><span>+</span></button><div class="faq-a">La página entrega una referencia según el año de nacimiento y el staff confirma la categoría adecuada al incorporarse.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Qué debe llevar a la clase de prueba?</span><span>+</span></button><div class="faq-a">Ropa deportiva, calzado apropiado para cancha e hidratación. La escuela orienta sobre la indumentaria oficial cuando el jugador se integra.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Necesita experiencia previa?</span><span>+</span></button><div class="faq-a">No necesariamente. El trabajo se adapta a la edad y etapa del jugador, desde quienes comienzan hasta quienes ya tienen experiencia competitiva.</div></article>
-          <article class="faq-item"><button class="faq-q" type="button"><span>¿La escuela participa en competencias?</span><span>+</span></button><div class="faq-a">Sí. La formación se complementa con competencia. En 2026 la escuela se encuentra actualmente compitiendo, después de sus resultados en Acereros Cup 2024 y Liga Amigos por el Fútbol 2025.</div></article>
+          <article class="faq-item"><button class="faq-q" type="button"><span>¿La escuela participa en competencias?</span><span>+</span></button><div class="faq-a">Sí. La formación se complementa con competencia. En 2026 la escuela compite en la liga Amigos por el Fútbol y se prepara para la GOAT League, después de sus resultados en Acereros Cup 2024 y Liga Amigos por el Fútbol 2025.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Cómo reservo la primera clase?</span><span>+</span></button><div class="faq-a">Completa el formulario de la web. Seleccionas una fecha y se abre WhatsApp con la información lista para coordinar con la escuela.</div></article>
         </div>
       </div>
@@ -684,15 +939,28 @@
   <footer>
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-brand"><img src="assets/huachipato-crest-vector.webp" alt=""><div><h4>Huachipato Huechuraba</h4><p>Formación · disciplina · competencia.</p></div></div>
+        <div class="footer-brand"><img src="assets/huachipato-crest-vector.webp" alt="" loading="lazy" decoding="async" width="52" height="52"><div><h4>Huachipato Huechuraba</h4><p>Formación · disciplina · competencia.</p></div></div>
         <div><h4>Entrenamiento</h4><p>Lunes y miércoles<br>18:00 — 19:30 hrs<br>Sub-7 a Sub-15</p></div>
-        <div><h4>Contacto</h4><p>+56 9 4591 1596<br>Av. Los Libertadores 6788<br>Huechuraba</p></div>
+        <div><h4>Contacto</h4><p><a href="tel:+56945911596">+56 9 4591 1596</a><br>Av. Los Libertadores 6788<br>Huechuraba</p></div>
+        <nav class="footer-links" aria-label="Enlaces del pie"><h4>Explorar</h4><a href="#escuela">La escuela</a><a href="#metodo">Entrenamiento</a><a href="#galeria">Galería</a><a href="#clase">Clase gratis</a><a href="#faq">Preguntas frecuentes</a></nav>
       </div>
-      <div class="footer-bottom"><span>© 2026 Huachipato Huechuraba</span><a href="https://www.instagram.com/escuela.huachipato.huechuraba/" target="_blank" rel="noopener">Instagram</a></div>
+      <div class="footer-bottom"><span>© 2026 Huachipato Huechuraba</span><div class="footer-social"><a href="https://www.instagram.com/escuela.huachipato.huechuraba/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a class="footer-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="WhatsApp"></a></div></div>
     </div>
   </footer>
 
-  <a class="wa-float" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.32c-.27-.13-1.6-.79-1.84-.88-.25-.09-.43-.13-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.13-.42-2.16-1.35-.8-.72-1.33-1.61-1.49-1.88-.16-.27-.02-.41.12-.54.12-.12.27-.32.41-.48.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.61-1.47-.84-2.01-.22-.53-.45-.45-.61-.46h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.81c.13.18 1.92 2.93 4.65 4.11.65.28 1.15.44 1.54.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.27.23-.63.23-1.16.16-1.27-.07-.11-.25-.18-.52-.32Z"/><path fill="currentColor" d="M16.02 3.2c-6.98 0-12.63 5.64-12.63 12.6 0 2.22.58 4.39 1.68 6.3L3.2 28.8l6.87-1.8a12.62 12.62 0 0 0 5.95 1.51h.01c6.97 0 12.62-5.65 12.62-12.61 0-3.37-1.31-6.54-3.7-8.92A12.55 12.55 0 0 0 16.02 3.2Zm0 22.97h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.08 1.07 1.09-3.98-.25-.41a10.3 10.3 0 0 1-1.58-5.43c0-5.73 4.68-10.39 10.43-10.39 2.79 0 5.4 1.08 7.36 3.04a10.3 10.3 0 0 1 3.05 7.35c0 5.74-4.69 10.41-10.29 10.43Z"/></svg></a>
+  <a class="wa-float" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.32c-.27-.13-1.6-.79-1.84-.88-.25-.09-.43-.13-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.13-.42-2.16-1.35-.8-.72-1.33-1.61-1.49-1.88-.16-.27-.02-.41.12-.54.12-.12.27-.32.41-.48.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.61-1.47-.84-2.01-.22-.53-.45-.45-.61-.46h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.81c.13.18 1.92 2.93 4.65 4.11.65.28 1.15.44 1.54.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.27.23-.63.23-1.16.16-1.27-.07-.11-.25-.18-.52-.32Z"/><path fill="currentColor" d="M16.02 3.2c-6.98 0-12.63 5.64-12.63 12.6 0 2.22.58 4.39 1.68 6.3L3.2 28.8l6.87-1.8a12.62 12.62 0 0 0 5.95 1.51h.01c6.97 0 12.62-5.65 12.62-12.61 0-3.37-1.31-6.54-3.7-8.92A12.55 12.55 0 0 0 16.02 3.2Zm0 22.97h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.08 1.07 1.09-3.98-.25-.41a10.3 10.3 0 0 1-1.58-5.43c0-5.73 4.68-10.39 10.43-10.39 2.79 0 5.4 1.08 7.36 3.04a10.3 10.3 0 0 1 3.05 7.35c0 5.74-4.69 10.41-10.29 10.43Z"/></svg></a>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Galería de fotos" tabindex="-1">
+    <figure class="lb-figure"><img id="lbImg" alt=""><figcaption><span id="lbCap"></span><span class="lb-count" id="lbCount"></span></figcaption></figure>
+    <button class="lb-btn lb-close" id="lbClose" type="button" aria-label="Cerrar galería"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="lb-btn lb-prev" id="lbPrev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="lb-btn lb-next" id="lbNext" type="button" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  </dialog>
+
+  <div class="mobile-cta" id="mobileCta" inert>
+    <a class="btn btn-primary" href="#clase">Reservar clase gratis</a>
+    <a class="mobile-cta-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"></a>
+  </div>
 
   <script>
     (function(){
@@ -703,6 +971,9 @@
         a.href=wa('Hola, quiero consultar disponibilidad de '+a.getAttribute('data-product')+' de Huachipato Huechuraba.');
       });
 
+      var waIcon=document.querySelector('.wa-float').innerHTML;
+      document.querySelectorAll('.mobile-cta-wa,.footer-wa').forEach(function(a){a.innerHTML=waIcon;});
+
       var menuBtn=document.getElementById('menuBtn');
       var menu=document.getElementById('mobileMenu');
       var backdrop=document.getElementById('mobileBackdrop');
@@ -712,15 +983,20 @@
         menu.classList.add('open');
         backdrop.classList.add('open');
         menu.setAttribute('aria-hidden','false');
+        menu.removeAttribute('inert');
         menuBtn.setAttribute('aria-expanded','true');
         document.body.style.overflow='hidden';
+        closeBtn.focus();
       }
       function closeMenu(){
+        if(!menu.classList.contains('open'))return;
         menu.classList.remove('open');
         backdrop.classList.remove('open');
         menu.setAttribute('aria-hidden','true');
+        menu.setAttribute('inert','');
         menuBtn.setAttribute('aria-expanded','false');
         document.body.style.overflow='';
+        menuBtn.focus({preventScroll:true});
       }
       menuBtn.addEventListener('click',openMenu);
       closeBtn.addEventListener('click',closeMenu);
@@ -728,21 +1004,29 @@
       menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu);});
       document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
 
-      document.querySelectorAll('.faq-q').forEach(function(btn){
+      document.querySelectorAll('.faq-q').forEach(function(btn,i){
+        var answer=btn.nextElementSibling;
+        answer.id='faq-a-'+i;
+        btn.setAttribute('aria-controls',answer.id);
+        btn.setAttribute('aria-expanded','false');
+        btn.lastElementChild.setAttribute('aria-hidden','true');
         btn.addEventListener('click',function(){
-          var item=btn.closest('.faq-item');
-          item.classList.toggle('open');
+          var open=btn.closest('.faq-item').classList.toggle('open');
+          btn.setAttribute('aria-expanded',open?'true':'false');
         });
       });
 
+      var SEASON=new Date().getFullYear();
+      document.getElementById('seasonYear').textContent=SEASON;
+
       var trialDate=document.getElementById('trialDate');
       var names=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-      var options=[],start=new Date();
+      var options=[],now=new Date(),start=new Date();
       start.setHours(12,0,0,0);
-      for(var i=0;i<45 && options.length<8;i++){
+      for(var i=(now.getHours()>=17?1:0);i<45 && options.length<8;i++){
         var d=new Date(start);d.setDate(start.getDate()+i);
         if(d.getDay()===1||d.getDay()===3){
-          var iso=d.toISOString().slice(0,10);
+          var iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
           var label=names[d.getDay()]+' '+d.toLocaleDateString('es-CL',{day:'2-digit',month:'long'})+' · 18:00';
           options.push('<option value="'+iso+'">'+label+'</option>');
         }
@@ -751,10 +1035,13 @@
 
       var birth=document.getElementById('birthDate');
       var cat=document.getElementById('autoCat');
+      var today=new Date();
+      birth.max=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+      birth.min=(SEASON-20)+'-01-01';
       function category(){
         if(!birth.value)return null;
         var year=parseInt(birth.value.slice(0,4),10);
-        var age=2026-year;
+        var age=SEASON-year;
         return age>=7&&age<=15?'Sub-'+age:'Consultar';
       }
       birth.addEventListener('change',function(){cat.textContent='Categoría: '+(category()||'—');});
@@ -782,9 +1069,10 @@
         }
 
         markGroup('.about-copy > *, .about-panel',75);
-        markGroup('.proof-head > *, .proof-card',80);
+        markGroup('.proof-head > *, .proof-card, .next-tournament',80);
         markGroup('.method-head > *, .session-card',80);
         markGroup('.pathway-head > *, .path-step, .path-note',70);
+        markGroup('.gallery-head > *, .g-item',60);
         markGroup('.booking-copy > *, .booking .form',75);
         markGroup('.store-head > *, .product',75);
         markGroup('.location > .container > .eyebrow, .location > .container > .title, .loc-card, .map',75);
@@ -797,6 +1085,13 @@
             if(entry.isIntersecting){
               entry.target.classList.add('is-visible');
               obs.unobserve(entry.target);
+              (function(el){
+                /* Terminada la entrada, se libera el elemento para que los efectos hover funcionen */
+                setTimeout(function(){
+                  el.classList.remove('reveal-on-scroll','is-visible');
+                  el.style.removeProperty('--reveal-delay');
+                },1200);
+              })(entry.target);
             }
           });
         },{
@@ -809,14 +1104,98 @@
         });
       }
 
+      /* Navegación: marca la sección visible */
+      if('IntersectionObserver' in window){
+        var navLinks={};
+        document.querySelectorAll('.navlinks a').forEach(function(a){navLinks[a.getAttribute('href').slice(1)]=a;});
+        var spy=new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            var link=navLinks[entry.target.id];
+            if(!link||!entry.isIntersecting)return;
+            Object.keys(navLinks).forEach(function(k){navLinks[k].classList.remove('is-active');navLinks[k].removeAttribute('aria-current');});
+            link.classList.add('is-active');link.setAttribute('aria-current','true');
+          });
+        },{rootMargin:'-45% 0px -50% 0px'});
+        Object.keys(navLinks).forEach(function(id){var el=document.getElementById(id);if(el)spy.observe(el);});
+
+        /* Barra de reserva móvil: visible fuera del hero y del formulario */
+        var cta=document.getElementById('mobileCta');
+        var seen={hero:true,booking:false,footer:false};
+        var ctaObs=new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){seen[entry.target.dataset.cta]=entry.isIntersecting;});
+          var show=!seen.hero&&!seen.booking&&!seen.footer;
+          cta.classList.toggle('show',show);
+          if(show)cta.removeAttribute('inert');else cta.setAttribute('inert','');
+        });
+        [['hero','.hero'],['booking','#clase'],['footer','footer']].forEach(function(p){
+          var el=document.querySelector(p[1]);el.dataset.cta=p[0];ctaObs.observe(el);
+        });
+      }
+
+      /* Galería: visor a pantalla completa */
+      var gItems=[].slice.call(document.querySelectorAll('.g-item'));
+      var lb=document.getElementById('lightbox');
+      var lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),lbCount=document.getElementById('lbCount');
+      var lbIndex=0,lastFocus=null;
+      function lbShow(i){
+        lbIndex=(i+gItems.length)%gItems.length;
+        var it=gItems[lbIndex],img=it.querySelector('img');
+        lbImg.classList.remove('is-in');
+        lbImg.src=it.dataset.full;lbImg.alt=img.alt;
+        lbCap.textContent=it.querySelector('.g-cap').textContent;
+        lbCount.textContent=(lbIndex+1)+' / '+gItems.length;
+        requestAnimationFrame(function(){lbImg.classList.add('is-in');});
+      }
+      if(lb&&typeof lb.showModal==='function'){
+        gItems.forEach(function(it,i){it.addEventListener('click',function(){
+          lastFocus=it;lbShow(i);lb.showModal();lb.focus();document.body.style.overflow='hidden';
+        });});
+        document.getElementById('lbClose').addEventListener('click',function(){lb.close();});
+        document.getElementById('lbPrev').addEventListener('click',function(){lbShow(lbIndex-1);});
+        document.getElementById('lbNext').addEventListener('click',function(){lbShow(lbIndex+1);});
+        lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('lb-figure'))lb.close();});
+        lb.addEventListener('close',function(){document.body.style.overflow='';if(lastFocus)lastFocus.focus({preventScroll:true});});
+        lb.addEventListener('keydown',function(e){
+          if(e.key==='ArrowLeft')lbShow(lbIndex-1);
+          if(e.key==='ArrowRight')lbShow(lbIndex+1);
+        });
+        var tx=null;
+        lb.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+        lb.addEventListener('touchend',function(e){
+          if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;tx=null;
+          if(Math.abs(dx)>50)lbShow(lbIndex+(dx<0?1:-1));
+        });
+      }
+
+      var formStatus=document.getElementById('formStatus');
+      var submitBtn=document.querySelector('#trialForm button[type=submit]');
+      var submitLabel=submitBtn.textContent;
+
       document.getElementById('trialForm').addEventListener('submit',function(e){
         e.preventDefault();
         var player=document.getElementById('playerName').value.trim();
         var guardian=document.getElementById('guardianName').value.trim();
-        var phone=document.getElementById('guardianPhone').value.trim();
+        var phone=document.getElementById('guardianPhone').value.trim().replace(/\s+/g,' ');
         var date=trialDate.options[trialDate.selectedIndex] ? trialDate.options[trialDate.selectedIndex].text : '';
-        var msg='Hola, quiero reservar una primera clase gratis en Huachipato Huechuraba.\\n\\nJugador: '+player+'\\nNacimiento: '+birth.value+'\\nCategoría: '+(category()||'Por definir')+'\\nApoderado: '+guardian+'\\nWhatsApp: '+phone+'\\nFecha: '+date+'\\n\\n¿Me confirman disponibilidad?';
-        window.open(wa(msg),'_blank','noopener');
+        var birthLabel=birth.value?birth.value.split('-').reverse().join('-'):'';
+        var msg=['Hola, quiero reservar una primera clase gratis en Huachipato Huechuraba.','',
+          'Jugador: '+player,
+          'Nacimiento: '+birthLabel,
+          'Categoría: '+(category()||'Por definir'),
+          'Apoderado: '+guardian,
+          'WhatsApp: '+phone,
+          'Fecha: '+date,'',
+          '¿Me confirman disponibilidad?'].join('\n');
+        var url=wa(msg);
+        window.open(url,'_blank','noopener');
+        formStatus.innerHTML='';
+        formStatus.append('Abrimos WhatsApp con tu solicitud. ¿No se abrió? ');
+        var retry=document.createElement('a');
+        retry.href=url;retry.target='_blank';retry.rel='noopener';retry.textContent='Toca aquí para enviarla';
+        formStatus.append(retry);
+        formStatus.classList.add('show');
+        submitBtn.classList.add('is-sent');submitBtn.textContent='Solicitud lista';
+        setTimeout(function(){submitBtn.classList.remove('is-sent');submitBtn.textContent=submitLabel;},4000);
       });
     })();
   </script>
