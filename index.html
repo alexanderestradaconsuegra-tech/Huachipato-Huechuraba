@@ -529,7 +529,8 @@
       .product:hover .product-art img{transform:scale(1.05)}
     }
     @media(prefers-reduced-motion:reduce){
-      .proof-card,.session-card,.path-step,.product,.product-art img,.btn,.navlinks a::after{transition:none!important;transform:none!important}
+      .proof-card,.session-card,.path-step,.product,.product-art img,.btn{transition:none!important;transform:none!important}
+      .navlinks a::after{transition:none!important}
     }
 
     /* PREMIUM V30 — legibilidad, navegación activa, móvil y formulario */
@@ -596,6 +597,29 @@
       footer{padding-bottom:32px}
     }
     @media(prefers-reduced-motion:reduce){.mobile-cta,.form-status,.map iframe{transition:none!important}}
+
+    /* TORNEOS V31 */
+    .proof-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .proof-logo{flex:0 0 auto;display:grid;place-items:center;height:58px;padding:9px 12px;border-radius:14px;background:var(--graphic-navy)}
+    .proof-logo img{height:40px;width:auto}
+    .proof-card.current .proof-logo{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+    .next-tournament{margin-top:14px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px;padding:18px 24px 18px 18px;border-radius:var(--radius-card);background:var(--warm-bone);border:1px solid var(--hairline)}
+    .nt-logo{width:96px;height:96px;border-radius:16px;background:#fff;border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .nt-logo img{width:auto;height:76px;max-width:none}
+    .nt-kicker{display:block;font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#2E9B1F}
+    .nt-copy h3{font-family:"Barlow Condensed";font-size:2rem;line-height:.95;text-transform:uppercase;margin:4px 0 6px;color:var(--graphic-navy)}
+    .nt-copy p{margin:0;font-size:.88rem;line-height:1.55;color:#536674;max-width:560px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:var(--graphic-black);color:#fff;font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+    .nt-badge i{width:8px;height:8px;border-radius:50%;background:#5BE33C;box-shadow:0 0 0 0 rgba(91,227,60,.6);animation:ntPulse 1.8s ease-out infinite}
+    @keyframes ntPulse{70%{box-shadow:0 0 0 8px rgba(91,227,60,0)}100%{box-shadow:0 0 0 0 rgba(91,227,60,0)}}
+    @media(max-width:720px){
+      .proof-logo{height:50px;padding:8px 10px}.proof-logo img{height:34px}
+      .next-tournament{grid-template-columns:auto 1fr;gap:16px;padding:16px}
+      .nt-logo{width:76px;height:76px}.nt-logo img{height:60px}
+      .nt-copy h3{font-size:1.7rem}
+      .nt-badge{grid-column:1/-1;justify-self:start}
+    }
+    @media(prefers-reduced-motion:reduce){.nt-badge i{animation:none}}
 
   </style>
 </head>
@@ -707,17 +731,26 @@
             <div class="proof-tags"><span>Sub-7</span><span>Sub-9</span><span>Sub-11</span><span>Sub-13</span><span>Sub-15</span></div>
           </article>
           <article class="proof-card">
-            <span class="year">2025</span>
+            <div class="proof-top"><span class="year">2025</span><span class="proof-logo"><img src="assets/torneo-amigos-por-el-futbol.webp" alt="Liga Amigos por el Fútbol" width="768" height="430" loading="lazy" decoding="async"></span></div>
             <h3>4 de 5 categorías campeonas</h3>
             <p>En la primera edición de la liga anual Amigos por el Fútbol, Huachipato Huechuraba se coronó campeón en cuatro de las cinco categorías participantes.</p>
             <div class="proof-tags"><span>Liga Amigos por el Fútbol</span><span>4 títulos</span></div>
           </article>
           <article class="proof-card current">
-            <span class="year">2026</span>
+            <div class="proof-top"><span class="year">2026</span><span class="proof-logo"><img src="assets/torneo-amigos-por-el-futbol.webp" alt="Liga Amigos por el Fútbol" width="768" height="430" loading="lazy" decoding="async"></span></div>
             <h3>Actualmente en competencia</h3>
-            <p>La escuela continúa compitiendo durante la temporada 2026, defendiendo el trabajo construido y sumando nuevas experiencias formativas y competitivas.</p>
-            <div class="proof-tags"><span>Temporada activa</span><span>Sub-7 a Sub-15</span></div>
+            <p>La escuela compite durante la temporada 2026 en la liga Amigos por el Fútbol, defendiendo el trabajo construido y sumando nuevas experiencias formativas y competitivas.</p>
+            <div class="proof-tags"><span>Temporada activa</span><span>Liga Amigos por el Fútbol</span></div>
           </article>
+        </div>
+        <div class="next-tournament">
+          <div class="nt-logo"><img src="assets/torneo-goat-league.webp" alt="GOAT League" width="558" height="640" loading="lazy" decoding="async"></div>
+          <div class="nt-copy">
+            <span class="nt-kicker">Próximo desafío</span>
+            <h3>GOAT League</h3>
+            <p>Huachipato Huechuraba se prepara para competir en la GOAT League, el nuevo torneo que está por comenzar.</p>
+          </div>
+          <span class="nt-badge"><i aria-hidden="true"></i>Muy pronto</span>
         </div>
       </div>
     </section>
@@ -826,7 +859,7 @@
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Cómo se define la categoría del jugador?</span><span>+</span></button><div class="faq-a">La página entrega una referencia según el año de nacimiento y el staff confirma la categoría adecuada al incorporarse.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Qué debe llevar a la clase de prueba?</span><span>+</span></button><div class="faq-a">Ropa deportiva, calzado apropiado para cancha e hidratación. La escuela orienta sobre la indumentaria oficial cuando el jugador se integra.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Necesita experiencia previa?</span><span>+</span></button><div class="faq-a">No necesariamente. El trabajo se adapta a la edad y etapa del jugador, desde quienes comienzan hasta quienes ya tienen experiencia competitiva.</div></article>
-          <article class="faq-item"><button class="faq-q" type="button"><span>¿La escuela participa en competencias?</span><span>+</span></button><div class="faq-a">Sí. La formación se complementa con competencia. En 2026 la escuela se encuentra actualmente compitiendo, después de sus resultados en Acereros Cup 2024 y Liga Amigos por el Fútbol 2025.</div></article>
+          <article class="faq-item"><button class="faq-q" type="button"><span>¿La escuela participa en competencias?</span><span>+</span></button><div class="faq-a">Sí. La formación se complementa con competencia. En 2026 la escuela compite en la liga Amigos por el Fútbol y se prepara para la GOAT League, después de sus resultados en Acereros Cup 2024 y Liga Amigos por el Fútbol 2025.</div></article>
           <article class="faq-item"><button class="faq-q" type="button"><span>¿Cómo reservo la primera clase?</span><span>+</span></button><div class="faq-a">Completa el formulario de la web. Seleccionas una fecha y se abre WhatsApp con la información lista para coordinar con la escuela.</div></article>
         </div>
       </div>
@@ -966,7 +999,7 @@
         }
 
         markGroup('.about-copy > *, .about-panel',75);
-        markGroup('.proof-head > *, .proof-card',80);
+        markGroup('.proof-head > *, .proof-card, .next-tournament',80);
         markGroup('.method-head > *, .session-card',80);
         markGroup('.pathway-head > *, .path-step, .path-note',70);
         markGroup('.booking-copy > *, .booking .form',75);
