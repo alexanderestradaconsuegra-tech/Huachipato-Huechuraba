@@ -1,0 +1,31 @@
+# Los buscadores pueden rastrear todo el sitio.
+User-agent: *
+Allow: /
+
+# Rastreadores que usan contenido para entrenar modelos de IA: bloqueados
+# (el sitio muestra fotos de menores de edad).
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+Sitemap: https://huachipatohuechuraba.cl/sitemap.xml

@@ -7,7 +7,7 @@
   <title>Escuela de Fútbol en Huechuraba, Santiago | Huachipato Huechuraba</title>
   <meta name="description" content="Huachipato Huechuraba, escuela de fútbol en Huechuraba, Santiago. Categorías Sub-7 a Sub-15, entrenamientos lunes y miércoles, clase de prueba y formación integral para niños y jóvenes." />
   <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://huachipato-huechuraba.vercel.app/" />
+  <link rel="canonical" href="https://huachipatohuechuraba.cl/" />
   <link rel="icon" href="favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
   <link rel="manifest" href="site.webmanifest" />
@@ -22,8 +22,8 @@
   <meta property="og:locale" content="es_CL" />
   <meta property="og:title" content="Huachipato Huechuraba | Escuela de fútbol en Huechuraba, Santiago" />
   <meta property="og:description" content="Escuela de fútbol formativo y competitivo en Huechuraba, Santiago. Sub-7 a Sub-15, clase de prueba, metodología y seguimiento del jugador." />
-  <meta property="og:url" content="https://huachipato-huechuraba.vercel.app/" />
-  <meta property="og:image" content="https://huachipato-huechuraba.vercel.app/og-huachipato.jpg?v=22" />
+  <meta property="og:url" content="https://huachipatohuechuraba.cl/" />
+  <meta property="og:image" content="https://huachipatohuechuraba.cl/og-huachipato.jpg?v=23" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Plantel de Huachipato Huechuraba con su lienzo y copa" />
@@ -31,7 +31,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Huachipato Huechuraba | Escuela de fútbol en Huechuraba" />
   <meta name="twitter:description" content="Fútbol formativo en Huechuraba, Santiago. Sub-7 a Sub-15, clase de prueba y entrenamiento competitivo." />
-  <meta name="twitter:image" content="https://huachipato-huechuraba.vercel.app/og-huachipato.jpg?v=22" />
+  <meta name="twitter:image" content="https://huachipatohuechuraba.cl/og-huachipato.jpg?v=23" />
   <meta name="twitter:image:alt" content="Plantel de Huachipato Huechuraba con su lienzo y copa" />
 
   <script type="application/ld+json">
@@ -40,7 +40,7 @@
     "@type":"SportsActivityLocation",
     "name":"Huachipato Huechuraba",
     "description":"Escuela de fútbol formativo y competitivo para niños y jóvenes en Huechuraba, Santiago.",
-    "url":"https://huachipato-huechuraba.vercel.app/",
+    "url":"https://huachipatohuechuraba.cl/",
     "telephone":"+56 9 4591 1596",
     "sport":"Football",
     "address":{
@@ -51,8 +51,8 @@
       "addressCountry":"CL"
     },
     "areaServed":"Huechuraba, Santiago, Chile",
-    "logo":"https://huachipato-huechuraba.vercel.app/assets/huachipato-crest.png",
-    "image":"https://huachipato-huechuraba.vercel.app/og-huachipato.jpg",
+    "logo":"https://huachipatohuechuraba.cl/assets/huachipato-crest.png",
+    "image":"https://huachipatohuechuraba.cl/og-huachipato.jpg",
     "sameAs":["https://www.instagram.com/escuela.huachipato.huechuraba/"],
     "openingHoursSpecification":[{
       "@type":"OpeningHoursSpecification",
@@ -1122,7 +1122,6 @@
         markGroup('.location > .container > .eyebrow, .location > .container > .title, .loc-card, .map',75);
         markGroup('.faq-wrap > div:first-child > *, .faq-item',60);
         markGroup('.instagram-brandline, .instagram-row > .btn',80);
-        markGroup('footer .footer-grid > *, .footer-bottom',60);
 
         var observer=new IntersectionObserver(function(entries,obs){
           entries.forEach(function(entry){
@@ -1146,6 +1145,13 @@
         document.querySelectorAll('.reveal-on-scroll').forEach(function(el){
           observer.observe(el);
         });
+
+        /* Respaldo: el observador no ve lo que queda pegado al borde inferior de la página */
+        window.addEventListener('scroll',function(){
+          if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-8){
+            document.querySelectorAll('.reveal-on-scroll:not(.is-visible)').forEach(function(el){el.classList.add('is-visible');});
+          }
+        },{passive:true});
       }
 
       /* Navegación: marca la sección visible */

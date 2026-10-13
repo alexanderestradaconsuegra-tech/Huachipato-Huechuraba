@@ -37,13 +37,26 @@
       ]
     },
     {
-      "source": "/(favicon.ico|og-huachipato.jpg|site.webmanifest)",
+      "source": "/(favicon.ico|og-huachipato.jpg|site.webmanifest|robots.txt|sitemap.xml)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400, stale-while-revalidate=604800"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "huachipato-huechuraba.vercel.app"
+        }
+      ],
+      "destination": "https://huachipatohuechuraba.cl/$1",
+      "permanent": true
     }
   ]
 }

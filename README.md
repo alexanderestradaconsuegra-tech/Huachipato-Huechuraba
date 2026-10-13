@@ -1,6 +1,6 @@
 # Huachipato Huechuraba — Landing
 
-Sitio estático single-file desplegado en Vercel: https://huachipato-huechuraba.vercel.app/
+Sitio estático single-file: https://huachipatohuechuraba.cl/ (EasyPanel; antes en Vercel).
 
 ## Estructura
 
@@ -48,12 +48,16 @@ Probado localmente con nginx: `/` 200, `/privacidad` 200, `/privacidad.html` red
 
 ## Checklist de lanzamiento (dominio propio)
 
-1. Vercel → Project → Settings → Domains: agregar el dominio y copiar los registros DNS que indique (A para el apex, CNAME para `www`). Dejar un solo dominio principal; el otro redirige.
-2. Reemplazar `huachipato-huechuraba.vercel.app` por el dominio nuevo en `index.html` (canonical, og:url, og:image, twitter:image, JSON-LD) y crear `robots.txt` + `sitemap.xml` con el dominio nuevo.
-3. Agregar en `vercel.json` una redirección permanente desde `huachipato-huechuraba.vercel.app` al dominio nuevo.
-4. Google Search Console: propiedad de dominio (TXT en DNS) → enviar `sitemap.xml` → "Inspeccionar URL" de la portada → "Solicitar indexación".
-5. Google Business Profile (ficha de la escuela, mismo nombre/dirección/teléfono que la web) y enlace de la web en Instagram.
-6. Actualizar el enlace en WhatsApp Business y redes; refrescar la vista previa con el depurador de Facebook (Scrape Again).
+Hecho: dominio `huachipatohuechuraba.cl` inscrito en NIC Chile, DNS en Cloudflare (registros A a la IP del VPS, sin proxy), etiquetas canónicas, `robots.txt`, `sitemap.xml` y redirección de `www` al dominio principal.
+
+Pendiente (los hace el cliente o el prestador con su cuenta):
+
+1. Google Search Console: propiedad de dominio (registro TXT en Cloudflare) -> enviar `https://huachipatohuechuraba.cl/sitemap.xml` -> "Inspeccionar URL" de la portada -> "Solicitar indexación".
+2. Google Business Profile (ficha de la escuela con el mismo nombre, dirección y teléfono que la web) y el enlace del sitio en la ficha.
+3. Enlace del sitio en la bio de Instagram y en WhatsApp Business.
+4. Refrescar la vista previa al compartir con el depurador de Facebook (Scrape Again).
+5. Bing Webmaster Tools (importar desde Search Console).
+6. Si se quita el sitio de Vercel, eliminar ese proyecto para no tener contenido duplicado.
 
 ## Métricas de referencia (Lighthouse, local sin compresión)
 
