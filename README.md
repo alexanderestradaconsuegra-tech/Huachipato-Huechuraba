@@ -34,6 +34,18 @@ Probar en local: `python3 -m http.server 8000` y abrir http://localhost:8000
 `hero-team-1920.webp` se sirve solo en escritorio con densidad 1x; el resto usa `hero-team-4k.webp`.
 Si se reemplaza la foto, regenerar ambas con el mismo encuadre 16:9.
 
+## Despliegue en EasyPanel (alternativa a Vercel)
+
+El repo incluye `Dockerfile` y `nginx.conf` (replican las cabeceras, el caché y las URLs limpias de `vercel.json`).
+
+1. EasyPanel → proyecto → **App** → Source: **GitHub** (repo `Huachipato-Huechuraba`, rama `main`).
+2. Build: **Dockerfile** (ruta `Dockerfile`, contexto `/`).
+3. Domains: agregar el dominio; puerto del proxy **80**; activar HTTPS (Let's Encrypt).
+4. DNS: registro A del dominio (y de `www`) apuntando a la IP del VPS.
+5. Activar auto-deploy (webhook de GitHub) para que cada merge a `main` publique solo.
+
+Probado localmente con nginx: `/` 200, `/privacidad` 200, `/privacidad.html` redirige a `/privacidad`, rutas inexistentes devuelven 404 con la página de error, y no se sirven `Dockerfile`, `nginx.conf` ni `vercel.json`.
+
 ## Checklist de lanzamiento (dominio propio)
 
 1. Vercel → Project → Settings → Domains: agregar el dominio y copiar los registros DNS que indique (A para el apex, CNAME para `www`). Dejar un solo dominio principal; el otro redirige.

@@ -1,0 +1,7 @@
+.git
+.github
+.dockerignore
+Dockerfile
+nginx.conf
+vercel.json
+README.md
