@@ -8,10 +8,15 @@
   <meta name="description" content="Huachipato Huechuraba, escuela de fútbol en Huechuraba, Santiago. Categorías Sub-7 a Sub-15, entrenamientos lunes y miércoles, clase de prueba y formación integral para niños y jóvenes." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://huachipato-huechuraba.vercel.app/" />
+  <link rel="icon" href="favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="preload" as="image" href="assets/hero-team-mobile.webp" type="image/webp" fetchpriority="high" media="(max-width:720px)" />
   <link rel="preload" as="image" href="assets/hero-team-1920.webp" type="image/webp" fetchpriority="high" media="(min-width:721px) and (max-width:1920px) and (max-resolution:1.49dppx)" />
-  <link rel="preload" as="image" href="assets/hero-team-4k.webp" type="image/webp" fetchpriority="high" media="(max-width:720px), (min-width:1921px), (min-resolution:1.5dppx)" />
+  <link rel="preload" as="image" href="assets/hero-team-4k.webp" type="image/webp" fetchpriority="high" media="(min-width:721px) and (min-resolution:1.5dppx), (min-width:1921px)" />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/barlow-condensed-700-latin.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin-var.woff2" crossorigin />
 
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CL" />
@@ -19,10 +24,15 @@
   <meta property="og:description" content="Escuela de fútbol formativo y competitivo en Huechuraba, Santiago. Sub-7 a Sub-15, clase de prueba, metodología y seguimiento del jugador." />
   <meta property="og:url" content="https://huachipato-huechuraba.vercel.app/" />
   <meta property="og:image" content="https://huachipato-huechuraba.vercel.app/og-huachipato.jpg?v=22" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Plantel de Huachipato Huechuraba con su lienzo y copa" />
+  <meta property="og:site_name" content="Huachipato Huechuraba" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Huachipato Huechuraba | Escuela de fútbol en Huechuraba" />
   <meta name="twitter:description" content="Fútbol formativo en Huechuraba, Santiago. Sub-7 a Sub-15, clase de prueba y entrenamiento competitivo." />
   <meta name="twitter:image" content="https://huachipato-huechuraba.vercel.app/og-huachipato.jpg?v=22" />
+  <meta name="twitter:image:alt" content="Plantel de Huachipato Huechuraba con su lienzo y copa" />
 
   <script type="application/ld+json">
   {
@@ -53,11 +63,11 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
+    @font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/barlow-condensed-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:900;font-display:swap;src:url('assets/fonts/barlow-condensed-900-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+    @font-face{font-family:"Inter";font-style:normal;font-weight:400 800;font-display:swap;src:url('assets/fonts/inter-latin-var.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
     :root{
       --blue:#0055A5;--blue2:#0B73C9;--navy:#071827;--navy2:#0D263A;
       --ink:#152636;--muted:#6C7A86;--line:#DDE5EB;--paper:#F5F7F9;
@@ -235,7 +245,7 @@
     .footer-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:28px}
     .footer-brand{display:flex;align-items:center;gap:12px}
     .footer-brand img{width:52px;height:52px}
-    footer h4{margin:0 0 8px;color:#fff;text-transform:uppercase;font-size:.75rem}
+    footer h3{margin:0 0 8px;color:#fff;text-transform:uppercase;font-size:.75rem}
     footer p,footer a{font-size:.76rem;line-height:1.6;color:#93A0AA}
     .footer-bottom{margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:18px;font-size:.68rem}
     .wa-float{position:fixed;right:14px;bottom:14px;z-index:60;width:56px;height:56px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:#fff;box-shadow:0 14px 30px rgba(37,211,102,.34)}.wa-float svg{width:29px;height:29px;display:block}
@@ -257,7 +267,7 @@
       .nav{height:62px;border-radius:17px;padding:6px 8px 6px 10px}
       .brand img{width:44px;height:44px}
       .brand-text strong{font-size:1.02rem}.brand-text span{font-size:.65rem}
-      .hero{min-height:760px;background-position:61% 24%}
+      .hero{min-height:760px;background-image:url('assets/hero-team-mobile.webp');background-position:61% 24%}
       .hero:before{background:linear-gradient(180deg,rgba(3,15,26,.14) 0%,rgba(3,15,26,.10) 30%,rgba(3,15,26,.62) 56%,rgba(3,15,26,.94) 100%)}
       .hero-inner{padding:318px 0 20px}
       .hero h1{font-size:clamp(3.1rem,13vw,4rem);max-width:10ch;margin-top:12px}
@@ -686,12 +696,22 @@
       .footer-meta{flex-direction:column;align-items:flex-start;gap:10px}
     }
 
+    /* ENTREGA V34 */
+    .footer-right{display:flex;align-items:center;gap:22px}
+    .footer-credit{color:#9AA8B3;font-size:.8rem;opacity:1;gap:10px}
+    .footer-credit img{height:18px;opacity:.95}
+    .footer-credit:hover{color:#fff}
+    @media(max-width:720px){
+      .footer-right{flex-direction:column;align-items:flex-start;gap:14px}
+      .footer-credit img{height:20px}
+    }
+
   </style>
 </head>
 <body>
   <a class="skip-link" href="#clase">Ir a reservar clase</a>
-  <div class="ticker" aria-label="Información destacada">
-    <div class="ticker-track" aria-hidden="true">
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
       <div class="ticker-row"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
       <div class="ticker-row" aria-hidden="true"><span>Huachipato Huechuraba</span><b>◆</b><span>Sub-7 a Sub-15</span><b>◆</b><span>Lunes + Miércoles</span><b>◆</b><span>18:00 — 19:30 hrs</span><b>◆</b><span>Equipo de acero</span><b>◆</b></div>
     </div>
@@ -722,7 +742,7 @@
       <div class="mobile-menu-brand"><img src="assets/huachipato-crest-3d.webp" alt=""><strong>Huachipato Huechuraba</strong></div>
       <button class="mobile-close" id="mobileClose" type="button" aria-label="Cerrar menú"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
-    <nav class="mobile-links">
+    <nav class="mobile-links" aria-label="Menú móvil">
       <a href="#inicio">Inicio</a>
       <a href="#escuela">La escuela</a>
       <a href="#metodo">Entrenamiento</a>
@@ -733,7 +753,7 @@
       <a href="#galeria">Galería</a>
       <a href="#faq">Preguntas frecuentes</a>
     </nav>
-    <a class="btn btn-primary" data-wa="Hola, quiero información sobre Huachipato Huechuraba." target="_blank" rel="noopener">Hablar por WhatsApp</a>
+    <a href="https://wa.me/56945911596" class="btn btn-primary" data-wa="Hola, quiero información sobre Huachipato Huechuraba." target="_blank" rel="noopener">Hablar por WhatsApp</a>
   </aside>
 
   <main>
@@ -881,13 +901,13 @@
         <form class="form" id="trialForm">
           <div class="form-head"><h3>Reservar clase</h3><div class="cat-pill" id="autoCat">Categoría: —</div></div>
           <div class="fields">
-            <div class="field"><label for="playerName">Jugador</label><input id="playerName" required autocomplete="off" maxlength="60" placeholder="Nombre del jugador"></div>
+            <div class="field"><label for="playerName">Jugador</label><input id="playerName" type="text" required autocomplete="off" maxlength="60" placeholder="Nombre del jugador"></div>
             <div class="field"><label for="birthDate">Fecha de nacimiento</label><input id="birthDate" type="date" required></div>
-            <div class="field"><label for="guardianName">Apoderado</label><input id="guardianName" required autocomplete="name" maxlength="60" placeholder="Nombre del apoderado"></div>
+            <div class="field"><label for="guardianName">Apoderado</label><input id="guardianName" type="text" required autocomplete="name" maxlength="60" placeholder="Nombre del apoderado"></div>
             <div class="field"><label for="guardianPhone">WhatsApp</label><input id="guardianPhone" required type="tel" inputmode="tel" autocomplete="tel" pattern="^\+?[0-9 ]{8,18}$" title="Número de WhatsApp, ej: +56 9 1234 5678" placeholder="+56 9 ..." aria-describedby="phoneHelp"><small class="field-help" id="phoneHelp">Te confirmamos la clase por este número.</small></div>
             <div class="field full"><label for="trialDate">Próxima fecha</label><select id="trialDate" required></select></div>
           </div>
-          <p class="form-note">La categoría es una referencia para temporada <span id="seasonYear">2026</span> y puede ser confirmada por la escuela.</p>
+          <p class="form-note">La categoría es una referencia para temporada <span id="seasonYear">2026</span> y puede ser confirmada por la escuela. Usamos estos datos solo para coordinar tu clase por WhatsApp; este sitio no los almacena.</p>
           <button class="btn btn-primary" type="submit">Solicitar clase gratis</button>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
@@ -901,9 +921,9 @@
           <p class="lead">Consulta disponibilidad y tallas directamente por WhatsApp.</p>
         </div>
         <div class="store-grid">
-          <article class="product"><div class="product-art"><img src="assets/uniforme-principal.webp" alt="Uniforme principal" loading="lazy" decoding="async"></div><h3>Uniforme principal</h3><p>Azul y negro.</p><a class="btn btn-primary" data-product="Uniforme principal azul y negro" target="_blank" rel="noopener">Solicitar</a></article>
-          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-blanco.webp" alt="Uniforme secundario blanco" loading="lazy" decoding="async"></div><h3>Secundario blanco</h3><p>Blanco y azul.</p><a class="btn btn-dark" data-product="Uniforme secundario blanco" target="_blank" rel="noopener">Solicitar</a></article>
-          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-verde.jpg" alt="Uniforme secundario verde" loading="lazy" decoding="async"></div><h3>Secundario verde</h3><p>Verde y negro.</p><a class="btn btn-dark" data-product="Uniforme secundario verde" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-principal.webp" alt="Uniforme principal" loading="lazy" decoding="async"></div><h3>Uniforme principal</h3><p>Azul y negro.</p><a href="https://wa.me/56945911596" class="btn btn-primary" data-product="Uniforme principal azul y negro" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-blanco.webp" alt="Uniforme secundario blanco" loading="lazy" decoding="async"></div><h3>Secundario blanco</h3><p>Blanco y azul.</p><a href="https://wa.me/56945911596" class="btn btn-dark" data-product="Uniforme secundario blanco" target="_blank" rel="noopener">Solicitar</a></article>
+          <article class="product"><div class="product-art"><img src="assets/uniforme-secundario-verde.jpg" alt="Uniforme secundario verde" loading="lazy" decoding="async"></div><h3>Secundario verde</h3><p>Verde y negro.</p><a href="https://wa.me/56945911596" class="btn btn-dark" data-product="Uniforme secundario verde" target="_blank" rel="noopener">Solicitar</a></article>
         </div>
       </div>
     </section>
@@ -956,19 +976,19 @@
   <footer>
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-brand"><img src="assets/huachipato-crest-vector.webp" alt="" loading="lazy" decoding="async" width="52" height="52"><div><h4>Huachipato Huechuraba</h4><p>Formación · disciplina · competencia.</p></div></div>
-        <div><h4>Entrenamiento</h4><p>Lunes y miércoles<br>18:00 — 19:30 hrs<br>Sub-7 a Sub-15</p></div>
-        <div><h4>Contacto</h4><p><a href="tel:+56945911596">+56 9 4591 1596</a><br>Av. Los Libertadores 6788<br>Huechuraba</p></div>
-        <nav class="footer-links" aria-label="Enlaces del pie"><h4>Explorar</h4><a href="#escuela">La escuela</a><a href="#metodo">Entrenamiento</a><a href="#galeria">Galería</a><a href="#clase">Clase gratis</a><a href="#faq">Preguntas frecuentes</a></nav>
+        <div class="footer-brand"><img src="assets/huachipato-crest-vector.webp" alt="" loading="lazy" decoding="async" width="52" height="52"><div><h3>Huachipato Huechuraba</h3><p>Formación · disciplina · competencia.</p></div></div>
+        <div><h3>Entrenamiento</h3><p>Lunes y miércoles<br>18:00 — 19:30 hrs<br>Sub-7 a Sub-15</p></div>
+        <div><h3>Contacto</h3><p><a href="tel:+56945911596">+56 9 4591 1596</a><br>Av. Los Libertadores 6788<br>Huechuraba</p></div>
+        <nav class="footer-links" aria-label="Enlaces del pie"><h3>Explorar</h3><a href="#escuela">La escuela</a><a href="#metodo">Entrenamiento</a><a href="#galeria">Galería</a><a href="#clase">Clase gratis</a><a href="#faq">Preguntas frecuentes</a></nav>
       </div>
-      <div class="footer-bottom"><div class="footer-meta"><span>© 2026 Huachipato Huechuraba</span><a class="footer-credit" href="https://alexanderestrada.com/?utm_source=huachipato-huechuraba&amp;utm_medium=referral&amp;utm_campaign=footer-credit" target="_blank" rel="noopener" aria-label="Diseño y desarrollo por Alexander Estrada, abre alexanderestrada.com"><span>Diseño y desarrollo</span><img src="assets/credito-ae.png" alt="Alexander Estrada" width="34" height="14" loading="lazy" decoding="async"></a></div><div class="footer-social"><a href="https://www.instagram.com/escuela.huachipato.huechuraba/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a class="footer-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.32c-.27-.13-1.6-.79-1.84-.88-.25-.09-.43-.13-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.13-.42-2.16-1.35-.8-.72-1.33-1.61-1.49-1.88-.16-.27-.02-.41.12-.54.12-.12.27-.32.41-.48.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.61-1.47-.84-2.01-.22-.53-.45-.45-.61-.46h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.81c.13.18 1.92 2.93 4.65 4.11.65.28 1.15.44 1.54.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.27.23-.63.23-1.16.16-1.27-.07-.11-.25-.18-.52-.32Z"/><path fill="currentColor" d="M16.02 3.2c-6.98 0-12.63 5.64-12.63 12.6 0 2.22.58 4.39 1.68 6.3L3.2 28.8l6.87-1.8a12.62 12.62 0 0 0 5.95 1.51h.01c6.97 0 12.62-5.65 12.62-12.61 0-3.37-1.31-6.54-3.7-8.92A12.55 12.55 0 0 0 16.02 3.2Zm0 22.97h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.08 1.07 1.09-3.98-.25-.41a10.3 10.3 0 0 1-1.58-5.43c0-5.73 4.68-10.39 10.43-10.39 2.79 0 5.4 1.08 7.36 3.04a10.3 10.3 0 0 1 3.05 7.35c0 5.74-4.69 10.41-10.29 10.43Z"/></svg></a></div></div>
+      <div class="footer-bottom"><div class="footer-meta"><span>© 2026 Huachipato Huechuraba</span></div><div class="footer-right"><a class="footer-credit" href="https://alexanderestrada.com/?utm_source=huachipato-huechuraba&amp;utm_medium=referral&amp;utm_campaign=footer-credit" target="_blank" rel="noopener" aria-label="Diseño y desarrollo por Alexander Estrada, abre alexanderestrada.com"><span>Diseño y desarrollo</span><img src="assets/credito-ae.png" alt="Alexander Estrada" width="43" height="18" decoding="async"></a><div class="footer-social"><a href="https://www.instagram.com/escuela.huachipato.huechuraba/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="https://wa.me/56945911596" class="footer-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.32c-.27-.13-1.6-.79-1.84-.88-.25-.09-.43-.13-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.13-.42-2.16-1.35-.8-.72-1.33-1.61-1.49-1.88-.16-.27-.02-.41.12-.54.12-.12.27-.32.41-.48.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.61-1.47-.84-2.01-.22-.53-.45-.45-.61-.46h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.81c.13.18 1.92 2.93 4.65 4.11.65.28 1.15.44 1.54.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.82-1.27.23-.63.23-1.16.16-1.27-.07-.11-.25-.18-.52-.32Z"/><path fill="currentColor" d="M16.02 3.2c-6.98 0-12.63 5.64-12.63 12.6 0 2.22.58 4.39 1.68 6.3L3.2 28.8l6.87-1.8a12.62 12.62 0 0 0 5.95 1.51h.01c6.97 0 12.62-5.65 12.62-12.61 0-3.37-1.31-6.54-3.7-8.92A12.55 12.55 0 0 0 16.02 3.2Zm0 22.97h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.08 1.07 1.09-3.98-.25-.41a10.3 10.3 0 0 1-1.58-5.43c0-5.73 4.68-10.39 10.43-10.39 2.79 0 5.4 1.08 7.36 3.04a10.3 10.3 0 0 1 3.05 7.35c0 5.74-4.69 10.41-10.29 10.43Z"/></svg></a></div></div></div>
     </div>
   </footer>
 
-  <a class="wa-float" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><img src="assets/whatsapp-logo.webp" alt="" width="64" height="64" decoding="async"></a>
+  <a href="https://wa.me/56945911596" class="wa-float" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><img src="assets/whatsapp-logo.webp" alt="" width="64" height="64" decoding="async"></a>
 
   <dialog class="lightbox" id="lightbox" aria-label="Galería de fotos" tabindex="-1">
-    <figure class="lb-figure"><img id="lbImg" alt=""><figcaption><span id="lbCap"></span><span class="lb-count" id="lbCount"></span></figcaption></figure>
+    <figure class="lb-figure"><img id="lbImg" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="><figcaption><span id="lbCap"></span><span class="lb-count" id="lbCount"></span></figcaption></figure>
     <button class="lb-btn lb-close" id="lbClose" type="button" aria-label="Cerrar galería"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <button class="lb-btn lb-prev" id="lbPrev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
     <button class="lb-btn lb-next" id="lbNext" type="button" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
@@ -976,7 +996,7 @@
 
   <div class="mobile-cta" id="mobileCta" inert>
     <a class="btn btn-primary" href="#clase">Reservar clase gratis</a>
-    <a class="mobile-cta-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"></a>
+    <a href="https://wa.me/56945911596" class="mobile-cta-wa" data-wa="Hola, vi la página de Huachipato Huechuraba y quiero más información." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"></a>
   </div>
 
   <script>
