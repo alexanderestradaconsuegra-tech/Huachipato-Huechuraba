@@ -8,6 +8,11 @@ Sitio estático single-file desplegado en Vercel: https://huachipato-huechuraba.
 - `assets/` — imágenes y fuentes (`assets/fonts`, servidas desde el propio sitio) usadas por la página.
 - `vercel.json` — cabeceras de seguridad (CSP, HSTS, etc.) y caché de `assets/`.
 - `404.html`, `favicon.ico`, `site.webmanifest` — página de error, iconos y manifiesto.
+- `privacidad.html` — política de privacidad y uso de imágenes (se publica en `/privacidad`). Si se agrega analítica, cookies o formularios con base de datos, hay que actualizarla.
+
+## Fotos de menores
+
+Publicar solo fotos de jugadores con autorización escrita del apoderado. Los niños de otros equipos van con el rostro difuminado. Antes de agregar fotos nuevas a la galería, revisar ambas cosas.
 - `og-huachipato.jpg` — imagen para compartir en redes (cambiar `?v=` en las meta `og:image`/`twitter:image` al reemplazarla).
 
 ## Flujo de cambios
