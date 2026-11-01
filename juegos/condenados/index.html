@@ -216,8 +216,11 @@ function buildVariants() {
   if (IMG.boss) VAR.r_boss = tintCanvas(IMG.boss, '#ff2010', 0.55);
   if (IMG.player) { VAR.player = IMG.player; VAR.pred = tintCanvas(IMG.player, '#ff2020', 0.55); }
 }
-[['player', 'img/jugador.png'], ['walker', 'img/zombi.png'], ['runner', 'img/corredor.png'], ['tank', 'img/tanque.png'],
-  ['spitter', 'img/escupidor.png'], ['boss', 'img/jefe.png']].forEach(([k, src]) => {
+// ruta base absoluta: con cleanUrls/trailingSlash:false la URL pierde la barra final y las rutas relativas fallan
+const BASE = location.pathname.replace(/[^/]*\.html$/, '').replace(/\/?$/, '/');
+[['player', 'jugador.png'], ['walker', 'zombi.png'], ['runner', 'corredor.png'], ['tank', 'tanque.png'],
+  ['spitter', 'escupidor.png'], ['boss', 'jefe.png']].forEach(([k, f]) => {
+  const src = BASE + 'img/' + f;
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
   im.src = src;
