@@ -185,9 +185,9 @@ try { best = +localStorage.getItem('condenados_best') || 0; } catch (e) {}
 el.best.textContent = best;
 
 const WEAPONS = [
-  { name:'PISTOLA',  dmg:25, rate:260, mag:12, reserve:Infinity, reload:900,  spread:0.03, pellets:1, speed:950,  auto:false, kb:260, kick:5,  shake:0.12, push:0 },
-  { name:'ESCOPETA', dmg:14, rate:750, mag:6,  reserve:24,       reload:1400, spread:0.22, pellets:7, speed:860,  auto:false, kb:380, kick:16, shake:0.45, push:5 },
-  { name:'FUSIL',    dmg:18, rate:95,  mag:30, reserve:90,       reload:1700, spread:0.08, pellets:1, speed:1050, auto:true,  kb:150, kick:4,  shake:0.09, push:0 }
+  { name:'PISTOLA',  dmg:25, rate:260, mag:12, reserve:Infinity, reload:900,  spread:0.03, pellets:1, speed:950,  auto:false, len:32, kb:260, kick:5,  shake:0.12, push:0 },
+  { name:'ESCOPETA', dmg:14, rate:750, mag:6,  reserve:24,       reload:1400, spread:0.22, pellets:7, speed:860,  auto:false, len:46, kb:380, kick:16, shake:0.45, push:5 },
+  { name:'FUSIL',    dmg:18, rate:95,  mag:30, reserve:90,       reload:1700, spread:0.08, pellets:1, speed:1050, auto:true,  len:54, kb:150, kick:4,  shake:0.09, push:0 }
 ];
 
 const ZTYPES = {
@@ -200,8 +200,8 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {};
-const UPRIGHT_TYPES = ['runner', 'tank', 'spitter', 'boss'];
-const UPRIGHT_W = { runner:6.4, tank:6.2, spitter:5.6, boss:5.0 };
+const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
+const UPRIGHT_W = { walker:5.8, runner:6.4, tank:6.2, spitter:5.6, boss:5.0 };
 function tintCanvas(img, color, alpha) {
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const g = c.getContext('2d');
@@ -211,21 +211,12 @@ function tintCanvas(img, color, alpha) {
   return c;
 }
 function buildVariants() {
-  if (IMG.zombie) {
-    VAR.walker = IMG.zombie;
-    VAR.runner = tintCanvas(IMG.zombie, '#d8d040', 0.3);
-    VAR.tank = tintCanvas(IMG.zombie, '#b02020', 0.4);
-    VAR.spitter = tintCanvas(IMG.zombie, '#20d0a8', 0.4);
-    VAR.boss = tintCanvas(IMG.zombie, '#200000', 0.5);
-    VAR.zwhite = tintCanvas(IMG.zombie, '#ffffff', 1);
-    VAR.zred = tintCanvas(IMG.zombie, '#ff2010', 0.65);
-  }
   // sprites propios (vista frontal): reemplazan el tinte y llevan su silueta blanca para el destello
   for (const t of UPRIGHT_TYPES) if (IMG[t]) { VAR[t] = IMG[t]; VAR['w_' + t] = tintCanvas(IMG[t], '#ffffff', 1); }
   if (IMG.boss) VAR.r_boss = tintCanvas(IMG.boss, '#ff2010', 0.55);
   if (IMG.player) { VAR.player = IMG.player; VAR.pred = tintCanvas(IMG.player, '#ff2020', 0.55); }
 }
-[['player', 'img/jugador.png'], ['zombie', 'img/zombi.png'], ['runner', 'img/corredor.png'], ['tank', 'img/tanque.png'],
+[['player', 'img/jugador.png'], ['walker', 'img/zombi.png'], ['runner', 'img/corredor.png'], ['tank', 'img/tanque.png'],
   ['spitter', 'img/escupidor.png'], ['boss', 'img/jefe.png']].forEach(([k, src]) => {
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
@@ -239,15 +230,6 @@ function drawUpright(img, x, y, w, flip, lean) {
   ctx.drawImage(img, -w / 2, -h * 0.55, w, h);
   ctx.restore();
 }
-// dibuja un sprite orientado hacia ang; si mira a la izquierda se refleja para no quedar de cabeza
-function drawSprite(img, x, y, ang, w, px, py, back = 0) {
-  const h = w * img.height / img.width;
-  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
-  if (Math.cos(ang) < 0) ctx.scale(1, -1);
-  ctx.drawImage(img, -px * w - back, -py * h, w, h);
-  ctx.restore();
-}
-
 /* ============================== ESTADO ============================== */
 let state = 'menu', prePause = 'playing';
 let player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
@@ -333,10 +315,10 @@ function shoot(now) {
   const ca = Math.cos(player.angle), sa = Math.sin(player.angle);
   for (let i = 0; i < w.pellets; i++) {
     const a = player.angle + rand(-w.spread, w.spread);
-    bullets.push({ x:player.x + ca * 50, y:player.y + sa * 50, px:player.x, py:player.y,
+    bullets.push({ x:player.x + ca * (w.len + 4), y:player.y + sa * (w.len + 4), px:player.x, py:player.y,
       vx:Math.cos(a) * w.speed, vy:Math.sin(a) * w.speed, ang:a, dmg:w.dmg * player.dmgMul, kb:w.kb, life:0.9 });
   }
-  const mx = player.x + ca * 52, my = player.y + sa * 52;
+  const mx = player.x + ca * (w.len + 6), my = player.y + sa * (w.len + 6);
   burst(mx, my, 5, '#ffd27a', 260, 0.15, 2);
   // casquillo expulsado
   particles.push({ x:player.x, y:player.y, vx:-sa * rand(80, 160) + rand(-30, 30), vy:ca * rand(80, 160) + rand(-30, 30),
@@ -454,6 +436,7 @@ function update(dt, now) {
   if (keys['a'] || keys['arrowleft']) mx--;
   if (keys['d'] || keys['arrowright']) mx++;
   const len = Math.hypot(mx, my) || 1;
+  player.lean = (player.lean || 0) + ((mx / len) * 0.12 - (player.lean || 0)) * Math.min(1, 10 * dt);
   const sp = player.speed * (keys['shift'] ? 1.5 : 1);
   player.x = clamp(player.x + mx / len * sp * dt, player.r, WORLD.w - player.r);
   player.y = clamp(player.y + my / len * sp * dt, player.r, WORLD.h - player.r);
@@ -618,13 +601,6 @@ function drawZombie(z) {
     const flip = z.type === 'runner' && player.x > z.x;
     drawUpright(img, z.x, z.y, w, flip, lean);
     if (z.flash > 0) { ctx.globalAlpha = 0.8; drawUpright(VAR['w_' + z.type], z.x, z.y, w, flip, lean); ctx.globalAlpha = 1; }
-  } else if (VAR[z.type]) {
-    let img = VAR[z.type];
-    if (z.boss && z.mode === 'wind' && Math.floor(z.mt * 14) % 2 === 0) img = VAR.zred;
-    const w = z.r * (z.boss ? 5.4 : 5.6), face = a + Math.sin(z.wob) * 0.1;
-    const sq = 1 + Math.sin(z.wob * 2) * 0.03;
-    drawSprite(img, z.x, z.y, face, w * sq, 0.36, 0.5);
-    if (z.flash > 0) { ctx.globalAlpha = 0.85; drawSprite(VAR.zwhite, z.x, z.y, face, w * sq, 0.36, 0.5); ctx.globalAlpha = 1; }
   } else {
   const sway = Math.sin(z.wob) * 0.25;
   let fill = z.flash > 0 ? '#ffffff' : z.color;
@@ -699,20 +675,35 @@ function draw() {
   ctx.fillStyle = 'rgba(0,0,0,.35)';
   ctx.beginPath(); ctx.ellipse(player.x + 3, player.y + 10, 15, 9, 0, 0, 7); ctx.fill();
   if (VAR.player) {
-    drawSprite(VAR.player, player.x, player.y, player.angle, 96, 0.42, 0.5, player.recoil);
-    if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); drawSprite(VAR.pred, player.x, player.y, player.angle, 96, 0.42, 0.5, player.recoil); ctx.globalAlpha = 1; }
+    const pw = 54, lean = player.lean || 0;
+    drawUpright(VAR.player, player.x, player.y, pw, false, lean);
+    if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); drawUpright(VAR.pred, player.x, player.y, pw, false, lean); ctx.globalAlpha = 1; }
   } else {
-    ctx.save(); ctx.translate(player.x, player.y); ctx.rotate(player.angle);
-    ctx.fillStyle = '#555'; ctx.fillRect(8 - player.recoil, -3, 20, 6);
     ctx.fillStyle = player.hurtT > 0 ? '#ee6666' : '#4a7fb0';
-    ctx.beginPath(); ctx.arc(0, 0, player.r, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(player.x, player.y, player.r, 0, 7); ctx.fill();
     ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke();
+  }
+  // arma orientada hacia el cursor (el sprite mira a la camara)
+  {
+    const wp = WEAPONS[player.cur], L = wp.len;
+    ctx.save(); ctx.translate(player.x, player.y); ctx.rotate(player.angle);
+    if (Math.cos(player.angle) < 0) ctx.scale(1, -1);
+    const back = player.recoil;
+    ctx.fillStyle = '#1a1a1a'; ctx.fillRect(6 - back, -3, L - 6, 6);
+    if (player.cur === 1) { ctx.fillStyle = '#6b4423'; ctx.fillRect(6 - back, -3.5, 16, 7); ctx.fillStyle = '#333'; ctx.fillRect(22 - back, -2, L - 22, 4); }
+    else if (player.cur === 2) { ctx.fillStyle = '#3a3a3a'; ctx.fillRect(14 - back, -3, L - 14, 6); ctx.fillStyle = '#222'; ctx.fillRect(18 - back, 3, 7, 9); }
+    else { ctx.fillStyle = '#6a6a6a'; ctx.fillRect(6 - back, -2.5, L - 6, 5); }
+    ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(6 - back, -3, L - 6, 1.2);
     ctx.restore();
+    // mira laser tenue
+    ctx.strokeStyle = 'rgba(255,60,40,.22)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(player.x + Math.cos(player.angle) * (L + 4), player.y + Math.sin(player.angle) * (L + 4));
+    ctx.lineTo(player.x + Math.cos(player.angle) * 520, player.y + Math.sin(player.angle) * 520); ctx.stroke();
   }
 
   // fogonazo (aditivo)
   if (player.flash > 0) {
-    const k = player.flash / 0.07, fx = player.x + Math.cos(player.angle) * 52, fy = player.y + Math.sin(player.angle) * 52;
+    const k = player.flash / 0.07, fl = WEAPONS[player.cur].len + 6, fx = player.x + Math.cos(player.angle) * fl, fy = player.y + Math.sin(player.angle) * fl;
     ctx.globalCompositeOperation = 'lighter';
     glow(fx, fy, 130, '#ffb050', 0.7 * k);
     glow(fx, fy, 40, '#fff2c0', 0.9 * k);
