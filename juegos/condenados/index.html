@@ -43,6 +43,7 @@
     <div>VIDA<div class="bar"><i id="hp"></i></div></div>
     <div>ARMA: <span id="wpn"></span></div>
     <div>MUNICION: <span id="ammo"></span></div>
+    <div>GRANADAS: <span id="gren">3</span> (G / clic der.)</div>
     <div>SONIDO: <span id="snd">ON</span> (X)</div>
   </div>
   <div class="hud r">
@@ -58,9 +59,9 @@
   <div id="msg">
     <h1>LOS CONDENADOS</h1>
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
-    <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-3: arma | Shift: correr | P: pausa | X: sonido</p>
+    <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-3: arma | G o clic derecho: granada | Shift: correr | P: pausa | X: sonido</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas.</p>
-    <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), Enter = continuar</p>
+    <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
     <button id="start">MISIONES</button><button id="startS">SUPERVIVENCIA</button>
   </div>
 </div>
@@ -134,7 +135,13 @@ const Sfx = (() => {
     shot(i) {
       if (i === 0) { noise(0.12, 0.5, 2500, 'highpass', 600); tone(190, 0.1, 'square', 0.22, 50); }
       else if (i === 1) { noise(0.35, 0.85, 1400, 'lowpass', 150); tone(95, 0.28, 'sawtooth', 0.5, 28); tone(300, 0.05, 'square', 0.15, 80); }
-      else { noise(0.08, 0.4, 3000, 'highpass', 900); tone(230, 0.07, 'square', 0.2, 80); }
+      else { noise(0.1, 0.6, 2200, 'highpass', 700); tone(150, 0.09, 'sawtooth', 0.3, 45); tone(75, 0.13, 'sine', 0.32, 34); }
+    },
+    pin() { tone(900, 0.03, 'square', 0.14); tone(520, 0.05, 'square', 0.12, 380, 0.05); noise(0.12, 0.16, 1500, 'bandpass', 500, 0.02); },
+    beep() { tone(1800, 0.04, 'square', 0.08); },
+    explosion() {
+      noise(1.1, 1.0, 1800, 'lowpass', 60); tone(80, 0.9, 'sawtooth', 0.7, 26); tone(48, 1.0, 'sine', 0.75, 24);
+      noise(0.25, 0.7, 5000, 'highpass', 800); tone(1200, 0.4, 'sine', 0.05, 200, 0.1);
     },
     empty() { tone(300, 0.04, 'square', 0.15); },
     reload(ms) {
@@ -172,7 +179,7 @@ const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
 const el = { hp:$('hp'), wpn:$('wpn'), ammo:$('ammo'), wave:$('wave'), pts:$('pts'), best:$('best'),
-  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), snd:$('snd'),
+  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), snd:$('snd'), gren:$('gren'),
   obj:$('obj'), mini:$('mini'), waveLbl:$('waveLbl') };
 const mctx = el.mini.getContext('2d');
 
@@ -198,7 +205,7 @@ el.best.textContent = best;
 const WEAPONS = [
   { name:'PISTOLA',  dmg:25, rate:260, mag:12, reserve:Infinity, reload:900,  spread:0.03, pellets:1, speed:950,  auto:false, len:32, kb:260, kick:5,  shake:0.12, push:0 },
   { name:'ESCOPETA', dmg:14, rate:750, mag:6,  reserve:24,       reload:1400, spread:0.22, pellets:7, speed:860,  auto:false, len:46, kb:380, kick:16, shake:0.45, push:5 },
-  { name:'FUSIL',    dmg:18, rate:95,  mag:30, reserve:90,       reload:1700, spread:0.08, pellets:1, speed:1050, auto:true,  len:54, kb:150, kick:4,  shake:0.09, push:0 }
+  { name:'AK-47',    dmg:30, rate:105, mag:30, reserve:90,       reload:1900, spread:0.035, bloomAdd:0.012, bloomMax:0.11, pellets:1, speed:1100, auto:true,  len:58, kb:240, kick:6,  shake:0.15, push:0.4 }
 ];
 
 const ZTYPES = {
@@ -271,6 +278,7 @@ function drawPlayerFrames() {
   put(sh);
   if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); put(VAR.pwalkRed); ctx.globalAlpha = 1; }
 }
+const PK = { hp:{ c:'#e04040', g:'#ff3030', l:'+' }, ammo:{ c:'#d8b030', g:'#ffcc30', l:'A' }, bomb:{ c:'#d86a1c', g:'#ff8a30', l:'G' } };
 const GUN_DY = 10; // altura de las manos respecto al centro del jugador
 const AMP = { walker:1, runner:1.35, tank:0.7, spitter:0.85, boss:0.6 };
 
@@ -278,16 +286,17 @@ const AMP = { walker:1, runner:1.35, tank:0.7, spitter:0.85, boss:0.6 };
 let state = 'menu', prePause = 'playing';
 let player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
 let spawnQueue, spawnTimer, hordeDone, trauma, freeze, groanT, heartT, combo, comboT, comboPulse, killsTotal;
+let grenades = [], blasts = [], scorch = [];
 let mode = 'survival', rects = [], mission = null, missionIdx = 0, snap = null, aggroCount = 0;
 
 function makePlayer() {
   return { x:WORLD.w/2, y:WORLD.h/2, r:17, hp:100, maxHp:100, angle:0, speed:190, pts:0, dmgMul:1,
-    cur:0, lastShot:0, reloading:0, reloadMax:0, hurtT:0, flash:0, recoil:0, ph:0, amp:0, lean:0,
+    cur:0, lastShot:0, reloading:0, reloadMax:0, hurtT:0, flash:0, recoil:0, ph:0, amp:0, lean:0, bloom:0, gren:3, grenMax:9, grenCd:0,
     ws: WEAPONS.map(w => ({ mag:w.mag, reserve:w.reserve })) };
 }
 
 function resetState() {
-  zombies = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = [];
+  zombies = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = [];
   keys = {}; mouse = { x:W/2, y:H/2, down:false };
   cam = { x:0, y:0, kx:0, ky:0 };
   wave = 0; toastT = 0; lastT = performance.now();
@@ -452,10 +461,10 @@ function startMission(idx, retry = false) {
   player.reloading = 0;
   snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
   // suministros repartidos por el mapa
-  for (let n = 0; n < 16; n++) {
+  for (let n = 0; n < 22; n++) {
     for (let t = 0; t < 40; t++) {
       const x = rand(80, WORLD.w - 80), y = rand(80, WORLD.h - 80);
-      if (!inRect(x, y, 30)) { pickups.push({ x, y, kind:n < 10 ? 'ammo' : 'hp', life:Infinity }); break; }
+      if (!inRect(x, y, 30)) { pickups.push({ x, y, kind:n < 10 ? 'ammo' : n < 16 ? 'hp' : 'bomb', life:Infinity }); break; }
     }
   }
   // patrullas dormidas
@@ -511,7 +520,7 @@ function completeMission() {
   toast('MISION COMPLETADA');
   Sfx.clear();
   el.shop.style.display = 'block';
-  el.shop.innerHTML = 'MISION ' + (mission.idx + 1) + ' COMPLETADA (+' + 200 * (mission.idx + 1) + ')<br>B botiquin (50) | N municion (30) | M dano +15% (100)<br>ENTER: siguiente mision';
+  el.shop.innerHTML = 'MISION ' + (mission.idx + 1) + ' COMPLETADA (+' + 200 * (mission.idx + 1) + ')<br>B botiquin (50) | N municion (30) | M dano +15% (100) | V 2 granadas (60)<br>ENTER: siguiente mision';
 }
 
 function victory() {
@@ -635,9 +644,10 @@ function shoot(now) {
   }
   player.lastShot = now; s.mag--;
   alertZombies(520);
+  if (w.bloomAdd) player.bloom = Math.min(w.bloomMax, player.bloom + w.bloomAdd);
   const ca = Math.cos(player.angle), sa = Math.sin(player.angle);
   for (let i = 0; i < w.pellets; i++) {
-    const a = player.angle + rand(-w.spread, w.spread);
+    const a = player.angle + rand(-(w.spread + player.bloom), w.spread + player.bloom);
     bullets.push({ x:player.x + ca * (w.len + 4), y:player.y + GUN_DY + sa * (w.len + 4), px:player.x, py:player.y,
       vx:Math.cos(a) * w.speed, vy:Math.sin(a) * w.speed, ang:a, dmg:w.dmg * player.dmgMul, kb:w.kb, life:0.9 });
   }
@@ -653,6 +663,38 @@ function shoot(now) {
   addShake(w.shake);
   Sfx.shot(player.cur);
   if (s.mag <= 0 && s.reserve > 0) reload();
+}
+
+function throwGrenade() {
+  if (state !== 'playing' || player.gren <= 0 || player.grenCd > 0) return;
+  player.gren--; player.grenCd = 0.6;
+  const gy = player.y + GUN_DY, d = Math.min(480, Math.max(140, Math.hypot(mouse.x + cam.x - player.x, mouse.y + cam.y - gy)));
+  const T = 0.85, a = Math.atan2(mouse.y + cam.y - gy, mouse.x + cam.x - player.x);
+  grenades.push({ x:player.x, y:gy, vx:Math.cos(a) * d / T, vy:Math.sin(a) * d / T, t:0, fly:T, fuse:1.7, beep:0 });
+  Sfx.pin();
+}
+
+function explode(g) {
+  const R = 170, x = g.x, y = g.y;
+  Sfx.explosion(); addShake(1); freeze = 0.06;
+  blasts.push({ x, y, t:0, R });
+  scorch.push({ x, y, r:R * 0.55 }); if (scorch.length > 40) scorch.shift();
+  burst(x, y, 46, '#ff9a30', 560, 0.55, 4.5);
+  burst(x, y, 28, '#ffe08a', 420, 0.35, 3);
+  burst(x, y, 34, '#4a4a4a', 220, 1.2, 8);
+  burst(x, y, 18, '#222', 480, 0.9, 3);
+  for (const z of zombies) {
+    const d = dist(z, { x, y });
+    if (d > R + z.r) continue;
+    const f = clamp(1 - d / (R + z.r), 0, 1), dmg = Math.round(60 + 220 * f);
+    z.hp -= dmg; z.flash = 0.12; z.aggro = true;
+    const a = Math.atan2(z.y - y, z.x - x);
+    z.kx += Math.cos(a) * (900 * f + 250) * z.kres; z.ky += Math.sin(a) * (900 * f + 250) * z.kres;
+    if (floaters.length < 40) floaters.push({ x:z.x, y:z.y - z.r, vy:-80, text:dmg, life:0.9, max:0.9, color:'#ff9a30', big:true });
+  }
+  alertZombies(900);
+  const dp = dist(player, { x, y });
+  if (dp < R) damagePlayer(Math.round(8 + 30 * (1 - dp / R)));
 }
 
 function reload() {
@@ -737,7 +779,7 @@ function killZombie(z) {
   addShake(z.boss ? 1 : z.r > 20 ? 0.4 : 0.12);
   if (z.boss || z.r > 20 || WEAPONS[player.cur].pellets > 1) freeze = z.boss ? 0.18 : 0.04;
   if (z.boss) { toast('JEFE ABATIDO'); for (let i = 0; i < 3; i++) pickups.push({ x:z.x + rand(-40, 40), y:z.y + rand(-40, 40), kind:i === 0 ? 'hp' : 'ammo', life:25 }); }
-  else if (Math.random() < 0.14) pickups.push({ x:z.x, y:z.y, kind:Math.random() < 0.5 ? 'hp' : 'ammo', life:15 });
+  else if (Math.random() < 0.15) { const r = Math.random(); pickups.push({ x:z.x, y:z.y, kind:r < 0.4 ? 'hp' : r < 0.85 ? 'ammo' : 'bomb', life:15 }); }
   if ([10, 25, 50, 100].includes(combo)) {
     toast(({ 10:'RACHA x10', 25:'MASACRE x25', 50:'IMPARABLE x50', 100:'LEYENDA x100' })[combo]);
     Sfx.streak();
@@ -753,7 +795,8 @@ function buy(k) {
   if (k === 'b' && player.pts >= 50 && player.hp < player.maxHp) { player.pts -= 50; player.hp = player.maxHp; Sfx.buy(); }
   else if (k === 'n' && player.pts >= 30) { player.pts -= 30; addAmmo(); Sfx.buy(); }
   else if (k === 'm' && player.pts >= 100) { player.pts -= 100; player.dmgMul += 0.15; Sfx.buy(); }
-  else if (k === 'b' || k === 'n' || k === 'm') Sfx.deny();
+  else if (k === 'v' && player.pts >= 60 && player.gren < player.grenMax) { player.pts -= 60; player.gren = Math.min(player.grenMax, player.gren + 2); Sfx.buy(); }
+  else if (k === 'b' || k === 'n' || k === 'm' || k === 'v') Sfx.deny();
 }
 
 /* ============================== UPDATE ============================== */
@@ -784,6 +827,8 @@ function update(dt, now) {
   player.hurtT = Math.max(0, player.hurtT - dt);
   player.flash = Math.max(0, player.flash - dt);
   player.recoil = Math.max(0, player.recoil - 60 * dt);
+  player.bloom = Math.max(0, player.bloom - 0.22 * dt);
+  player.grenCd = Math.max(0, player.grenCd - dt);
 
   // misiones: objetivos y apariciones ambientales
   if (mode === 'mission' && state === 'playing') missionUpdate(dt);
@@ -887,6 +932,21 @@ function update(dt, now) {
   }
   spits = spits.filter(s => s.life > 0);
 
+  // granadas
+  for (const g of grenades) {
+    g.t += dt;
+    if (g.t < g.fly) {
+      const nx = g.x + g.vx * dt, ny = g.y + g.vy * dt;
+      if (rects.length && inRect(nx, ny)) { g.vx = 0; g.vy = 0; g.t = Math.max(g.t, g.fly); } else { g.x = nx; g.y = ny; }
+    } else { g.vx *= Math.max(0, 1 - 6 * dt); g.vy *= Math.max(0, 1 - 6 * dt); g.x += g.vx * dt; g.y += g.vy * dt; }
+    g.beep -= dt;
+    if (g.beep <= 0 && g.t > g.fly) { g.beep = Math.max(0.12, (g.fuse - g.t) * 0.35); Sfx.beep(); }
+    if (g.t >= g.fuse) { g.dead = true; explode(g); }
+  }
+  grenades = grenades.filter(g => !g.dead);
+  for (const b of blasts) b.t += dt;
+  blasts = blasts.filter(b => b.t < 0.6);
+
   // muertes
   for (const z of zombies) if (z.hp <= 0) killZombie(z);
   zombies = zombies.filter(z => z.hp > 0);
@@ -900,8 +960,10 @@ function update(dt, now) {
     p.life -= dt;
     if (dist(p, player) < player.r + 14) {
       p.life = 0; Sfx.pickup();
-      burst(p.x, p.y, 10, p.kind === 'hp' ? '#e04040' : '#d8b030', 180, 0.4, 2);
-      if (p.kind === 'hp') player.hp = Math.min(player.maxHp, player.hp + 25); else addAmmo();
+      burst(p.x, p.y, 10, PK[p.kind].c, 180, 0.4, 2);
+      if (p.kind === 'hp') player.hp = Math.min(player.maxHp, player.hp + 25);
+      else if (p.kind === 'bomb') player.gren = Math.min(player.grenMax, player.gren + 2);
+      else addAmmo();
     }
   }
   pickups = pickups.filter(p => p.life > 0);
@@ -934,7 +996,7 @@ function update(dt, now) {
     toast('OLEADA ' + wave + ' SUPERADA');
     Sfx.clear();
     el.shop.style.display = 'block';
-    el.shop.innerHTML = 'B botiquin (50) | N municion (30) | M dano +15% (100)<br>ENTER: siguiente oleada';
+    el.shop.innerHTML = 'B botiquin (50) | N municion (30) | M dano +15% (100) | V 2 granadas (60)<br>ENTER: siguiente oleada';
   }
 }
 
@@ -1092,6 +1154,8 @@ function draw() {
 
   drawGround();
 
+  ctx.fillStyle = 'rgba(0,0,0,.45)';
+  for (const sc of scorch) { ctx.beginPath(); ctx.arc(sc.x, sc.y, sc.r, 0, 7); ctx.fill(); }
   ctx.fillStyle = 'rgba(80,10,10,.4)';
   for (const b of blood) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fill(); }
 
@@ -1099,11 +1163,11 @@ function draw() {
   if (mode === 'mission' && mission) drawMissionWorld(tNow);
   for (const p of pickups) {
     const pulse = 0.6 + Math.sin(tNow * 6) * 0.4;
-    glow(p.x, p.y, 34, p.kind === 'hp' ? '#ff3030' : '#ffcc30', 0.5 * pulse);
-    ctx.fillStyle = p.kind === 'hp' ? '#e04040' : '#d8b030';
+    glow(p.x, p.y, 34, PK[p.kind].g, 0.5 * pulse);
+    ctx.fillStyle = PK[p.kind].c;
     ctx.fillRect(p.x - 8, p.y - 8, 16, 16);
     ctx.fillStyle = '#fff'; ctx.font = '11px monospace'; ctx.textAlign = 'center';
-    ctx.fillText(p.kind === 'hp' ? '+' : 'A', p.x, p.y + 4);
+    ctx.fillText(PK[p.kind].l, p.x, p.y + 4);
   }
 
   for (const p of particles) {
@@ -1130,6 +1194,26 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x - b.vx / m * 22, b.y - b.vy / m * 22); ctx.stroke();
   }
 
+  // granadas en vuelo
+  for (const g of grenades) {
+    const h = g.t < g.fly ? Math.sin(g.t / g.fly * Math.PI) * 70 : 0;
+    ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.ellipse(g.x, g.y + 3, 7, 3.5, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#3e4a2e'; ctx.beginPath(); ctx.arc(g.x, g.y - h, 7, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#111'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#222'; ctx.fillRect(g.x - 2, g.y - h - 10, 4, 4);
+    if (Math.sin(g.t * (10 + g.t * 14)) > 0) { glow(g.x, g.y - h, 22, '#ff3020', 0.9); ctx.fillStyle = '#ff4030'; ctx.beginPath(); ctx.arc(g.x, g.y - h - 1, 2.5, 0, 7); ctx.fill(); }
+  }
+  // explosiones (aditivo)
+  ctx.globalCompositeOperation = 'lighter';
+  for (const b of blasts) {
+    const k = b.t / 0.6;
+    glow(b.x, b.y, b.R * 1.9, '#ff8a20', clamp(1 - k * 2.2, 0, 1) * 0.9);
+    glow(b.x, b.y, b.R * 0.8, '#fff2c0', clamp(1 - k * 4, 0, 1));
+    ctx.strokeStyle = 'rgba(255,190,90,' + clamp(1 - k, 0, 1) * 0.8 + ')'; ctx.lineWidth = 8 * (1 - k) + 2;
+    ctx.beginPath(); ctx.arc(b.x, b.y, b.R * Math.min(1, k * 2.2), 0, 7); ctx.stroke();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
   // jugador
   ctx.fillStyle = 'rgba(0,0,0,.35)';
   ctx.beginPath(); ctx.ellipse(player.x + 2, player.y + (VAR.pwalk ? 46 : 10), 15, 7, 0, 0, 7); ctx.fill();
@@ -1152,7 +1236,12 @@ function draw() {
     const back = player.recoil;
     ctx.fillStyle = '#1a1a1a'; ctx.fillRect(6 - back, -3, L - 6, 6);
     if (player.cur === 1) { ctx.fillStyle = '#6b4423'; ctx.fillRect(6 - back, -3.5, 16, 7); ctx.fillStyle = '#333'; ctx.fillRect(22 - back, -2, L - 22, 4); }
-    else if (player.cur === 2) { ctx.fillStyle = '#3a3a3a'; ctx.fillRect(14 - back, -3, L - 14, 6); ctx.fillStyle = '#222'; ctx.fillRect(18 - back, 3, 7, 9); }
+    else if (player.cur === 2) { // AK-47: cañon, guardamanos y culata de madera, cargador curvo
+      ctx.fillStyle = '#2e2e2e'; ctx.fillRect(14 - back, -2.6, L - 14, 5.2);
+      ctx.fillStyle = '#7a4a22'; ctx.fillRect(6 - back, -3.6, 14, 7.2); ctx.fillRect(30 - back, -3.4, 15, 6.8);
+      ctx.fillStyle = '#181818'; ctx.fillRect(L - 5 - back, -1.6, 5, 3.2);
+      ctx.beginPath(); ctx.moveTo(26 - back, 2.6); ctx.lineTo(32 - back, 2.6); ctx.lineTo(37 - back, 14); ctx.lineTo(30 - back, 14); ctx.closePath(); ctx.fillStyle = '#222'; ctx.fill();
+    }
     else { ctx.fillStyle = '#6a6a6a'; ctx.fillRect(6 - back, -2.5, L - 6, 5); }
     ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(6 - back, -3, L - 6, 1.2);
     ctx.restore();
@@ -1269,6 +1358,7 @@ function hud() {
   el.wpn.textContent = w.name + ' (' + (player.cur + 1) + ')';
   el.ammo.textContent = player.reloading > 0 ? 'RECARGANDO...' : s.mag + ' / ' + (s.reserve === Infinity ? 'INF' : s.reserve);
   el.pts.textContent = player.pts;
+  el.gren.textContent = player.gren;
   if (mode === 'mission' && mission) {
     el.left.textContent = aggroCount;
     el.obj.innerHTML = 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b>';
@@ -1298,6 +1388,7 @@ window.addEventListener('keydown', e => {
   if (k === 'p' && (state === 'playing' || state === 'between')) { prePause = state; state = 'paused'; Sfx.music(false); return; }
   if (state !== 'playing' && state !== 'between') return;
   if (k === 'r') reload();
+  if (k === 'g') throwGrenade();
   if (k === '1' || k === '2' || k === '3') {
     const i = +k - 1;
     if (i !== player.cur) { player.cur = i; player.reloading = 0; Sfx.swap(); }
@@ -1308,8 +1399,9 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => { if (keys) keys[e.key.toLowerCase()] = false; });
 window.addEventListener('blur', () => { if (keys) keys = {}; if (mouse) mouse.down = false; });
 cv.addEventListener('mousemove', e => { if (mouse) { mouse.x = e.clientX; mouse.y = e.clientY; } });
-cv.addEventListener('mousedown', () => {
+cv.addEventListener('mousedown', e => {
   if (!mouse) return;
+  if (e.button === 2) { throwGrenade(); return; }
   mouse.down = true;
   if (state === 'playing' && !WEAPONS[player.cur].auto) shoot(performance.now());
 });
