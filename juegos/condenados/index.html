@@ -225,12 +225,13 @@ function buildVariants() {
   // sprites propios (vista frontal): reemplazan el tinte y llevan su silueta blanca para el destello
   for (const t of UPRIGHT_TYPES) if (IMG[t]) { VAR[t] = IMG[t]; VAR['w_' + t] = tintCanvas(IMG[t], '#ffffff', 1); }
   if (IMG.boss) VAR.r_boss = tintCanvas(IMG.boss, '#ff2010', 0.55);
+  if (IMG.pwalk) { VAR.pwalk = IMG.pwalk; VAR.pwalkRed = tintCanvas(IMG.pwalk, '#ff2020', 0.55); }
   if (IMG.player) { VAR.player = IMG.player; VAR.pred = tintCanvas(IMG.player, '#ff2020', 0.55); }
 }
 // ruta base absoluta: con cleanUrls/trailingSlash:false la URL pierde la barra final y las rutas relativas fallan
 const BASE = location.pathname.replace(/[^/]*\.html$/, '').replace(/\/?$/, '/');
 [['player', 'jugador.png'], ['walker', 'zombi.png'], ['runner', 'corredor.png'], ['tank', 'tanque.png'],
-  ['spitter', 'escupidor.png'], ['boss', 'jefe.png']].forEach(([k, f]) => {
+  ['spitter', 'escupidor.png'], ['boss', 'jefe.png'], ['pwalk', 'jugador_walk.png']].forEach(([k, f]) => {
   const src = BASE + 'img/' + f;
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
@@ -256,6 +257,21 @@ function drawAnim(img, x, y, w, flip, lean, ph, amp) {
   ctx.restore();
   ctx.restore();
 }
+// jugador con hoja de 6 cuadros de caminata (3 pasos por mitad de ciclo); en reposo usa el cuadro con las piernas juntas
+function drawPlayerFrames() {
+  const sh = VAR.pwalk, n = 6, cw = Math.floor(sh.width / n), ch = sh.height, h = 124, w = h * cw / ch;
+  const walking = player.amp > 0.2;
+  const idx = walking ? Math.floor((((player.ph / (Math.PI * 2)) % 1) + 1) % 1 * n) : 2;
+  const bob = walking ? -Math.abs(Math.sin(player.ph * 2)) * 1.5 : Math.sin(performance.now() / 450) * 0.8;
+  const put = img => {
+    ctx.save(); ctx.translate(player.x, player.y + bob); ctx.rotate(player.lean);
+    ctx.drawImage(img, idx * cw, 0, cw, ch, -w / 2, -h * 0.5, w, h);
+    ctx.restore();
+  };
+  put(sh);
+  if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); put(VAR.pwalkRed); ctx.globalAlpha = 1; }
+}
+const GUN_DY = 10; // altura de las manos respecto al centro del jugador
 const AMP = { walker:1, runner:1.35, tank:0.7, spitter:0.85, boss:0.6 };
 
 /* ============================== ESTADO ============================== */
@@ -622,10 +638,10 @@ function shoot(now) {
   const ca = Math.cos(player.angle), sa = Math.sin(player.angle);
   for (let i = 0; i < w.pellets; i++) {
     const a = player.angle + rand(-w.spread, w.spread);
-    bullets.push({ x:player.x + ca * (w.len + 4), y:player.y + sa * (w.len + 4), px:player.x, py:player.y,
+    bullets.push({ x:player.x + ca * (w.len + 4), y:player.y + GUN_DY + sa * (w.len + 4), px:player.x, py:player.y,
       vx:Math.cos(a) * w.speed, vy:Math.sin(a) * w.speed, ang:a, dmg:w.dmg * player.dmgMul, kb:w.kb, life:0.9 });
   }
-  const mx = player.x + ca * (w.len + 6), my = player.y + sa * (w.len + 6);
+  const mx = player.x + ca * (w.len + 6), my = player.y + GUN_DY + sa * (w.len + 6);
   burst(mx, my, 5, '#ffd27a', 260, 0.15, 2);
   // casquillo expulsado
   particles.push({ x:player.x, y:player.y, vx:-sa * rand(80, 160) + rand(-30, 30), vy:ca * rand(80, 160) + rand(-30, 30),
@@ -759,7 +775,7 @@ function update(dt, now) {
 
   cam.x = clamp(player.x - W / 2, 0, Math.max(0, WORLD.w - W));
   cam.y = clamp(player.y - H / 2, 0, Math.max(0, WORLD.h - H));
-  player.angle = Math.atan2(mouse.y + cam.y - player.y, mouse.x + cam.x - player.x);
+  player.angle = Math.atan2(mouse.y + cam.y - (player.y + GUN_DY), mouse.x + cam.x - player.x);
   const kd = Math.max(0, 1 - 12 * dt); cam.kx *= kd; cam.ky *= kd;
   trauma = Math.max(0, trauma - 1.7 * dt);
 
@@ -1116,8 +1132,10 @@ function draw() {
 
   // jugador
   ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(player.x + 3, player.y + 10, 15, 9, 0, 0, 7); ctx.fill();
-  if (VAR.player) {
+  ctx.beginPath(); ctx.ellipse(player.x + 2, player.y + (VAR.pwalk ? 46 : 10), 15, 7, 0, 0, 7); ctx.fill();
+  if (VAR.pwalk) {
+    drawPlayerFrames();
+  } else if (VAR.player) {
     const pw = 54, lean = player.lean;
     drawAnim(VAR.player, player.x, player.y, pw, false, lean, player.ph, player.amp);
     if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); drawAnim(VAR.pred, player.x, player.y, pw, false, lean, player.ph, player.amp); ctx.globalAlpha = 1; }
@@ -1129,7 +1147,7 @@ function draw() {
   // arma orientada hacia el cursor (el sprite mira a la camara)
   {
     const wp = WEAPONS[player.cur], L = wp.len;
-    ctx.save(); ctx.translate(player.x, player.y); ctx.rotate(player.angle);
+    ctx.save(); ctx.translate(player.x, player.y + GUN_DY); ctx.rotate(player.angle);
     if (Math.cos(player.angle) < 0) ctx.scale(1, -1);
     const back = player.recoil;
     ctx.fillStyle = '#1a1a1a'; ctx.fillRect(6 - back, -3, L - 6, 6);
@@ -1140,15 +1158,15 @@ function draw() {
     ctx.restore();
     // mira laser tenue
     ctx.strokeStyle = 'rgba(255,60,40,.22)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(player.x + Math.cos(player.angle) * (L + 4), player.y + Math.sin(player.angle) * (L + 4));
-    ctx.lineTo(player.x + Math.cos(player.angle) * 520, player.y + Math.sin(player.angle) * 520); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(player.x + Math.cos(player.angle) * (L + 4), player.y + GUN_DY + Math.sin(player.angle) * (L + 4));
+    ctx.lineTo(player.x + Math.cos(player.angle) * 520, player.y + GUN_DY + Math.sin(player.angle) * 520); ctx.stroke();
   }
 
   if (mode === 'mission' && mission && state === 'playing') drawArrow();
 
   // fogonazo (aditivo)
   if (player.flash > 0) {
-    const k = player.flash / 0.07, fl = WEAPONS[player.cur].len + 6, fx = player.x + Math.cos(player.angle) * fl, fy = player.y + Math.sin(player.angle) * fl;
+    const k = player.flash / 0.07, fl = WEAPONS[player.cur].len + 6, fx = player.x + Math.cos(player.angle) * fl, fy = player.y + GUN_DY + Math.sin(player.angle) * fl;
     ctx.globalCompositeOperation = 'lighter';
     glow(fx, fy, 130, '#ffb050', 0.7 * k);
     glow(fx, fy, 40, '#fff2c0', 0.9 * k);
