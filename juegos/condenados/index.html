@@ -193,13 +193,15 @@ const WEAPONS = [
 const ZTYPES = {
   walker:  { r:17, hp:50,   speed:70,  dmg:8,  pts:10,  color:'#6b8e5a', kres:1 },
   runner:  { r:15, hp:30,   speed:150, dmg:6,  pts:15,  color:'#9a9a55', kres:1.3 },
-  tank:    { r:28, hp:260,  speed:50,  dmg:22, pts:40,  color:'#7a4a4a', kres:0.35 },
+  tank:    { r:30, hp:260,  speed:50,  dmg:22, pts:40,  color:'#7a4a4a', kres:0.35 },
   spitter: { r:16, hp:40,   speed:60,  dmg:0,  pts:25,  color:'#4a8a8a', kres:1, ranged:true },
-  boss:    { r:48, hp:1500, speed:62,  dmg:30, pts:500, color:'#8a2a2a', kres:0.05, boss:true }
+  boss:    { r:56, hp:1500, speed:62,  dmg:30, pts:500, color:'#8a2a2a', kres:0.05, boss:true }
 };
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {};
+const UPRIGHT_TYPES = ['runner', 'tank', 'spitter', 'boss'];
+const UPRIGHT_W = { runner:6.4, tank:6.2, spitter:5.6, boss:5.0 };
 function tintCanvas(img, color, alpha) {
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const g = c.getContext('2d');
@@ -218,13 +220,25 @@ function buildVariants() {
     VAR.zwhite = tintCanvas(IMG.zombie, '#ffffff', 1);
     VAR.zred = tintCanvas(IMG.zombie, '#ff2010', 0.65);
   }
+  // sprites propios (vista frontal): reemplazan el tinte y llevan su silueta blanca para el destello
+  for (const t of UPRIGHT_TYPES) if (IMG[t]) { VAR[t] = IMG[t]; VAR['w_' + t] = tintCanvas(IMG[t], '#ffffff', 1); }
+  if (IMG.boss) VAR.r_boss = tintCanvas(IMG.boss, '#ff2010', 0.55);
   if (IMG.player) { VAR.player = IMG.player; VAR.pred = tintCanvas(IMG.player, '#ff2020', 0.55); }
 }
-[['player', 'img/jugador.png'], ['zombie', 'img/zombi.png']].forEach(([k, src]) => {
+[['player', 'img/jugador.png'], ['zombie', 'img/zombi.png'], ['runner', 'img/corredor.png'], ['tank', 'img/tanque.png'],
+  ['spitter', 'img/escupidor.png'], ['boss', 'img/jefe.png']].forEach(([k, src]) => {
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
   im.src = src;
 });
+// sprite frontal (el personaje mira a la camara): no rota, se inclina hacia el objetivo
+function drawUpright(img, x, y, w, flip, lean) {
+  const h = w * img.height / img.width;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(lean);
+  if (flip) ctx.scale(-1, 1);
+  ctx.drawImage(img, -w / 2, -h * 0.55, w, h);
+  ctx.restore();
+}
 // dibuja un sprite orientado hacia ang; si mira a la izquierda se refleja para no quedar de cabeza
 function drawSprite(img, x, y, ang, w, px, py, back = 0) {
   const h = w * img.height / img.width;
@@ -595,7 +609,16 @@ function drawZombie(z) {
   const a = Math.atan2(player.y - z.y, player.x - z.x);
   ctx.fillStyle = 'rgba(0,0,0,.35)';
   ctx.beginPath(); ctx.ellipse(z.x + 3, z.y + z.r * 0.7, z.r * 0.95, z.r * 0.55, 0, 0, 7); ctx.fill();
-  if (VAR[z.type]) {
+  if (UPRIGHT_TYPES.includes(z.type) && VAR[z.type]) {
+    let img = VAR[z.type];
+    if (z.boss && z.mode === 'wind' && Math.floor(z.mt * 14) % 2 === 0) img = VAR.r_boss;
+    const w = z.r * UPRIGHT_W[z.type] * (1 + Math.sin(z.wob * 2) * 0.025);
+    const dx = z.boss && z.mode === 'charge' ? z.dx : (player.x - z.x) / Math.max(1, dist(z, player));
+    const lean = clamp(dx, -1, 1) * (z.mode === 'charge' ? 0.3 : 0.14) + Math.sin(z.wob) * 0.05;
+    const flip = z.type === 'runner' && player.x > z.x;
+    drawUpright(img, z.x, z.y, w, flip, lean);
+    if (z.flash > 0) { ctx.globalAlpha = 0.8; drawUpright(VAR['w_' + z.type], z.x, z.y, w, flip, lean); ctx.globalAlpha = 1; }
+  } else if (VAR[z.type]) {
     let img = VAR[z.type];
     if (z.boss && z.mode === 'wind' && Math.floor(z.mt * 14) % 2 === 0) img = VAR.zred;
     const w = z.r * (z.boss ? 5.4 : 5.6), face = a + Math.sin(z.wob) * 0.1;
