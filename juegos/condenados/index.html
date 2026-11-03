@@ -74,6 +74,7 @@
   #keyDisp.bad { color:#ff4d4d; }
   .kp { display:grid; grid-template-columns:repeat(3,72px); gap:8px; justify-content:center; } .kp button { margin:0; font-size:22px; padding:12px 0; font-weight:bold; }
   .ovl { position:absolute; display:none; pointer-events:auto; background:rgba(26,8,60,.9); border:2px solid #ff3fb4; border-radius:14px; padding:12px 14px; color:#e8eefc; font-size:12px; box-shadow:0 0 26px rgba(255,63,180,.38); z-index:4; }
+  #expp { right:14px; top:140px; width:330px; } #seedhud { position:absolute; left:50%; bottom:14px; transform:translateX(-50%); display:none; background:rgba(26,8,60,.82); border:2px solid #7dff6a; border-radius:12px; padding:7px 12px; color:#e8eefc; font-size:12px; text-align:center; z-index:3; pointer-events:none; box-shadow:0 0 18px rgba(125,255,106,.3); }
   #pwr { right:14px; top:140px; width:318px; } #camov { left:14px; bottom:14px; width:366px; }
   .ovl h3 { font-size:13px; letter-spacing:1px; margin-bottom:6px; color:#2be8f0; display:flex; justify-content:space-between; }
   .ovl button { font:inherit; font-size:11px; cursor:pointer; border:0; border-radius:8px; padding:5px 9px; background:#3a2a7a; color:#fff; } .ovl button:hover { filter:brightness(1.25); }
@@ -133,13 +134,15 @@
   <div id="task"><div id="taskBox"></div></div>
   <div id="pwr" class="ovl"></div>
   <div id="camov" class="ovl"></div>
+  <div id="expp" class="ovl"></div>
+  <div id="seedhud"></div>
   <div id="toast"></div>
   <div id="shop"></div>
   <div id="msg">
     <h1>LOS CONDENADOS</h1>
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido | H: efectos de brillo</p>
-    <p><b>NIVEL 2 BIOLAB - como se juega:</b> tu meta es escapar con una muestra. Antes hay 3 trabajos, en el orden que quieras: <b>A. Energia</b> (repara el generador, sala izquierda), <b>B. Muestra</b> (sacala de la capsula, sala de arriba, y guardala en el congelador del centro) y <b>C. Seguridad</b> (apaga la cuarentena, sala derecha). Al terminar los 3 se abre la compuerta de abajo, donde espera el jefe. En el centro hay un panel de energia: ahi eliges que funciona (puertas, luces, torretas...). No alcanza para todo. El juego no se pausa mientras usas los paneles.</p>
+    <p><b>NIVEL 2 BIOLAB - como se juega:</b> tu meta es escapar con una muestra. Antes hay 3 trabajos, en el orden que quieras: <b>A. Energia</b> (repara el generador, sala izquierda), <b>B. Muestra</b> (sacala de la capsula, sala de arriba, y guardala en el congelador del centro) y <b>C. Seguridad</b> (apaga la cuarentena, sala derecha). Al terminar los 3 se abre la compuerta de abajo, donde espera el jefe. En el centro hay un panel de energia: ahi eliges que funciona (puertas, luces, torretas...). No alcanza para todo. El juego no se pausa mientras usas los paneles.<br><b>Plantas:</b> por el mapa hay ingredientes (esporas, savia y nucleos). Llevalos a la mesa de experimento del centro para crear semillas. Con <b>C</b> plantas, con <b>V</b> cambias de planta. Las semillas te quedan para los siguientes niveles.</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas. Busca las cajas verdes de armas: ametralladora, lanzacohetes y francotirador.</p>
     <p>PRIMERA PERSONA (estilo CS): clic para capturar el mouse; mira arriba y abajo. Disparo a la CABEZA = muerte instantanea. ESPACIO saltar | C agacharse (mas precision) | E esquivar | Shift correr | [ y ] campo de vision. Salta sobre autos y cajas. Flechas rojas avisan de zombis fuera de pantalla.</p>
     <p>NIVEL 1 (MISIONES): una instalacion por secciones. Activa el generador, repara el panel de cables, consigue las tarjetas VERDE y AZUL, enciende los disyuntores, descarga los planos, encuentra la NOTA con el codigo y abre el reactor. Derrota al jefe y sube al elevador. E: interactuar (tareas, cajas, luces, barricadas, vehiculo). TORRE: entra por la puerta y dispara por la ranura. Activa la REJILLA ELECTRICA del salon de control para freir a los zombis que la crucen.</p>
@@ -319,7 +322,7 @@ let ctx = cv.getContext('2d', { alpha:false });
 let DPR = 1, renderScale = 1;
 const $ = id => document.getElementById(id);
 const el = { hp:$('hp'), wpn:$('wpn'), ammo:$('ammo'), wave:$('wave'), pts:$('pts'), best:$('best'),
-  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), startL2:$('startL2'), pwr:$('pwr'), camov:$('camov'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
+  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), startL2:$('startL2'), pwr:$('pwr'), camov:$('camov'), expp:$('expp'), seedhud:$('seedhud'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
   obj:$('obj'), mini:$('mini'), waveLbl:$('waveLbl') };
 const mctx = el.mini.getContext('2d');
 
@@ -363,7 +366,7 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
-const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp']]
+const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp'], ['pl_shoot', 'lab/pl_shoot.webp'], ['pl_trap', 'lab/pl_trap.webp'], ['pl_bomb', 'lab/pl_bomb.webp'], ['i_spore', 'lab/i_spore.webp'], ['i_sap', 'lab/i_sap.webp'], ['i_core', 'lab/i_core.webp']]
   .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.png']))
   .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.png']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
@@ -446,7 +449,7 @@ function drawPlayerFrames() {
   if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); put(VAR.pwalkRed); ctx.globalAlpha = 1; }
 }
 const WLBL = ['', '', '', 'LMG', 'RPG', 'SNP'];
-const PK = { scrap:{ c:'#7d8a99', g:'#cfe0f0', l:'S' }, wpn:{ c:'#3a8a4a', g:'#5fe08a', l:'W' }, hp:{ c:'#e04040', g:'#ff3030', l:'+' }, ammo:{ c:'#d8b030', g:'#ffcc30', l:'A' }, bomb:{ c:'#d86a1c', g:'#ff8a30', l:'G' } };
+const PK = { ing:{ c:'#7dff6a', g:'#7dff6a', l:'' }, scrap:{ c:'#7d8a99', g:'#cfe0f0', l:'S' }, wpn:{ c:'#3a8a4a', g:'#5fe08a', l:'W' }, hp:{ c:'#e04040', g:'#ff3030', l:'+' }, ammo:{ c:'#d8b030', g:'#ffcc30', l:'A' }, bomb:{ c:'#d86a1c', g:'#ff8a30', l:'G' } };
 const TLIFT = 92;   // altura visual de la plataforma de la torre
 const GUN_DY = 0, PS = 1.55; // PS: escala del personaje (el arma crece con el)
 const muzzleOf = cur => 0.4 * 70 + WEAPONS[cur].len * PS * 0.8;   // distancia del centro del jugador a la boca del arma // altura de las manos respecto al centro del jugador
@@ -454,7 +457,7 @@ const AMP = { walker:1, runner:1.35, tank:0.7, spitter:0.85, boss:0.6 };
 
 /* ============================== ESTADO ============================== */
 let state = 'menu', prePause = 'playing';
-let player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
+let plants = [], player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
 let spawnQueue, spawnTimer, hordeDone, trauma, freeze, groanT, heartT, combo, comboT, comboPulse, killsTotal;
 let grenades = [], blasts = [], scorch = [], rockets = [], dying = [], decoys = [], noiseRings = [], pendingBlasts = [];
 let camZoom = 1, camZoomT = 1, G = null, lastHitRect = null, vehicle = null;
@@ -475,7 +478,7 @@ function makePlayer() {
 }
 
 function resetState() {
-  zombies = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = []; decoys = []; noiseRings = []; pendingBlasts = []; vehicle = null; G = null;
+  zombies = []; plants = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = []; decoys = []; noiseRings = []; pendingBlasts = []; vehicle = null; G = null;
   keys = {}; mouse = { x:W/2, y:H/2, down:false };
   cam = { x:0, y:0, kx:0, ky:0, lx:0, ly:0, vw:W, vh:H }; camZoom = 1; camZoomT = 1;
   wave = 0; toastT = 0; lastT = performance.now();
@@ -878,6 +881,105 @@ function steer(z, tx, ty, dt) {
   return direct;
 }
 
+/* ============================== PLANTAS ============================== */
+const PLANTS = {
+  shoot:{ n:'DISPARAPLANTA', spr:'pl_shoot', hp:70, col:'#7dff6a', d:'dispara esporas a los zombis cercanos' },
+  trap: { n:'PLANTA TRAMPA', spr:'pl_trap',  hp:110, col:'#ff3fb4', d:'muerde al zombi que se le acerca' },
+  bomb: { n:'HONGO BOMBA',   spr:'pl_bomb',  hp:40, col:'#ffb020', d:'explota cuando pasan zombis cerca' } };
+const INGN = { spore:'Espora', sap:'Savia', core:'Nucleo' };
+const RECIPES = [['shoot','spore','sap'], ['trap','sap','core'], ['bomb','spore','core']];
+let seeds = { shoot:0, trap:0, bomb:0 }, seedsStart = null, seedSel = 'shoot', seedHudS = '';
+try { const v = JSON.parse(localStorage.getItem('condenados_seeds')); if (v) for (const k in seeds) seeds[k] = Math.max(0, +v[k] || 0); } catch (e) {}
+const saveSeeds = () => { try { localStorage.setItem('condenados_seeds', JSON.stringify(seeds)); } catch (e) {} };
+
+function renderExp() {
+  const I = mission.ing;
+  el.expp.innerHTML = '<h3><span>MESA DE EXPERIMENTO</span><button data-close="exp">X</button></h3><div>Tus ingredientes: Esporas <b>' + I.spore + '</b> | Savia <b>' + I.sap + '</b> | Nucleos <b>' + I.core + '</b></div>'
+    + '<div style="opacity:.8;margin:4px 0 6px">Mezcla 2 ingredientes distintos y creas 1 semilla. Las plantas defienden el lugar donde las siembres, y las semillas pasan a los siguientes niveles.</div>'
+    + RECIPES.map(([k, a, b]) => { const ok = I[a] > 0 && I[b] > 0; return '<div class="sysr"><div><b>' + PLANTS[k].n + '</b><small>' + INGN[a] + ' + ' + INGN[b] + ': ' + PLANTS[k].d + '</small></div><button data-craft="' + k + '"' + (ok ? '' : ' disabled') + ' class="' + (ok ? 'on' : 'off') + '">CREAR</button></div>'; }).join('')
+    + '<div style="margin-top:6px">Semillas: ' + Object.keys(PLANTS).map(k => PLANTS[k].n + ' <b>' + seeds[k] + '</b>').join(' | ') + '</div><small style="opacity:.7;display:block;margin-top:4px">Siembra con C y cambia de planta con V.</small>';
+}
+function craft(k) {
+  const r = RECIPES.find(q => q[0] === k), I = mission.ing; if (!r || I[r[1]] < 1 || I[r[2]] < 1) { Sfx.deny(); return; }
+  I[r[1]]--; I[r[2]]--; seeds[k]++; seedSel = k; saveSeeds(); Sfx.clear(); burst(player.x, player.y, 14, PLANTS[k].col, 200, 0.6, 3);
+  toast('SEMILLA CREADA: ' + PLANTS[k].n + '  |  SIEMBRA CON C'); renderExp();
+}
+function plantSpot() {
+  const a = player.angle, x = player.x + Math.cos(a) * 80, y = player.y + Math.sin(a) * 80;
+  let ok = (!G || floorAt(x, y)) && !inRect(x, y, 26) && !(G && solidAt(x, y)) && x > 40 && y > 40 && x < WORLD.w - 40 && y < WORLD.h - 40;
+  for (const q of plants) if (Math.hypot(q.x - x, q.y - y) < 58) ok = false;
+  return { x, y, ok };
+}
+function cycleSeed() {
+  const ks = Object.keys(PLANTS); let i = ks.indexOf(seedSel);
+  for (let n = 0; n < ks.length; n++) { i = (i + 1) % ks.length; if (seeds[ks[i]] > 0) { seedSel = ks[i]; break; } }
+  Sfx.task(); seedHudS = '';
+}
+function plantSeed() {
+  if (state !== 'playing' || !player || player.tower || player.driving) return;
+  if (!seeds[seedSel]) { const o = Object.keys(seeds).find(k => seeds[k] > 0); if (!o) { toast(mission && mission.lab ? 'NO TIENES SEMILLAS: JUNTA INGREDIENTES Y CREA PLANTAS EN LA MESA DE EXPERIMENTO' : 'NO TIENES SEMILLAS'); return; } seedSel = o; }
+  if (plants.length >= 14) { toast('YA HAY DEMASIADAS PLANTAS'); return; }
+  const sp = plantSpot(); if (!sp.ok) { Sfx.deny(); toast('NO SE PUEDE SEMBRAR AHI'); return; }
+  const d = PLANTS[seedSel]; seeds[seedSel]--; saveSeeds();
+  plants.push({ type:seedSel, x:sp.x, y:sp.y, hp:d.hp, max:d.hp, t:0, cd:0.6, arm:1.6, bite:0, hurt:0, ang:0, face:1, seed:Math.random() });
+  burst(sp.x, sp.y, 12, d.col, 160, 0.5, 3); Sfx.pickup(); seedHudS = '';
+}
+function plantsUpdate(dt) {
+  if (!plants.length) return;
+  for (const p of plants) {
+    p.t += dt; p.cd = Math.max(0, p.cd - dt); p.arm = Math.max(0, p.arm - dt); p.bite = Math.max(0, p.bite - dt); p.hurt = Math.max(0, p.hurt - dt);
+    const lure = z => { if (z.st === 'idle' || z.st === 'search') { z.st = 'alert'; z.tx = p.x; z.ty = p.y; z.alertT = 6; } };
+    let tz = null, td = p.type === 'shoot' ? 440 : p.type === 'trap' ? 80 : 105;
+    for (const z of zombies) {
+      if (z.hp <= 0) continue; const d = Math.hypot(z.x - p.x, z.y - p.y);
+      if (d < 44 && z.st !== 'idle') { p.hp -= 14 * dt; p.hurt = 0.25; }   // los zombis se la comen
+      if (d < td && (p.type !== 'shoot' || losClear(p.x, p.y, z.x, z.y))) { td = d; tz = z; }
+    }
+    if (!tz) continue;
+    if (p.type === 'shoot') {
+      const a = Math.atan2(tz.y - p.y, tz.x - p.x); p.ang = a; p.face = Math.cos(a) < 0 ? -1 : 1;
+      if (p.cd <= 0) { p.cd = 0.62; p.bite = 0.12; bullets.push({ x:p.x + Math.cos(a) * 34, y:p.y - 28 + Math.sin(a) * 34, px:p.x, py:p.y - 28, vx:Math.cos(a) * 1000, vy:Math.sin(a) * 1000, ang:a, dmg:15, kb:60, life:0.55, pierce:0, hit:[], tr:24 }); lure(tz); }
+    } else if (p.type === 'trap') {
+      if (p.cd <= 0) { p.cd = 3.5; p.bite = 0.55; tz.hp -= 170; tz.flash = 0.15; tz.aggro = true; lure(tz); burst(tz.x, tz.y, 12, '#ff3fb4', 220, 0.5, 3); Sfx.explosion && 0; Sfx.stab && Sfx.stab(); if (floaters.length < 40) floaters.push({ x:tz.x, y:tz.y - tz.r, vy:-80, text:170, life:0.9, max:0.9, color:'#ff3fb4', big:true }); }
+    } else if (p.type === 'bomb') {
+      if (p.arm <= 0) { p.dead = true; explodeAt(p.x, p.y, 165, 70, 210, 0, 0); }
+    }
+  }
+  for (const p of plants) if (p.hp <= 0) { p.dead = true; burst(p.x, p.y, 14, PLANTS[p.type].col, 200, 0.6, 3); }
+  plants = plants.filter(p => !p.dead);
+}
+function drawPlants(t) {
+  for (const p of plants) {
+    if (!vis(p.x - 70, p.y - 100, 140, 130)) continue;
+    const d = PLANTS[p.type], img = IMG[d.spr]; if (!img) continue;
+    const H = 88, W = H * img.width / img.height, grow = Math.min(1, p.t / 0.45), bob = Math.sin(t * 3 + p.seed * 9) * 2;
+    const sc = grow * (1 + (p.bite > 0 ? 0.16 : 0) + (p.type === 'bomb' && p.arm <= 0 ? Math.sin(t * 16) * 0.05 : 0));
+    ctx.fillStyle = 'rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(p.x + 3, p.y + 6, 30, 13, 0, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(p.x, p.y + 8); ctx.scale(sc * (p.type === 'shoot' ? p.face : 1), sc); if (p.hurt > 0) ctx.globalAlpha = 0.6 + Math.sin(t * 40) * 0.3; ctx.drawImage(img, -W / 2, -H + bob, W, H); ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(p.x, p.y - 30, 52, d.col, 0.16 + (p.bite > 0 ? 0.3 : 0)); ctx.restore();
+    if (p.t < 2.2) { ctx.save(); ctx.strokeStyle = d.col; ctx.globalAlpha = 0.5 * (1 - p.t / 2.2); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, p.type === 'shoot' ? 440 : p.type === 'trap' ? 80 : 105, 0, 7); ctx.stroke(); ctx.restore(); }
+    if (p.hp < p.max) { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(p.x - 22, p.y - H - 8, 44, 6); ctx.fillStyle = '#7dff6a'; ctx.fillRect(p.x - 21, p.y - H - 7, 42 * clamp(p.hp / p.max, 0, 1), 4); }
+  }
+  if (state === 'playing' && player && seeds[seedSel] > 0 && !player.tower && !player.driving) {
+    const sp = plantSpot(), img = IMG[PLANTS[seedSel].spr];
+    if (img) { const H = 88, W = H * img.width / img.height; ctx.save(); ctx.globalAlpha = sp.ok ? 0.42 : 0.18; ctx.drawImage(img, sp.x - W / 2, sp.y + 8 - H, W, H); ctx.restore(); ctx.strokeStyle = sp.ok ? '#7dff6a' : '#ff3a4a'; ctx.globalAlpha = 0.6; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(sp.x, sp.y + 6, 30, 13, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
+  }
+}
+function drawIng(p, t) {
+  const img = IMG['i_' + p.ing], col = { spore:'#7dff6a', sap:'#ff3fb4', core:'#2be8f0' }[p.ing], bob = Math.sin(t * 3 + p.x) * 4;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(p.x, p.y, 54, col, 0.4 + Math.sin(t * 5) * 0.15); ctx.restore();
+  if (img) { const H = 46, W = H * img.width / img.height; ctx.drawImage(img, p.x - W / 2, p.y - H / 2 + bob, W, H); }
+  else { ctx.fillStyle = col; ctx.fillRect(p.x - 8, p.y - 8, 16, 16); }
+  ctx.fillStyle = col; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(INGN[p.ing].toUpperCase(), p.x, p.y + 34);
+}
+function updSeedHud() {
+  if (!el.seedhud) return;
+  const tot = seeds.shoot + seeds.trap + seeds.bomb, M = mission && mission.lab ? mission : null; let h = '';
+  if (tot > 0 || plants.length) h += '<b>PLANTAS</b> (C siembra, V cambia): ' + Object.keys(PLANTS).map(k => '<span style="' + (k === seedSel ? 'color:#7dff6a;font-weight:bold' : 'opacity:.7') + '">' + PLANTS[k].n + ' x' + seeds[k] + '</span>').join(' | ');
+  if (M && M.ing) h += (h ? '<br>' : '') + 'Ingredientes: Esporas ' + M.ing.spore + ' | Savia ' + M.ing.sap + ' | Nucleos ' + M.ing.core;
+  if (h !== seedHudS) { seedHudS = h; el.seedhud.innerHTML = h; el.seedhud.style.display = h ? 'block' : 'none'; }
+}
+
 /* ============================== LOGICA DEL BIOLAB ============================== */
 const sysUsed = () => SYSD.reduce((a, d) => a + (mission.sys[d.k] ? d.c : 0), 0);
 const labRect = k => rects.find(r => r.kind === k);
@@ -898,7 +1000,9 @@ function startLab(retry = false) {
   player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
   player.hp = retry ? Math.max(player.hp, 60) : player.maxHp;
   snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
-  el.facHud.style.display = 'block'; closeLabPanels();
+  el.facHud.style.display = 'block'; closeLabPanels(); mission.ing = { spore:0, sap:0, core:0 };
+  if (!retry || !seedsStart) seedsStart = { ...seeds }; else { seeds = { ...seedsStart }; saveSeeds(); }
+  for (const [ik, tx, ty] of [['spore',27.6,8.2],['spore',18.6,13.4],['sap',7.5,31.8],['sap',9.5,20.6],['core',43.5,33],['core',51.5,46]]) pickups.push({ x:tx * TS, y:ty * TS, kind:'ing', ing:ik, life:Infinity });
   const PK = [['ammo',22,23],['hp',34,23],['bomb',27,30.4],['ammo',24,44],['hp',31,47],['ammo',6,19],['hp',13,29],['scrap',8,33],['bomb',14,19],['scrap',10,22.5],['ammo',20,6],['hp',36,6],['bomb',27,12],['scrap',23,10],['ammo',43,20],['hp',50,30],['bomb',47,18],['scrap',42,29],['ammo',41,43],['hp',51,46],['scrap',46,38.4],['wpn',12.4,31.6,3],['wpn',51.2,22,4]];
   PK.forEach(([k, tx, ty, slot], idx) => { if (diff > 0 && (k === 'ammo' || k === 'hp') && idx % (diff === 1 ? 3 : 2) === 1) return; pickups.push({ x:tx * TS, y:ty * TS, kind:k, slot, life:Infinity }); });
   const NEST = [[22.5,23.5,2],[33,26,2],[6,19,2],[11,24,3,'blind'],[11,30,2],[20,6,2],[33,6,3],[27,9,2,'deaf'],[22,11,2],[43,20,2],[49,23,3],[44,29,2,'blind'],[49,31,2],[41,43,2],[50,43,2]];
@@ -951,7 +1055,7 @@ function labObjHtml() {
   const carry = player.sample ? ' | <b style="color:#7dff6a">LLEVAS LA MUESTRA (olor alto)</b>' : '';
   const spoil = M.cryo.stored && M.cryo.spoil > 0 ? ' | <b style="color:#ff6a7a">MUESTRA CALENTANDOSE ' + Math.max(0, Math.ceil(20 - M.cryo.spoil)) + 's</b>' : '';
   return 'BIOLAB - ' + z + '<br>' + m(M.done.decon, 'Descontaminarte') + m(M.done.A, 'A. Energia: repara el generador (izquierda)') + m(M.done.B, 'B. Muestra: sacala (arriba) y guardala en el congelador (centro)') + m(M.done.C, 'C. Seguridad: apaga la cuarentena (derecha)') + m(M.finalOpen && M.elevReady, 'Final: escapa en el ascensor con la muestra')
-    + '<b>' + labHint() + '</b><br><span style="opacity:.8">Energia ' + sysUsed() + '/' + M.cap + ' | Alertas ' + M.alerts + carry + spoil + '</span>';
+    + '<b>' + labHint() + '</b><br><span style="opacity:.8">Extra opcional: junta ingredientes (' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos) y crea plantas en la mesa del centro</span><br><span style="opacity:.8">Energia ' + sysUsed() + '/' + M.cap + ' | Alertas ' + M.alerts + carry + spoil + '</span>';
 }
 
 function labNearest() {
@@ -961,6 +1065,7 @@ function labNearest() {
   const nd = r => Math.hypot(clamp(player.x, r.x, r.x + r.w) - player.x, clamp(player.y, r.y, r.y + r.h) - player.y);
   for (const r of rects) {
     if (r.kind === 'decon' && !M.done.decon) consider('decon', r, nd(r), 70, 'Manten E para descontaminarte', true, M.deconProg / 4);
+    else if (r.kind === 'exp') consider('exp', r, nd(r), 110, 'E - Experimento: crea plantas con tus ingredientes', false);
     else if (r.kind === 'pwrpanel') consider('pwr', r, nd(r), 100, 'E - Panel de energia (elige que se enciende)', false);
     else if (r.kind === 'camcon') consider('cam', r, nd(r), 100, M.sys.cams ? 'E - Ver camaras, abrir compuertas, soltar gas' : 'Camaras apagadas: enciendelas en el panel de energia', false);
     else if (r.kind === 'gen' && !M.done.A) consider('gen', r, nd(r), 110, 'E - Reparar el generador', false);
@@ -997,6 +1102,7 @@ function takeSample() {
 function labPress() {
   const ia = labNearest(); if (!ia || ia.hold) return; const M = mission;
   if (ia.type === 'pwr') openPwr();
+  else if (ia.type === 'exp') { closeLabPanels(); expOpen = true; el.expp.style.display = 'block'; renderExp(); Sfx.task(); }
   else if (ia.type === 'cam') { if (!M.sys.cams) { Sfx.deny(); toast('CAMARAS SIN ENERGIA'); } else openCam(); }
   else if (ia.type === 'gate') toggleGate(ia.ref, false);
   else if (ia.type === 'gen') { const c = centerOf(ia.ref); openTask({ kind:'wires', live:true, title:'REPARAR GENERADOR', hint:'Une cada cable con el del mismo color. El juego sigue: no te alejes mucho.', pos:c, cb:() => { M.done.A = true; M.cap = 5; toast('GENERADOR REPARADO. TRABAJO A LISTO: AHORA TIENES 5 DE ENERGIA'); Sfx.clear(); } }); }
@@ -1011,9 +1117,10 @@ function labPress() {
 function labVictory() { player.pts += 900; completeMission(); }
 
 /* --- paneles (no pausan el juego) --- */
-function closeLabPanels() { if (el.pwr) { el.pwr.style.display = 'none'; el.pwr.innerHTML = ''; } if (el.camov) { el.camov.style.display = 'none'; el.camov.innerHTML = ''; } camOpen = false; pwrOpen = false; }
-let pwrOpen = false, camOpen = false, camHash = '';
-function openPwr() { pwrOpen = true; el.pwr.style.display = 'block'; renderPwr(); Sfx.task(); }
+function closeExp() { expOpen = false; if (el.expp) { el.expp.style.display = 'none'; el.expp.innerHTML = ''; } }
+function closeLabPanels() { closeExp(); if (el.pwr) { el.pwr.style.display = 'none'; el.pwr.innerHTML = ''; } if (el.camov) { el.camov.style.display = 'none'; el.camov.innerHTML = ''; } camOpen = false; pwrOpen = false; }
+let pwrOpen = false, camOpen = false, expOpen = false, camHash = '';
+function openPwr() { closeExp(); pwrOpen = true; el.pwr.style.display = 'block'; renderPwr(); Sfx.task(); }
 function renderPwr() {
   const M = mission, used = sysUsed();
   el.pwr.innerHTML = '<h3><span>PANEL DE ENERGIA</span><button data-close="pwr">X</button></h3><div>Capacidad: <b>' + used + ' / ' + M.cap + '</b> ' + (M.done.A ? '' : '<span style="color:#ffd02b">(repara el generador y sube a 5)</span>') + '</div><div class="cbar"><i style="width:' + (used / 5 * 100) + '%"></i></div>'
@@ -1058,7 +1165,9 @@ function renderCam() {
 document.addEventListener('click', e => {
   const t = e.target; if (!mission || !mission.lab || !t.closest) return;
   const q = t.closest('button'); if (!q) return;
-  if (q.dataset.close === 'pwr') { el.pwr.style.display = 'none'; pwrOpen = false; }
+  if (q.dataset.close === 'exp') closeExp();
+  else if (q.dataset.craft) craft(q.dataset.craft);
+  else if (q.dataset.close === 'pwr') { el.pwr.style.display = 'none'; pwrOpen = false; }
   else if (q.dataset.close === 'cam') { el.camov.style.display = 'none'; camOpen = false; }
   else if (q.dataset.sys) toggleSys(q.dataset.sys);
   else if (q.dataset.gate !== undefined) { toggleGate(G.doors[+q.dataset.gate], true); camHash = ''; }
@@ -1093,6 +1202,7 @@ function labUpdate(dt) {
   if (taskObj && taskObj.live && taskObj.pos && Math.hypot(taskObj.pos.x - player.x, taskObj.pos.y - player.y) > 220) { closeTask(false); toast('TE ALEJASTE DE LA TAREA'); }
   if (pwrOpen) { const r = labRect('pwrpanel'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) { el.pwr.style.display = 'none'; pwrOpen = false; } else if ((M.camT += dt) > 0) { /* refresco del panel cada ~0.4 s */ } }
   if (camOpen) { const r = labRect('camcon'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) { el.camov.style.display = 'none'; camOpen = false; } else { M.camAcc = (M.camAcc || 0) + dt; if (M.camAcc > 0.15) { M.camAcc = 0; renderCam(); } } }
+  if (expOpen) { const r = labRect('exp'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) closeExp(); }
   // torretas
   for (const r of rects) if (r.kind === 'turret') {
     r.fl = Math.max(0, (r.fl || 0) - dt);
@@ -1320,7 +1430,7 @@ function buildLab() {
   // ---- HUB ----
   O('pwrpanel', 19.5, 20.1, 2.6, 0.9, { walk:true }); O('cryo', 22.8, 20.1, 2, 1); O('camcon', 31.4, 20.1, 3, 0.9);
   O('turret', 22, 29.5, 1, 1, { ang:-1.2, cd:0, fl:0 }); O('turret', 33.5, 29.5, 1, 1, { ang:-1.9, cd:0, fl:0 });
-  O('tube', 26.8, 24.0, 2.4, 2.8); O('labtable', 21, 24.6, 2.2, 1); O('labtable', 33, 24.6, 2.2, 1);
+  O('tube', 26.8, 24.0, 2.4, 2.8); O('exp', 30.6, 28.2, 2.4, 1.0); O('labtable', 21, 24.6, 2.2, 1); O('labtable', 33, 24.6, 2.2, 1);
   P('p_barrier', 24.2, 27.4, 2.2, 0.7); P('p_sandbags', 30.2, 27.6, 1.6, 1); P('p_dumpster', 34.2, 22, 1.6, 1, { hide:true }); P('p_crates', 20.2, 22.6, 1, 1);
   O('fan', 26.6, 29.5, 1.4, 1.4, { walk:true });
   // ---- ESCLUSA ----
@@ -1953,7 +2063,7 @@ function explodeAt(x, y, R, base, scale, selfBase, selfScale) {
   rects = rects.filter(q => !q.dead);
   makeNoise(x, y, 900, '#ff9a30');
   const dp = dist(player, { x, y });
-  if (dp < R) damagePlayer(Math.round(selfBase + selfScale * (1 - dp / R)));
+  if (dp < R && selfBase + selfScale > 0) damagePlayer(Math.round(selfBase + selfScale * (1 - dp / R)));
 }
 
 function explode(g) { explodeAt(g.x, g.y, 170, 60, 220, 8, 30); }
@@ -2375,6 +2485,7 @@ function update(dt, now) {
   if (comboT > 0) { comboT -= dt; if (comboT <= 0) combo = 0; }
   comboPulse = Math.max(0, comboPulse - 5 * dt);
 
+  plantsUpdate(dt);
   // pickups
   for (const p of pickups) {
     p.life -= dt;
@@ -2384,6 +2495,7 @@ function update(dt, now) {
       if (p.kind === 'hp') player.hp = Math.min(player.maxHp, player.hp + 25);
       else if (p.kind === 'bomb') player.gren = Math.min(player.grenMax, player.gren + 2);
       else if (p.kind === 'wpn') unlockWeapon(p.slot);
+      else if (p.kind === 'ing') { mission.ing[p.ing]++; toast('+1 ' + INGN[p.ing].toUpperCase() + (mission.ingTip ? '' : '  |  LLEVA LOS INGREDIENTES A LA MESA DE EXPERIMENTO (CENTRO)')); mission.ingTip = true; if (expOpen) renderExp(); }
       else if (p.kind === 'scrap') { player.scrap += 2; toast('+2 CHATARRA'); }
       else addAmmo();
     }
@@ -3373,7 +3485,7 @@ function drawFacilityDoor(d) {
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(d.px + d.pw / 2, d.py + d.ph / 2, d.pw * 0.9 + 40, col, on ? 0.42 : 0.12); ctx.restore();
 }
 
-const LABSPR = { tube:'l_tube', planter:'l_planter', labtable:'l_labtable', cryo:'l_cryo', turret:'l_turret', console:'l_console', terminal:'l_console' };
+const LABSPR = { exp:'l_labtable', tube:'l_tube', planter:'l_planter', labtable:'l_labtable', cryo:'l_cryo', turret:'l_turret', console:'l_console', terminal:'l_console' };
 function drawLabSprite(r, tNow) {
   const k = r.kind, img = IMG[LABSPR[k]], cx = r.x + r.w / 2, cy = r.y + r.h / 2, M = mission, asp = img.width / img.height;
   ctx.fillStyle = 'rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(cx + 4, r.y + r.h - 2, r.w * 0.5, Math.min(r.h, 60) * 0.3, 0, 0, 7); ctx.fill();
@@ -3392,6 +3504,7 @@ function drawLabSprite(r, tNow) {
   if (k === 'cryo') { const on = M.sys.cryo; glow(cx, cy - 10, r.w * 0.9, on ? '#2be8f0' : '#ff3a4a', 0.22); if (M.cryo.stored) glow(cx, cy - 10, 44, '#7dff6a', 0.55 + Math.sin(tNow * 4) * 0.2); }
   else glow(cx, cy - 6, Math.max(r.w, r.h) * 0.8, k === 'planter' ? '#7dff6a' : k === 'tube' ? '#9dff4a' : ac, 0.16 + Math.sin(tNow * 2 + (r.seed || 0) * 7) * 0.05);
   ctx.restore();
+  if (k === 'exp') { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy - 20, 90, '#7dff6a', 0.25 + Math.sin(tNow * 3) * 0.08); ctx.restore(); ctx.fillStyle = 'rgba(8,10,20,.85)'; rrect(cx - 54, r.y + r.h + 10, 108, 15, 4); ctx.fill(); ctx.fillStyle = '#7dff6a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('E: EXPERIMENTO (PLANTAS)', cx, r.y + r.h + 21); }
   if (k === 'cryo') { const on = M.sys.cryo; ctx.fillStyle = 'rgba(8,10,20,.85)'; rrect(cx - 26, r.y + r.h + 10, 52, 15, 4); ctx.fill(); ctx.fillStyle = on ? '#2be8f0' : '#ff3a4a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(M.cryo.stored ? (on ? 'MUESTRA OK' : 'SIN FRIO') : (on ? 'ENCENDIDO' : 'APAGADO'), cx, r.y + r.h + 21); }
 }
 
@@ -3787,6 +3900,7 @@ function draw() {
   const tNow = performance.now() / 1000;
   if (mode === 'mission' && mission) drawMissionWorld(tNow);
   for (const p of pickups) {
+    if (p.kind === 'ing') { drawIng(p, tNow); continue; }
     const pulse = 0.6 + Math.sin(tNow * 6) * 0.4;
     glow(p.x, p.y, 34, PK[p.kind].g, 0.5 * pulse);
     ctx.fillStyle = PK[p.kind].c;
@@ -3813,6 +3927,7 @@ function draw() {
       if (!player.driving && vehicle.fuel > 0) { ctx.fillStyle = '#7be0ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('CARRO', vehicle.x, vehicle.y - 50); }
     }
   }
+  if (!fp) drawPlants(tNow);
   for (const z of zombies) {
     if (z.x < cam.x - 220 || z.x > cam.x + cam.vw + 220 || z.y < cam.y - 260 || z.y > cam.y + cam.vh + 260) continue;
     drawZombie(z);
@@ -4022,6 +4137,7 @@ function drawMini() {
 }
 
 function hud() {
+  updSeedHud();
   const w = WEAPONS[player.cur], s = player.ws[player.cur];
   el.hp.style.width = clamp(player.hp / player.maxHp * 100, 0, 100) + '%';
   el.hp.style.background = player.hp < 30 ? '#c0392b' : '#7fbf5f';
@@ -4098,6 +4214,8 @@ window.addEventListener('keydown', e => {
   if (k === 't') throwDecoy();
   if (k === 'e' && !fp && !e.repeat) interactPress();
   if (k === 'f') stab();
+  if (k === 'c' && !fp && !e.repeat) plantSeed();
+  if (k === 'v' && !fp && !e.repeat) cycleSeed();
   if (k >= '1' && k <= '6' && k.length === 1) selectWeapon(+k - 1);
   if (state === 'between') { if (k === 'enter') { if (mode === 'mission') startMission(missionIdx + 1); else nextWave(); } else buy(k); }
   if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();
