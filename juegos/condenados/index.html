@@ -139,7 +139,7 @@
     <h1>LOS CONDENADOS</h1>
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido | H: efectos de brillo</p>
-    <p>NIVEL 2 BIOLAB: un hub con 3 modulos en cualquier orden (Energia, Muestra, Seguridad). El juego NO se pausa en los paneles. Reparte la energia (no alcanza para todo), usa camaras y compuertas para guiar o encerrar zombis, inunda sectores con gas y cuidado: la muestra se huele.</p>
+    <p><b>NIVEL 2 BIOLAB - como se juega:</b> tu meta es escapar con una muestra. Antes hay 3 trabajos, en el orden que quieras: <b>A. Energia</b> (repara el generador, sala izquierda), <b>B. Muestra</b> (sacala de la capsula, sala de arriba, y guardala en el congelador del centro) y <b>C. Seguridad</b> (apaga la cuarentena, sala derecha). Al terminar los 3 se abre la compuerta de abajo, donde espera el jefe. En el centro hay un panel de energia: ahi eliges que funciona (puertas, luces, torretas...). No alcanza para todo. El juego no se pausa mientras usas los paneles.</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas. Busca las cajas verdes de armas: ametralladora, lanzacohetes y francotirador.</p>
     <p>PRIMERA PERSONA (estilo CS): clic para capturar el mouse; mira arriba y abajo. Disparo a la CABEZA = muerte instantanea. ESPACIO saltar | C agacharse (mas precision) | E esquivar | Shift correr | [ y ] campo de vision. Salta sobre autos y cajas. Flechas rojas avisan de zombis fuera de pantalla.</p>
     <p>NIVEL 1 (MISIONES): una instalacion por secciones. Activa el generador, repara el panel de cables, consigue las tarjetas VERDE y AZUL, enciende los disyuntores, descarga los planos, encuentra la NOTA con el codigo y abre el reactor. Derrota al jefe y sube al elevador. E: interactuar (tareas, cajas, luces, barricadas, vehiculo). TORRE: entra por la puerta y dispara por la ranura. Activa la REJILLA ELECTRICA del salon de control para freir a los zombis que la crucen.</p>
@@ -363,7 +363,7 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
-const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp']]
+const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp']]
   .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.png']))
   .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.png']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
@@ -914,7 +914,7 @@ function startLab(retry = false) {
   for (const rt of ROUTES) { spawnZombie('walker', { x:rt[0][0] * TS, y:rt[0][1] * TS }, false); const z = zombies[zombies.length - 1]; z.patrol = rt.map(q => ({ x:q[0] * TS, y:q[1] * TS })); z.pp = 1; z.speed *= 1.15; }
   state = 'playing'; el.shop.style.display = 'none'; el.wave.textContent = 2;
   toast('NIVEL 2: BIOLAB ARGOS'); Sfx.wave();
-  setTimeout(() => { if (mission && mission.lab) toast('ESCLUSA: MANTEN E EN LA PLATAFORMA PARA DESCONTAMINARTE'); }, 2300);
+  setTimeout(() => { if (mission && mission.lab) toast('PRIMERO: MANTEN E EN LA PLATAFORMA BRILLANTE PARA DESCONTAMINARTE'); }, 2300);
 }
 
 function labTargets() {
@@ -929,10 +929,20 @@ function labTargets() {
 
 function labHint() {
   const M = mission;
-  if (!M.done.decon) return 'Descontaminate en la esclusa (mantener E)';
-  if (M.finalOpen) { if (!M.boss || M.boss.hp > 0) return M.bossSpawned ? 'Elimina al Experimento' : 'Entra al nucleo ARGOS (compuerta FINAL)'; return player.sample ? (M.sys.elev ? 'Sube al ascensor con la muestra' : 'Enciende el ASCENSOR en el panel de energia') : 'Recoge la muestra de la refrigeracion'; }
-  const left = [!M.done.A && 'Energia', !M.done.B && 'Muestra', !M.done.C && 'Seguridad'].filter(Boolean);
-  return 'Completa los modulos pendientes: ' + left.join(', ');
+  if (!M.done.decon) return 'AHORA: parate en la plataforma brillante de la esclusa y mantén E';
+  if (M.finalOpen) {
+    if (!M.bossSpawned) return 'AHORA: entra por la compuerta de abajo (FINAL)';
+    if (M.boss && M.boss.hp > 0) return 'AHORA: derrota al jefe. Tienes torretas y gas para ayudarte';
+    if (!player.sample) return 'AHORA: retira la muestra del congelador del centro';
+    return M.sys.elev ? 'AHORA: sube al ascensor con la muestra' : 'AHORA: enciende el ASCENSOR en el panel de energia (centro) y vuelve al ascensor';
+  }
+  if (!M.done.A) return 'SUGERENCIA: repara el generador (sala izquierda) para tener mas energia';
+  if (!M.done.B) {
+    if (player.sample) return M.sys.cryo ? 'AHORA: guarda la muestra en el congelador del centro' : 'AHORA: enciende el CONGELADOR en el panel de energia y guarda la muestra';
+    return 'AHORA: ve a la sala de arriba y saca la muestra de la capsula verde';
+  }
+  if (!M.done.C) return M.sys.cams ? 'AHORA: ve a la sala derecha y apaga la cuarentena' : 'AHORA: enciende las CAMARAS en el panel de energia, luego apaga la cuarentena (sala derecha)';
+  return '';
 }
 
 function labObjHtml() {
@@ -940,7 +950,7 @@ function labObjHtml() {
   const z = ZINFO[M.curZone] ? ZINFO[M.curZone].name : '';
   const carry = player.sample ? ' | <b style="color:#7dff6a">LLEVAS LA MUESTRA (olor alto)</b>' : '';
   const spoil = M.cryo.stored && M.cryo.spoil > 0 ? ' | <b style="color:#ff6a7a">MUESTRA CALENTANDOSE ' + Math.max(0, Math.ceil(20 - M.cryo.spoil)) + 's</b>' : '';
-  return 'BIOLAB - ' + z + '<br>' + m(M.done.decon, 'Esclusa') + m(M.done.A, 'A. Energia (generador)') + m(M.done.B, 'B. Muestra (invernadero a refrigeracion)') + m(M.done.C, 'C. Seguridad (protocolo)') + m(M.finalOpen && M.elevReady, 'Final: escapar con la muestra')
+  return 'BIOLAB - ' + z + '<br>' + m(M.done.decon, 'Descontaminarte') + m(M.done.A, 'A. Energia: repara el generador (izquierda)') + m(M.done.B, 'B. Muestra: sacala (arriba) y guardala en el congelador (centro)') + m(M.done.C, 'C. Seguridad: apaga la cuarentena (derecha)') + m(M.finalOpen && M.elevReady, 'Final: escapa en el ascensor con la muestra')
     + '<b>' + labHint() + '</b><br><span style="opacity:.8">Energia ' + sysUsed() + '/' + M.cap + ' | Alertas ' + M.alerts + carry + spoil + '</span>';
 }
 
@@ -950,20 +960,20 @@ function labNearest() {
   const consider = (type, ref, d, lim, label, hold, pr) => { if (d < lim && d < bd) { bd = d; best = { type, ref, label, hold, pr }; } };
   const nd = r => Math.hypot(clamp(player.x, r.x, r.x + r.w) - player.x, clamp(player.y, r.y, r.y + r.h) - player.y);
   for (const r of rects) {
-    if (r.kind === 'decon' && !M.done.decon) consider('decon', r, nd(r), 70, 'E (mantener) - Descontaminacion', true, M.deconProg / 4);
-    else if (r.kind === 'pwrpanel') consider('pwr', r, nd(r), 100, 'E - Panel de energia (el juego sigue corriendo)', false);
-    else if (r.kind === 'camcon') consider('cam', r, nd(r), 100, M.sys.cams ? 'E - Camaras, compuertas y gas' : 'E - Camaras (SIN ENERGIA: activalas en el panel)', false);
-    else if (r.kind === 'gen' && !M.done.A) consider('gen', r, nd(r), 110, 'E - Reparar generador (minijuego sin pausa)', false);
-    else if (r.kind === 'samplep' && !M.sampleTaken) consider('sample', r, nd(r), 100, 'E - Extraer muestra (hace ruido: ellos la huelen)', false);
-    else if (r.kind === 'seccon' && !M.done.C) consider('sec', r, nd(r), 100, M.sys.cams ? 'E - Desactivar protocolo de cuarentena' : 'SIN SENAL: activa las CAMARAS en el panel de energia', false);
+    if (r.kind === 'decon' && !M.done.decon) consider('decon', r, nd(r), 70, 'Manten E para descontaminarte', true, M.deconProg / 4);
+    else if (r.kind === 'pwrpanel') consider('pwr', r, nd(r), 100, 'E - Panel de energia (elige que se enciende)', false);
+    else if (r.kind === 'camcon') consider('cam', r, nd(r), 100, M.sys.cams ? 'E - Ver camaras, abrir compuertas, soltar gas' : 'Camaras apagadas: enciendelas en el panel de energia', false);
+    else if (r.kind === 'gen' && !M.done.A) consider('gen', r, nd(r), 110, 'E - Reparar el generador', false);
+    else if (r.kind === 'samplep' && !M.sampleTaken) consider('sample', r, nd(r), 100, 'E - Sacar la muestra (los zombis cercanos se alertan)', false);
+    else if (r.kind === 'seccon' && !M.done.C) consider('sec', r, nd(r), 100, M.sys.cams ? 'E - Apagar la cuarentena' : 'Sin señal: enciende las CAMARAS en el panel de energia', false);
     else if (r.kind === 'cryo') {
-      if (player.sample && !M.cryo.stored) consider('cryo', r, nd(r), 100, M.sys.cryo ? 'E - Guardar la muestra en refrigeracion' : 'REFRIGERACION APAGADA: enciendela en el panel', false);
-      else if (M.cryo.stored && M.finalOpen && !player.sample) consider('cryo', r, nd(r), 100, 'E - Retirar la muestra (te delatara el olor)', false);
-    } else if (r.kind === 'elev') consider('elev', r, nd(r), 130, M.elevReady ? 'E - Subir al ascensor' : 'ASCENSOR: ' + labHint(), false);
+      if (player.sample && !M.cryo.stored) consider('cryo', r, nd(r), 100, M.sys.cryo ? 'E - Guardar la muestra en el congelador' : 'Congelador apagado: enciendelo en el panel de energia', false);
+      else if (M.cryo.stored && M.finalOpen && !player.sample) consider('cryo', r, nd(r), 100, 'E - Retirar la muestra (los zombis la huelen)', false);
+    } else if (r.kind === 'elev') consider('elev', r, nd(r), 130, M.elevReady ? 'E - Subir al ascensor y escapar' : 'Ascensor: ' + labHint().replace('AHORA: ', '').replace('SUGERENCIA: ', ''), false);
   }
   for (const d of G.doors) if (d.lock === 'gate') {
     const dd = Math.hypot(player.x - (d.px + d.pw / 2), player.y - (d.py + d.ph / 2));
-    consider('gate', d, dd, 140, d.final && !M.finalOpen ? 'COMPUERTA FINAL BLOQUEADA: completa los 3 modulos' : (M.sys.doors ? 'E - ' + (d.open ? 'Cerrar' : 'Abrir') + ' compuerta ' + d.name : 'COMPUERTAS SIN ENERGIA (actívalas en el panel)'), false);
+    consider('gate', d, dd, 140, d.final && !M.finalOpen ? 'Compuerta final cerrada: termina los trabajos A, B y C' : (M.sys.doors ? 'E - ' + (d.open ? 'Cerrar' : 'Abrir') + ' compuerta ' + d.name : 'Compuertas apagadas: enciendelas en el panel de energia'), false);
   }
   return best;
 }
@@ -980,7 +990,7 @@ function toggleGate(d, remote) {
 
 function takeSample() {
   const M = mission; M.sampleTaken = true; M.sampleSpoiled = false; player.sample = true;
-  toast('MUESTRA EXTRAIDA: LLEVALA A REFRIGERACION'); Sfx.stinger(); makeNoise(labRect('samplep').x, labRect('samplep').y, 700, '#7dff6a');
+  toast('MUESTRA LISTA: LLEVALA AL CONGELADOR DEL CENTRO'); Sfx.stinger(); makeNoise(labRect('samplep').x, labRect('samplep').y, 700, '#7dff6a');
   for (const z of zombies) if (z.st === 'idle' && z.type !== 'tank' && Math.hypot(z.x - player.x, z.y - player.y) < 900 && zoneAt(z.x, z.y) === 3) { z.st = 'alert'; z.aggro = true; z.tx = player.x; z.ty = player.y; z.alertT = 8; }
 }
 
@@ -989,11 +999,11 @@ function labPress() {
   if (ia.type === 'pwr') openPwr();
   else if (ia.type === 'cam') { if (!M.sys.cams) { Sfx.deny(); toast('CAMARAS SIN ENERGIA'); } else openCam(); }
   else if (ia.type === 'gate') toggleGate(ia.ref, false);
-  else if (ia.type === 'gen') { const c = centerOf(ia.ref); openTask({ kind:'wires', live:true, title:'GENERADOR PRINCIPAL', hint:'Conecta cada cable con su color. Puedes moverte, pero no te alejes.', pos:c, cb:() => { M.done.A = true; M.cap = 5; toast('GENERADOR REPARADO: CAPACIDAD 5'); Sfx.clear(); } }); }
-  else if (ia.type === 'sample') { const c = centerOf(ia.ref); openTask({ kind:'breakers', live:true, title:'CAPSULA DE CONTENCION', hint:'Sube todos los interruptores para liberar la muestra', pos:c, cb:() => takeSample() }); }
-  else if (ia.type === 'sec') { const c = centerOf(ia.ref); openTask({ kind:'seq', live:true, title:'PROTOCOLO DE CUARENTENA', hint:'Repite la secuencia para desbloquear el sistema', pos:c, cb:() => { M.done.C = true; toast('PROTOCOLO DESACTIVADO'); Sfx.clear(); } }); }
+  else if (ia.type === 'gen') { const c = centerOf(ia.ref); openTask({ kind:'wires', live:true, title:'REPARAR GENERADOR', hint:'Une cada cable con el del mismo color. El juego sigue: no te alejes mucho.', pos:c, cb:() => { M.done.A = true; M.cap = 5; toast('GENERADOR REPARADO. TRABAJO A LISTO: AHORA TIENES 5 DE ENERGIA'); Sfx.clear(); } }); }
+  else if (ia.type === 'sample') { const c = centerOf(ia.ref); openTask({ kind:'breakers', live:true, title:'ABRIR LA CAPSULA', hint:'Sube todos los interruptores para liberar la muestra', pos:c, cb:() => takeSample() }); }
+  else if (ia.type === 'sec') { const c = centerOf(ia.ref); openTask({ kind:'seq', live:true, title:'APAGAR LA CUARENTENA', hint:'Mira la secuencia de colores y repitela en el mismo orden', pos:c, cb:() => { M.done.C = true; toast('CUARENTENA APAGADA. TRABAJO C LISTO'); Sfx.clear(); } }); }
   else if (ia.type === 'cryo') {
-    if (player.sample && !M.cryo.stored) { if (!M.sys.cryo) { Sfx.deny(); toast('ENCIENDE LA REFRIGERACION EN EL PANEL'); } else { M.cryo.stored = true; M.cryo.spoil = 0; player.sample = false; M.done.B = true; toast('MUESTRA ESTABLE EN REFRIGERACION'); Sfx.clear(); } }
+    if (player.sample && !M.cryo.stored) { if (!M.sys.cryo) { Sfx.deny(); toast('ENCIENDE EL CONGELADOR EN EL PANEL DE ENERGIA'); } else { M.cryo.stored = true; M.cryo.spoil = 0; player.sample = false; M.done.B = true; toast('MUESTRA GUARDADA. TRABAJO B LISTO'); Sfx.clear(); } }
     else if (M.cryo.stored && M.finalOpen && !player.sample) { M.cryo.stored = false; player.sample = true; toast('LLEVAS LA MUESTRA: ESCAPA'); Sfx.stinger(); }
   } else if (ia.type === 'elev') { if (M.elevReady) labVictory(); else { Sfx.deny(); toast(labHint()); } }
 }
@@ -1006,9 +1016,9 @@ let pwrOpen = false, camOpen = false, camHash = '';
 function openPwr() { pwrOpen = true; el.pwr.style.display = 'block'; renderPwr(); Sfx.task(); }
 function renderPwr() {
   const M = mission, used = sysUsed();
-  el.pwr.innerHTML = '<h3><span>PANEL DE ENERGIA</span><button data-close="pwr">X</button></h3><div>Capacidad: <b>' + used + ' / ' + M.cap + '</b> ' + (M.done.A ? '' : '<span style="color:#ffd02b">(repara el generador para subir a 5)</span>') + '</div><div class="cbar"><i style="width:' + (used / 5 * 100) + '%"></i></div>'
+  el.pwr.innerHTML = '<h3><span>PANEL DE ENERGIA</span><button data-close="pwr">X</button></h3><div>Capacidad: <b>' + used + ' / ' + M.cap + '</b> ' + (M.done.A ? '' : '<span style="color:#ffd02b">(repara el generador y sube a 5)</span>') + '</div><div class="cbar"><i style="width:' + (used / 5 * 100) + '%"></i></div>'
     + SYSD.map(d => { const on = M.sys[d.k]; return '<div class="sysr"><div><b>' + d.n + '</b> <span style="opacity:.7">(' + d.c + ')</span><small>' + d.d + '</small></div><button data-sys="' + d.k + '" class="' + (on ? 'on' : 'off') + '">' + (on ? 'ON' : 'OFF') + '</button></div>'; }).join('')
-    + '<small style="opacity:.6;display:block;margin-top:6px">El juego sigue corriendo mientras decides.</small>';
+    + '<small style="opacity:.7;display:block;margin-top:6px">Enciende solo lo que necesitas ahora. El juego sigue corriendo mientras decides.</small>';
 }
 function toggleSys(k) {
   const M = mission, d = SYSD.find(q => q.k === k);
@@ -1042,7 +1052,7 @@ function renderCam() {
     camHash = hash; const b = el.camov.querySelector('#camb');
     b.innerHTML = '<div class="gbt">' + G.doors.filter(d => d.lock === 'gate').map((d, i) => '<button data-gate="' + G.doors.indexOf(d) + '" class="' + (d.open ? 'on' : 'off') + '"' + (M.sys.doors ? '' : ' disabled') + '>' + d.name + ': ' + (d.open ? 'ABIERTA' : 'CERRADA') + '</button>').join('') + '</div>'
       + '<div class="gbt">' + Object.keys(G.gas).map(z => { const g2 = G.gas[z]; return '<button data-gas="' + z + '" class="warn"' + (!M.sys.vent || g2.st !== 'off' || g2.cd > 0 ? ' disabled' : '') + '>GAS ' + ZINFO[z].name + (g2.st !== 'off' ? ' (' + g2.st + ')' : g2.cd > 0 ? ' ' + Math.ceil(g2.cd) + 's' : '') + '</button>'; }).join('') + '</div>'
-      + '<small style="opacity:.7;display:block;margin-top:5px">Amarillo: patrullas con su ruta. Blanco: zombis tranquilos. Rojo: persecucion. El gas tarda 5 s en soltarse: salvo tu del sector.</small>';
+      + '<small style="opacity:.75;display:block;margin-top:5px">Puntos: blanco = zombi tranquilo, naranja = alerta, rojo = te persigue, amarillo = guardia (con su ruta). El gas tarda 5 segundos en salir: avisa y sal de esa sala antes.</small>';
   }
 }
 document.addEventListener('click', e => {
@@ -1066,13 +1076,13 @@ function labUpdate(dt) {
     M.curZone = zn;
     if (!M.zoneSeen[zn]) {
       M.zoneSeen[zn] = true;
-      toast(ZINFO[zn].name + ({ 1:'  |  PANEL DE ENERGIA Y CAMARAS AL NORTE', 2:'  |  REPARA EL GENERADOR', 3:'  |  LA MUESTRA SE HUELE', 4:'  |  CUIDADO CON LA GUARDIA', 5:'  |  EL EXPERIMENTO' })[zn]);
+      toast(ZINFO[zn].name + ({ 1:'  |  AQUI ESTAN EL PANEL DE ENERGIA Y LAS CAMARAS', 2:'  |  TRABAJO A: REPARA EL GENERADOR', 3:'  |  TRABAJO B: SACA LA MUESTRA', 4:'  |  TRABAJO C: APAGA LA CUARENTENA. OJO CON LOS GUARDIAS', 5:'  |  AQUI ESTA EL JEFE' })[zn]);
       if (zn === 5 && !M.bossSpawned) { M.bossSpawned = true; spawnZombie('boss', { x:45.5 * TS, y:43.5 * TS }, true); M.boss = zombies[zombies.length - 1]; for (let i = 0; i < 2; i++) spawnZombie('runner', { x:(41 + i * 8) * TS, y:44 * TS }, true); }
     }
   }
   for (let z = 1; z <= 5; z++) G.lit[z] = M.sys.lights;
   M.finalOpen = M.done.A && M.done.B && M.done.C;
-  if (M.finalOpen && !M.finalToast) { M.finalToast = true; toast('COMPUERTA FINAL DESBLOQUEADA'); Sfx.clear(); }
+  if (M.finalOpen && !M.finalToast) { M.finalToast = true; toast('LOS 3 TRABAJOS LISTOS: SE ABRIO LA COMPUERTA FINAL (ABAJO)'); Sfx.clear(); }
   M.elevReady = !!(M.finalOpen && M.bossSpawned && M.boss && M.boss.hp <= 0 && player.sample && M.sys.elev);
   for (const d of G.doors) { d.t += ((d.open ? 1 : 0) - d.t) * Math.min(1, 8 * dt); d.locked = !!(d.final && !M.finalOpen); d.near = Math.hypot(player.x - (d.px + d.pw / 2), player.y - (d.py + d.ph / 2)) < 220; }
   const ia = labNearest(); player.ia = ia;
@@ -1276,13 +1286,13 @@ const LDOORS = [{ x:27, y:40, w:2, h:1, lock:'decon', name:'ESCLUSA' }, { x:17, 
   { x:38, y:25, w:1, h:2, lock:'gate', name:'ESTE' }, { x:33, y:34, w:2, h:1, lock:'gate', name:'FINAL', final:true }];
 const LGAS = { 2:[3, 16, 13, 18], 3:[17, 3, 22, 12], 4:[40, 16, 13, 18] };
 const SYSD = [
-  { k:'doors',   n:'COMPUERTAS',    c:1, d:'Sin energia las compuertas quedan trabadas como estan' },
-  { k:'lights',  n:'ILUMINACION',   c:1, d:'Sin luz te ven menos, pero tu ves menos tambien' },
-  { k:'turrets', n:'TORRETAS',      c:1, d:'Disparan a zombis en el hub' },
-  { k:'vent',    n:'VENTILACION',   c:1, d:'Necesaria para inundar un sector con gas' },
-  { k:'cams',    n:'CAMARAS',       c:1, d:'Vista de patrullas, compuertas y gas a distancia' },
-  { k:'cryo',    n:'REFRIGERACION', c:1, d:'Sin frio la muestra guardada se echa a perder' },
-  { k:'elev',    n:'ASCENSOR',      c:2, d:'Necesario para escapar' }];
+  { k:'doors',   n:'COMPUERTAS',    c:1, d:'Para abrir y cerrar las compuertas. Apagadas, no se pueden mover.' },
+  { k:'lights',  n:'LUCES',         c:1, d:'Con luz ves mejor. Apagadas, los zombis te ven menos... y tu tambien.' },
+  { k:'turrets', n:'TORRETAS',      c:1, d:'Dos armas automaticas en el centro que disparan a los zombis.' },
+  { k:'vent',    n:'VENTILACION',   c:1, d:'Hace falta para soltar gas toxico en una sala (daña a zombis).' },
+  { k:'cams',    n:'CAMARAS',       c:1, d:'Para ver a los zombis desde el centro. Tambien las necesitas para el trabajo C.' },
+  { k:'cryo',    n:'CONGELADOR',    c:1, d:'Mantiene fria la muestra. Si se apaga 20 segundos, se echa a perder.' },
+  { k:'elev',    n:'ASCENSOR',      c:2, d:'Solo para el final: enciendelo cuando vayas a escapar.' }];
 
 function buildLab() {
   GC = 56; GR = 52; ZINFO = ZINFO_LAB; METAL = null; METALZ = [];
@@ -1305,7 +1315,8 @@ function buildLab() {
   for (const z in LGAS) { const q = LGAS[z]; G.gasR[z] = { x:q[0] * TS, y:q[1] * TS, w:q[2] * TS, h:q[3] * TS }; }
   const out = [];
   const O = (kind, x, y, w, h, extra) => { const r = { kind, x:x * TS, y:y * TS, w:w * TS, h:h * TS, seed:Math.random(), ...extra }; out.push(r); return r; };
-  const P = (spr, x, y, w, h, extra) => O('prop', x, y, w, h, { spr, sc:spr === 'p_barrier' || spr === 'p_barricade' ? 1.12 : 1.25, flip:Math.random() < 0.5, dir:1, ...extra });
+  const LM = { p_barrels:['l_drum',1.2], p_crates:['l_case',1.1], p_barrier:['l_barrier',1.1], p_sandbags:['l_boxes',1.0], p_dumpster:['l_locker',1.0] };
+  const P = (spr, x, y, w, h, extra) => { const m = LM[spr] || [spr, 1.25]; return O('prop', x, y, w, h, { spr:m[0], sc:m[1], flip:Math.random() < 0.5, dir:1, ...extra }); };
   // ---- HUB ----
   O('pwrpanel', 19.5, 20.1, 2.6, 0.9, { walk:true }); O('cryo', 22.8, 20.1, 2, 1); O('camcon', 31.4, 20.1, 3, 0.9);
   O('turret', 22, 29.5, 1, 1, { ang:-1.2, cd:0, fl:0 }); O('turret', 33.5, 29.5, 1, 1, { ang:-1.9, cd:0, fl:0 });
@@ -3097,12 +3108,12 @@ function drawDecal(img, x, y, w, rot, alpha) {
 // sprite que ocupa un rectangulo de colision; los alargados giran 90 grados en calles verticales
 function drawFit(r) {
   const img = IMG[r.hv ? r.spr + '#' + r.hv : r.spr] || IMG[r.spr]; if (!img) return false;
-  const asp = img.width / img.height, horiz = r.w >= r.h, L = Math.max(r.w, r.h) * r.sc, cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+  const asp = img.width / img.height, horiz = r.w >= r.h, L = Math.max(r.w, r.h) * r.sc, cx = r.x + r.w / 2, cy = r.y + r.h / 2, lab = r.spr.charCodeAt(0) === 108 && r.spr[1] === '_', dW = lab && asp < 1 ? L * asp : L;
   ctx.fillStyle = 'rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(cx + 5, cy + 9, r.w * 0.56, r.h * 0.56, 0, 0, 7); ctx.fill();
   ctx.save(); ctx.translate(cx, cy);
-  if (!horiz && asp > 1.3) ctx.rotate((r.dir || 1) * Math.PI / 2);
+  if (!lab && !horiz && asp > 1.3) ctx.rotate((r.dir || 1) * Math.PI / 2);
   if (r.flip) ctx.scale(-1, 1);
-  ctx.drawImage(img, -L / 2, -L / asp / 2, L, L / asp);
+  ctx.drawImage(img, -dW / 2, -dW / asp / 2 - (lab ? 8 : 0), dW, dW / asp);
   ctx.restore();
   if (r.explosive) { const pu = 0.5 + Math.sin(performance.now() / 260 + r.seed * 9) * 0.5; ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, 78, '#ff3a2a', 0.22 + pu * 0.2); ctx.restore(); ctx.fillStyle = '#ffd24a'; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeText('!', cx, cy - r.h * 0.62); ctx.fillText('!', cx, cy - r.h * 0.62); }
   if (r.alarmOn) { const on = Math.sin(performance.now() / 90) > 0; ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, 120, on ? '#ff2a2a' : '#2a6aff', 0.55); ctx.restore(); }
@@ -3362,8 +3373,31 @@ function drawFacilityDoor(d) {
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(d.px + d.pw / 2, d.py + d.ph / 2, d.pw * 0.9 + 40, col, on ? 0.42 : 0.12); ctx.restore();
 }
 
+const LABSPR = { tube:'l_tube', planter:'l_planter', labtable:'l_labtable', cryo:'l_cryo', turret:'l_turret', console:'l_console', terminal:'l_console' };
+function drawLabSprite(r, tNow) {
+  const k = r.kind, img = IMG[LABSPR[k]], cx = r.x + r.w / 2, cy = r.y + r.h / 2, M = mission, asp = img.width / img.height;
+  ctx.fillStyle = 'rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(cx + 4, r.y + r.h - 2, r.w * 0.5, Math.min(r.h, 60) * 0.3, 0, 0, 7); ctx.fill();
+  if (k === 'turret') {
+    const on = M.sys.turrets; ctx.save(); ctx.translate(cx, cy); ctx.rotate(r.ang || 0); const L = r.w * 1.9; ctx.drawImage(img, -L * 0.42, -L / asp * 0.52, L, L / asp); ctx.restore();
+    if (r.fl > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx + Math.cos(r.ang) * 50, cy + Math.sin(r.ang) * 50, 60, '#ff3fb4', 0.8); ctx.restore(); }
+    ctx.fillStyle = on ? '#7dff6a' : '#ff3a4a'; ctx.beginPath(); ctx.arc(cx, cy + 34, 5, 0, 7); ctx.fill();
+    if (on) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(255,63,180,.35)'; ctx.lineWidth = 2; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.arc(cx, cy, 380, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+    return;
+  }
+  const tall = k === 'tube' || k === 'cryo', W = r.w * (tall ? 1.05 : 1.12), H = r.h * (tall ? 1.18 : 1.9);
+  const s = Math.min(W / img.width, H / img.height * (tall ? 1 : 1.35)), dw = img.width * s, dh = img.height * s;
+  ctx.drawImage(img, cx - dw / 2, r.y + r.h + 8 - dh, dw, dh);
+  const ac = ZINFO[zoneAt(cx, cy)] ? ZINFO[zoneAt(cx, cy)].acc : '#2be8f0';
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  if (k === 'cryo') { const on = M.sys.cryo; glow(cx, cy - 10, r.w * 0.9, on ? '#2be8f0' : '#ff3a4a', 0.22); if (M.cryo.stored) glow(cx, cy - 10, 44, '#7dff6a', 0.55 + Math.sin(tNow * 4) * 0.2); }
+  else glow(cx, cy - 6, Math.max(r.w, r.h) * 0.8, k === 'planter' ? '#7dff6a' : k === 'tube' ? '#9dff4a' : ac, 0.16 + Math.sin(tNow * 2 + (r.seed || 0) * 7) * 0.05);
+  ctx.restore();
+  if (k === 'cryo') { const on = M.sys.cryo; ctx.fillStyle = 'rgba(8,10,20,.85)'; rrect(cx - 26, r.y + r.h + 10, 52, 15, 4); ctx.fill(); ctx.fillStyle = on ? '#2be8f0' : '#ff3a4a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(M.cryo.stored ? (on ? 'MUESTRA OK' : 'SIN FRIO') : (on ? 'ENCENDIDO' : 'APAGADO'), cx, r.y + r.h + 21); }
+}
+
 function drawFacilityObj(r, tNow) {
   const k = r.kind, cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+  if (mission && mission.lab && LABSPR[k] && IMG[LABSPR[k]]) { drawLabSprite(r, tNow); return; }
   const sh = () => { ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(r.x + 6, r.y + 9, r.w, r.h); };
   if (k === 'tank') {
     const horiz = r.w >= r.h, rad = Math.min(r.w, r.h) / 2; sh();
