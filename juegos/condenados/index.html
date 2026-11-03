@@ -840,8 +840,8 @@ function setupFacilityMission(retry) {
   const T0 = v => v * TS, Hc = (x, y) => ({ x:T0(x), y:T0(y) });
   const objs = [
     { t:'gen', text:'Activa el generador del muelle (mantener E)', pos:Hc(7.4, 58.3), sec:8 },
-    { t:'collect', text:'Recupera la tarjeta VERDE del laboratorio', n:1, items:[{ x:T0(2.6), y:T0(44.8), got:false, card:'green' }] },
-    { t:'collect', text:'Consigue la tarjeta AZUL del ala este', n:1, items:[{ x:T0(36.2), y:T0(28.2), got:false, card:'blue' }] },
+    { t:'collect', text:'Recupera la tarjeta VERDE: laboratorio al OESTE de la Sala de Maquinas', n:1, items:[{ x:T0(2.6), y:T0(44.8), got:false, card:'green' }] },
+    { t:'collect', text:'Consigue la tarjeta AZUL: ala ESTE del Centro de Control (cuidado con los barriles)', n:1, items:[{ x:T0(36.2), y:T0(28.2), got:false, card:'blue' }] },
     { t:'hold', text:'Descarga los planos en el terminal (permanece en la zona)', pos:Hc(19.6, 15.8), sec:22, onDone:'power2' },
     { t:'reach', text:'Entra al nucleo del reactor', pos:Hc(20, 9), boss:true, bossPos:Hc(19.5, 4.4) },
     { t:'kill', text:'Elimina a El Alcaide' },
@@ -2782,7 +2782,31 @@ function drawFacilityMarkers(tNow) {
     if (pr > 0) { ctx.strokeStyle = '#5fe08a'; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(o.pos.x, o.pos.y, R, -Math.PI / 2, -Math.PI / 2 + pr * Math.PI * 2); ctx.stroke(); }
   }
   ctx.restore();
-  for (const it of o.items) if (!it.got && it.card) { ctx.fillStyle = LOCKCOL[it.card]; rrect(it.x - 15, it.y - 10, 30, 20, 3); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#fff'; ctx.fillRect(it.x - 11, it.y - 3, 22, 3); }
+}
+
+function drawCardMarker(it, t) {
+  const c = LOCKCOL[it.card], bob = Math.sin(t * 3 + it.x) * 4, nm = it.card === 'green' ? 'TARJETA VERDE' : 'TARJETA AZUL';
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  glow(it.x, it.y, 150, c, 0.5 + Math.sin(t * 4) * 0.12);
+  ctx.strokeStyle = c; ctx.lineWidth = 3; for (let k = 0; k < 2; k++) { const rr = 30 + ((t * 40 + k * 40) % 80); ctx.globalAlpha = 1 - (rr - 30) / 80; ctx.beginPath(); ctx.arc(it.x, it.y, rr, 0, 7); ctx.stroke(); }
+  ctx.restore(); ctx.globalAlpha = 1;
+  ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.ellipse(it.x + 3, it.y + 18, 24, 8, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(it.x, it.y - 6 + bob); ctx.rotate(Math.sin(t * 2) * 0.12);
+  ctx.fillStyle = c; rrect(-24, -15, 48, 30, 5); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillRect(-20, -4, 40, 6); ctx.fillStyle = '#e8d27a'; rrect(-18, -12, 12, 9, 2); ctx.fill();
+  ctx.restore();
+  ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText(nm, it.x, it.y - 42); ctx.fillStyle = c; ctx.fillText(nm, it.x, it.y - 42);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 15px sans-serif'; ctx.strokeText('\u25BC', it.x, it.y - 26 + Math.abs(Math.sin(t * 4)) * 5); ctx.fillText('\u25BC', it.x, it.y - 26 + Math.abs(Math.sin(t * 4)) * 5);
+}
+
+// la tarjeta se dibuja por encima de la oscuridad para que siempre se vea
+function drawTopMarkers() {
+  const o = mission && mission.objs[mission.cur];
+  if (!o || o.t !== 'collect') return;
+  ctx.save(); ctx.scale(camZoom, camZoom); ctx.translate(-cam.x, -cam.y);
+  const t = performance.now() / 1000;
+  for (const it of o.items) if (!it.got && it.card && vis(it.x - 100, it.y - 100, 200, 200)) drawCardMarker(it, t);
+  ctx.restore();
 }
 
 function drawMissionWorld(tNow) {
@@ -2976,7 +3000,7 @@ function draw() {
 
   ctx.restore();
 
-  if (G && mission && mission.facility) drawDarkness();
+  if (G && mission && mission.facility) { drawDarkness(); drawTopMarkers(); }
   // oscuridad con linterna
   const g = ctx.createRadialGradient(player.x - cam.x, player.y - cam.y, 120, player.x - cam.x, player.y - cam.y, Math.max(W, H) * 0.7);
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(10,6,30,.4)');
