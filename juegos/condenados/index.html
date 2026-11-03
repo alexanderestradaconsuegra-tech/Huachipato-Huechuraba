@@ -3,7 +3,9 @@
 <head>
 <script>document.write('<base href="'+location.pathname.replace(/[^/]*\.html$/,'').replace(/\/?$/,'/')+'">');</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Los Condenados: shooter de zombis con sigilo, estrategia y plantas mutantes. Juega gratis en tu navegador.">
+<meta name="theme-color" content="#07040f">
 <meta name="robots" content="noindex">
 <title>Los Condenados</title>
 <style>
@@ -182,10 +184,50 @@
   #hero .hscroll { bottom:12px; }
   @keyframes hkeyz { from { transform:scale(1) translateX(0); } to { transform:scale(1.07) translateX(-1%); } }
   @media (max-width:900px) { #hero .htitle br { display:block; } #hero .htitle { font-size:clamp(34px,11.2vw,80px); } #hero .hhero { min-height:max(100vh,720px); } #hero .hkey { background-position:42% 14%; } #hero .hhero::after { background:linear-gradient(180deg, rgba(7,4,15,.5) 0%, rgba(7,4,15,0) 20%, rgba(7,4,15,.25) 36%, rgba(7,4,15,.9) 62%, #07040f 100%); } }
+  /* ===== SISTEMA DE DISEÑO (tokens y componentes compartidos por pagina y juego) ===== */
+  :root { --c-pink:#ff3fb4; --c-cyan:#2be8f0; --c-lime:#7dff6a; --c-yellow:#ffe14a; --c-red:#ff3a4a; --c-night:#07040f; --c-panel:rgba(26,8,60,.9); --c-line:rgba(255,63,180,.55); --c-text:#eef0ff; --c-muted:#b8bee8;
+    --r1:8px; --r2:12px; --r3:16px; --r4:22px; --sp1:4px; --sp2:8px; --sp3:12px; --sp4:16px; --sp5:24px;
+    --shadow-panel:0 0 0 1px rgba(43,232,240,.25), 0 8px 28px rgba(80,0,120,.45); --glow-pink:0 8px 28px rgba(255,45,143,.5);
+    --dur-fast:150ms; --dur:250ms; --ease:cubic-bezier(.2,.8,.2,1);
+    --z-hud:1; --z-ovl:4; --z-task:5; --z-msg:10; --z-hero:30; }
+  :where(button, [role=button], a) { touch-action:manipulation; }
+  #hero :focus-visible, #msg :focus-visible, .ovl :focus-visible, #taskBox :focus-visible { outline:3px solid var(--c-cyan); outline-offset:3px; border-radius:var(--r1); }
+  /* paneles del juego: un solo lenguaje visual */
+  .hud, #obj, #shop, .ovl, #seedhud, #taskBox, #prompt { background:var(--c-panel); border:1px solid var(--c-line); border-radius:var(--r3); box-shadow:var(--shadow-panel); color:var(--c-text); }
+  #seedhud { border-color:rgba(125,255,106,.7); font-size:13px; line-height:1.5; } .ovl { padding:var(--sp3) var(--sp4); font-size:13px; line-height:1.45; z-index:var(--z-ovl); }
+  .ovl h3 { font-size:13px; letter-spacing:1.2px; text-transform:uppercase; }
+  .ovl button, #taskBox button { min-height:34px; font-size:12.5px; font-weight:700; border-radius:var(--r2); padding:6px 12px; transition:filter var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+  .ovl button:active, #taskBox button:active { transform:scale(.96); } .ovl button[data-close] { min-width:34px; }
+  .ovl button.on { background:#17a653; } .sysr small, .ovl small { font-size:12px !important; opacity:.8 !important; line-height:1.4; }
+  #toast { transition:opacity var(--dur) var(--ease); }
+  /* pantalla de resultado: mismo estilo que la pagina principal */
+  #msg { background:radial-gradient(ellipse at 50% 15%, rgba(138,31,255,.35), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(255,63,180,.22), transparent 55%), rgba(7,4,15,.93); z-index:var(--z-msg); gap:0; }
+  #msg h1 { font:900 clamp(34px,6vw,64px)/1 'Arial Black',Impact,system-ui,sans-serif; letter-spacing:1px; text-transform:uppercase; background:linear-gradient(180deg,#fff 5%,#ffb3e6 45%,var(--c-pink)); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 3px 0 #2a0a4a) drop-shadow(0 0 22px rgba(255,63,180,.6)); margin-bottom:var(--sp3); }
+  #msg p { font-size:16px; line-height:1.55; max-width:560px; color:var(--c-muted); } #msg p:not(:first-of-type) { display:none; }
+  #msg button { min-height:48px; margin:var(--sp3) var(--sp2) 0; padding:12px 26px; font:800 14px/1 'Arial Black',system-ui,sans-serif; letter-spacing:1.6px; text-transform:uppercase; border:0; border-radius:var(--r2); color:#fff; cursor:pointer; transition:transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease); }
+  #msg button:hover { filter:brightness(1.12); transform:translateY(-2px); } #msg button:active { transform:scale(.97); }
+  #msg #start { background:linear-gradient(135deg,#ff2d8f,#ff8a3d); box-shadow:var(--glow-pink); font-size:16px; }
+  #msg #startL2 { background:linear-gradient(135deg,#12b8a0,#3ad66a); box-shadow:0 8px 24px rgba(43,232,160,.4); }
+  #msg #startS, #msg #toHero { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.25); box-shadow:none; } #msg #startF, #msg #startD, #msg #startC { display:none; }
+  /* pagina principal: accesibilidad y objetivos tactiles */
+  #hero { scroll-padding-top:76px; } #hero .hhero { min-height:max(100vh,640px); min-height:max(100dvh,640px); }
+  #hero .hbg { filter:saturate(1.2) brightness(.5); will-change:transform; }
+  .hlink { font:inherit; font-weight:600; font-size:14px; color:#cfd4ff; background:none; border:0; min-height:44px; padding:0 4px; cursor:pointer; opacity:.9; transition:color var(--dur-fast), opacity var(--dur-fast); } .hlink:hover { color:var(--c-cyan); opacity:1; }
+  .hskip { position:absolute; left:12px; top:-60px; z-index:9; background:#fff; color:#000; font-weight:800; padding:10px 16px; border:0; border-radius:var(--r2); cursor:pointer; } .hskip:focus { top:10px; }
+  .hbtn.sm { min-height:44px; } .hbtn { min-height:48px; transition:transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease); }
+  .hbtn.sm { padding:12px 20px; }
+  .hmarq .dot { display:inline-block; width:12px; height:12px; background:var(--c-yellow); transform:rotate(45deg); align-self:center; box-shadow:0 0 10px var(--c-yellow); }
+  .hopts { display:flex; flex-wrap:wrap; gap:var(--sp2); margin:0 0 var(--sp4); } .hopts .hbtn { font-size:12px; letter-spacing:1px; }
+  .hwarn { display:none; margin:0 0 var(--sp4); padding:var(--sp3) var(--sp4); border-radius:var(--r2); background:rgba(255,225,74,.12); border:1px solid var(--c-yellow); color:var(--c-yellow); font-size:14px; line-height:1.45; max-width:520px; }
+  @media (pointer:coarse) { .hwarn { display:block; } }
+  #hero .hstats li { font-size:13px; } #hero .hen .e small, #hero .hthumb small { font-size:13px; } #hero .hplants .pl small { font-size:12.5px; } #hero .hen .e img { height:104px; width:auto; max-width:100%; } #hero .hwpn img { height:62px; max-height:none; }
+  #hero .hcard .body p { font-size:14.5px; }
+  @media (prefers-reduced-motion:reduce) { #toast, .ovl button, #msg button, .hbtn { transition:none !important; } #hero .hkey, #hero .hbg { animation:none !important; } }
+  .mbtns { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--sp3); margin-top:var(--sp4); } #msg .mbtns button { margin:0; } #msg #start { order:1; } #msg #startL2 { order:2; } #msg #startS { order:3; } #msg #toHero { order:4; }
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
+<canvas id="c" role="img" aria-label="Area de juego"></canvas>
 <div id="ui">
   <div class="hud">
     <div>VIDA<div class="bar"><i id="hp"></i></div></div>
@@ -213,29 +255,32 @@
   <div id="camov" class="ovl"></div>
   <div id="expp" class="ovl"></div>
   <div id="seedhud"></div>
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
   <div id="shop"></div>
-  <div id="hero">
+  <div id="hero" role="main" aria-label="Los Condenados, menu principal">
+    <button class="hskip" data-go="h-ver">Saltar al contenido</button>
     <div class="hbg"></div><div class="hov"></div>
     <div class="hdots"></div>
     <nav class="hnav">
       <div class="hlogo">LOS CONDENADOS</div>
-      <div class="hlinks"><a data-go="h-ver">El juego</a><a data-go="h-niv">Niveles</a><a data-go="h-ene">Enemigos</a><a data-go="h-pla">Plantas</a><a data-go="h-ctl">Controles</a></div>
+      <div class="hlinks"><button class="hlink" data-go="h-ver">El juego</button><button class="hlink" data-go="h-niv">Niveles</button><button class="hlink" data-go="h-ene">Enemigos</button><button class="hlink" data-go="h-pla">Plantas</button><button class="hlink" data-go="h-ctl">Controles</button></div>
       <button class="hbtn main sm" data-play="start">Jugar</button>
     </nav>
     <section class="hhero">
-      <div class="hkey"></div>
+      <div class="hkey" role="img" aria-label="Ilustracion: una heroina y un soldado disparan a una horda de zombis frente a un laboratorio neon"></div>
       <div class="hcopy">
         <span class="hbadge">NUEVO · NIVEL 2: BIOLABORATORIO ARGOS</span>
         <h1 class="htitle"><span>SHOOTER DE ZOMBIS</span>LOS <br>CONDENADOS</h1>
         <p class="htag">Los ejecutados volvieron de la tumba. Tu eres el ultimo justiciero.</p>
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
         <div class="hcta"><button class="hbtn main" data-play="start">Jugar ahora</button><button class="hbtn alt" data-play="startL2">Nivel 2: Biolab</button></div>
+        <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
+        <p class="hwarn" role="note">Este juego se controla con teclado y mouse. Para jugarlo abrelo en una computadora.</p>
         <ul class="hstats"><li><b>2</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
     </section>
-    <div class="hmarq"><div><span>ZOMBIS</span><span>★</span><span>SIGILO</span><span>★</span><span>ESTRATEGIA</span><span>★</span><span>PLANTAS MUTANTES</span><span>★</span><span>JEFES</span><span>★</span><span>ZOMBIS</span><span>★</span><span>SIGILO</span><span>★</span><span>ESTRATEGIA</span><span>★</span><span>PLANTAS MUTANTES</span><span>★</span><span>JEFES</span><span>★</span></div></div>
+    <div class="hmarq" aria-hidden="true"><div><span>ZOMBIS</span><i class="dot"></i><span>SIGILO</span><i class="dot"></i><span>ESTRATEGIA</span><i class="dot"></i><span>PLANTAS MUTANTES</span><i class="dot"></i><span>JEFES</span><i class="dot"></i><span>ZOMBIS</span><i class="dot"></i><span>SIGILO</span><i class="dot"></i><span>ESTRATEGIA</span><i class="dot"></i><span>PLANTAS MUTANTES</span><i class="dot"></i><span>JEFES</span><i class="dot"></i></div></div>
     <section class="hsec hrev" id="h-ver">
       <h2>No es solo disparar</h2><p class="hlead">Aqui cada decision cuenta. Los zombis no te persiguen todos a la vez: piensan, escuchan y se reparten por el mapa.</p>
       <div class="hgrid">
@@ -248,18 +293,18 @@
     <section class="hsec hrev">
       <h2>Mira el juego</h2><p class="hlead">Capturas reales de la partida.</p>
       <div class="hview">
-        <div class="hmon"><img class="on" src="img/promo/hub.webp" alt=""><img src="img/promo/green.webp" alt=""><img src="img/promo/boss.webp" alt=""></div>
+        <div class="hmon"><img class="on" src="img/promo/hub.webp" alt="Hub central del Biolab con torretas y plantas defendiendo" loading="lazy" decoding="async"><img src="img/promo/green.webp" alt="Invernadero del Biolab con plantas mutantes y zombis" loading="lazy" decoding="async"><img src="img/promo/boss.webp" alt="Sala del nucleo ARGOS con el jefe El Experimento" loading="lazy" decoding="async"></div>
         <div class="hthumbs">
-          <button class="hthumb on" data-shot="0"><img src="img/promo/hub.webp" alt=""><span><b>Hub central</b><small>Torretas, plantas y laboratorio</small></span></button>
-          <button class="hthumb" data-shot="1"><img src="img/promo/green.webp" alt=""><span><b>Invernadero</b><small>La muestra se huele</small></span></button>
-          <button class="hthumb" data-shot="2"><img src="img/promo/boss.webp" alt=""><span><b>Nucleo ARGOS</b><small>Donde espera El Experimento</small></span></button>
+          <button class="hthumb on" data-shot="0"><img loading="lazy" decoding="async" src="img/promo/hub.webp" alt=""><span><b>Hub central</b><small>Torretas, plantas y laboratorio</small></span></button>
+          <button class="hthumb" data-shot="1"><img loading="lazy" decoding="async" src="img/promo/green.webp" alt=""><span><b>Invernadero</b><small>La muestra se huele</small></span></button>
+          <button class="hthumb" data-shot="2"><img loading="lazy" decoding="async" src="img/promo/boss.webp" alt=""><span><b>Nucleo ARGOS</b><small>Donde espera El Experimento</small></span></button>
         </div>
       </div>
     </section>
     <section class="hsec hrev" id="h-niv">
       <h2>Niveles</h2><p class="hlead">Cada nivel es mas complejo, no solo por los zombis: por la estrategia.</p>
       <div class="hgrid">
-        <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
+        <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img loading="lazy" decoding="async" src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
         <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(18,184,160,.3),rgba(125,255,106,.2)),url(img/promo/hub.webp)"><span class="tag">NUEVO</span></div><div class="body"><h3>Nivel 2 · Biolab ARGOS</h3><p>Hub con tres modulos, energia limitada, gas, torretas, guardias y plantas mutantes. Escapa con la muestra.</p><p style="margin-top:14px"><button class="hbtn alt sm" data-play="startL2">Jugar nivel 2</button></p></div></div>
         <div class="hcard lock"><div class="pic" style="background-image:url(img/promo/hero.webp)"><span class="tag">PROXIMAMENTE</span></div><div class="body"><h3>Nivel 3 · ???</h3><p>Algo crece bajo la ciudad. Tus plantas seran la unica defensa. Estrategia total.</p><p style="margin-top:14px"><button class="hbtn ghost sm" disabled>En desarrollo</button></p></div></div>
       </div>
@@ -267,28 +312,28 @@
     <section class="hsec hrev" id="h-ene">
       <h2>Conoce al enemigo</h2><p class="hlead">Cada tipo se comporta distinto. Aprende sus puntos debiles.</p>
       <div class="hen">
-        <div class="e"><img src="img/cartoon/t_walker.webp" alt=""><b>Caminante</b><small>Lento y numeroso. Ataca en grupo.</small></div>
-        <div class="e"><img src="img/cartoon/t_runner.webp" alt=""><b>Corredor</b><small>Rapido y fragil. Te alcanza si fallas.</small></div>
-        <div class="e"><img src="img/cartoon/t_tank.webp" alt=""><b>Tanque</b><small>Aguanta todo. Usa trampas y explosivos.</small></div>
-        <div class="e"><img src="img/cartoon/t_spitter.webp" alt=""><b>Escupidor</b><small>Ataca desde lejos con acido.</small></div>
-        <div class="e boss"><img src="img/cartoon/t_boss.webp" alt=""><b>Jefe</b><small>El Alcaide y El Experimento.</small></div>
+        <div class="e"><img loading="lazy" decoding="async" src="img/cartoon/t_walker.webp" alt=""><b>Caminante</b><small>Lento y numeroso. Ataca en grupo.</small></div>
+        <div class="e"><img loading="lazy" decoding="async" src="img/cartoon/t_runner.webp" alt=""><b>Corredor</b><small>Rapido y fragil. Te alcanza si fallas.</small></div>
+        <div class="e"><img loading="lazy" decoding="async" src="img/cartoon/t_tank.webp" alt=""><b>Tanque</b><small>Aguanta todo. Usa trampas y explosivos.</small></div>
+        <div class="e"><img loading="lazy" decoding="async" src="img/cartoon/t_spitter.webp" alt=""><b>Escupidor</b><small>Ataca desde lejos con acido.</small></div>
+        <div class="e boss"><img loading="lazy" decoding="async" src="img/cartoon/t_boss.webp" alt=""><b>Jefe</b><small>El Alcaide y El Experimento.</small></div>
       </div>
     </section>
     <section class="hsec hrev" id="h-pla">
       <div class="hplants">
         <div><h2>Cultiva tu arsenal</h2><p class="hlead">Recoge esporas, savia y nucleos por el mapa. Mezclalos en la mesa de experimento y crea semillas que pasan contigo a los siguientes niveles.</p>
-          <div class="ings"><img src="img/lab/i_spore.webp" alt=""><span>+</span><img src="img/lab/i_sap.webp" alt=""><span>+</span><img src="img/lab/i_core.webp" alt=""><span>=</span><span style="font-size:15px;color:#7dff6a">PLANTAS</span></div>
+          <div class="ings"><img loading="lazy" decoding="async" src="img/lab/i_spore.webp" alt=""><span>+</span><img loading="lazy" decoding="async" src="img/lab/i_sap.webp" alt=""><span>+</span><img loading="lazy" decoding="async" src="img/lab/i_core.webp" alt=""><span>=</span><span style="font-size:15px;color:#7dff6a">PLANTAS</span></div>
         </div>
         <div class="row">
-          <div class="pl"><img src="img/lab/pl_shoot.webp" alt=""><b>Disparaplanta</b><small>Dispara a los zombis cercanos</small></div>
-          <div class="pl"><img src="img/lab/pl_trap.webp" alt=""><b>Planta trampa</b><small>Muerde al que se acerca</small></div>
-          <div class="pl"><img src="img/lab/pl_bomb.webp" alt=""><b>Hongo bomba</b><small>Explota en area</small></div>
+          <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_shoot.webp" alt=""><b>Disparaplanta</b><small>Dispara a los zombis cercanos</small></div>
+          <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_trap.webp" alt=""><b>Planta trampa</b><small>Muerde al que se acerca</small></div>
+          <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_bomb.webp" alt=""><b>Hongo bomba</b><small>Explota en area</small></div>
         </div>
       </div>
     </section>
     <section class="hsec hrev">
       <h2>Arsenal</h2><p class="hlead">Seis armas, desde la pistola hasta el lanzacohetes. Consiguelas explorando.</p>
-      <div class="hwpn"><div><img src="img/cartoon/w_pistol.webp" alt=""><small>PISTOLA</small></div><div><img src="img/cartoon/w_shotgun.webp" alt=""><small>ESCOPETA</small></div><div><img src="img/cartoon/w_ak.webp" alt=""><small>AK</small></div><div><img src="img/cartoon/w_lmg.webp" alt=""><small>AMETRALLADORA</small></div><div><img src="img/cartoon/w_rpg.webp" alt=""><small>LANZACOHETES</small></div><div><img src="img/cartoon/w_sniper.webp" alt=""><small>FRANCOTIRADOR</small></div></div>
+      <div class="hwpn"><div><img loading="lazy" decoding="async" src="img/cartoon/w_pistol.webp" alt=""><small>PISTOLA</small></div><div><img loading="lazy" decoding="async" src="img/cartoon/w_shotgun.webp" alt=""><small>ESCOPETA</small></div><div><img loading="lazy" decoding="async" src="img/cartoon/w_ak.webp" alt=""><small>AK</small></div><div><img loading="lazy" decoding="async" src="img/cartoon/w_lmg.webp" alt=""><small>AMETRALLADORA</small></div><div><img loading="lazy" decoding="async" src="img/cartoon/w_rpg.webp" alt=""><small>LANZACOHETES</small></div><div><img loading="lazy" decoding="async" src="img/cartoon/w_sniper.webp" alt=""><small>FRANCOTIRADOR</small></div></div>
     </section>
     <section class="hsec hrev">
       <h2>Elige como jugar</h2><p class="hlead">Tambien hay supervivencia infinita y modo primera persona.</p>
@@ -312,7 +357,7 @@
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
-    <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button>
+    <div class="mbtns"><button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button></div>
   </div>
 </div>
 <script>
@@ -1807,7 +1852,7 @@ function victory() {
   ps[0].textContent = mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
   el.start.textContent = 'JUGAR DE NUEVO'; el.startS.textContent = 'SUPERVIVENCIA';
-  setTimeout(() => { if (state === 'won') el.msg.style.display = 'flex'; }, 1200);
+  setTimeout(() => { if (state === 'won') { closeLabPanels(); el.msg.style.display = 'flex'; } }, 1200);
 }
 
 function setDoorGrid(d, v) { for (let j = d.y; j < d.y + d.h; j++) for (let i = d.x; i < d.x + d.w; i++) G.grid[j * GC + i] = v; }
@@ -2273,7 +2318,7 @@ function gameOver() {
   const ps = el.msg.querySelectorAll('p');
   if (mode === 'mission') {
     el.msg.querySelector('h1').textContent = 'MISION FALLIDA';
-    ps[0].textContent = 'Mision ' + (missionIdx + 1) + ': ' + mission.def.name + '. Objetivo pendiente: ' + objText() + '. Puntos: ' + player.pts + ' | Record: ' + best + '.';
+    ps[0].textContent = (mission.lab ? 'Nivel 2: ' + mission.def.name + '.' : 'Mision ' + (missionIdx + 1) + ': ' + mission.def.name + '. Objetivo pendiente: ' + objText() + '.') + ' Puntos: ' + player.pts + ' | Record: ' + best + '.';
     el.start.textContent = 'REINTENTAR MISION'; el.startS.textContent = 'SUPERVIVENCIA';
   } else {
     el.msg.querySelector('h1').textContent = 'HAS CAIDO';
@@ -2281,7 +2326,7 @@ function gameOver() {
     el.start.textContent = 'MISIONES'; el.startS.textContent = 'REINTENTAR';
   }
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
-  setTimeout(() => { if (state === 'over') el.msg.style.display = 'flex'; }, 900);
+  setTimeout(() => { if (state === 'over') { closeLabPanels(); el.msg.style.display = 'flex'; } }, 900);
 }
 
 function zombieH(z) {
@@ -4426,7 +4471,11 @@ const showHero = () => { Sfx.music(false); el.msg.style.display = 'none'; hero.s
 hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => { state = 'menu'; hero.style.display = 'none'; el[b.dataset.play].click(); }));
 hero.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => { const t = document.getElementById(a.dataset.go); if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); }));
 $('toHero').addEventListener('click', showHero);
-{ const hd = hero.querySelector('.hdots'); for (let i = 0; i < 26; i++) { const d = document.createElement('i'); d.style.left = (i * 3.9 + Math.random() * 3) + '%'; d.style.animationDelay = (-Math.random() * 9) + 's'; d.style.animationDuration = (7 + Math.random() * 7) + 's'; d.style.width = d.style.height = (3 + Math.random() * 6) + 'px'; hd.appendChild(d); } }
+const syncOpts = () => { $('hChar').textContent = el.startC.textContent; $('hDiff').textContent = el.startD.textContent; };
+$('hChar').addEventListener('click', () => { el.startC.click(); syncOpts(); });
+$('hDiff').addEventListener('click', () => { el.startD.click(); syncOpts(); });
+syncOpts();
+{ const hd = hero.querySelector('.hdots'); for (let i = 0; i < 16; i++) { const d = document.createElement('i'); d.style.left = (i * 6.2 + Math.random() * 4) + '%'; d.style.animationDelay = (-Math.random() * 9) + 's'; d.style.animationDuration = (7 + Math.random() * 7) + 's'; d.style.width = d.style.height = (3 + Math.random() * 6) + 'px'; hd.appendChild(d); } }
 { const imgs = hero.querySelectorAll('.hmon img'), th = hero.querySelectorAll('.hthumb'); let cur = 0, tm;
   const go = i => { cur = i; imgs.forEach((m, k) => m.classList.toggle('on', k === i)); th.forEach((m, k) => m.classList.toggle('on', k === i)); clearInterval(tm); tm = setInterval(() => go((cur + 1) % imgs.length), 3800); };
   th.forEach(t => t.addEventListener('click', () => go(+t.dataset.shot))); go(0); }
