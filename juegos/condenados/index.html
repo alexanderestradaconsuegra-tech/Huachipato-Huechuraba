@@ -73,6 +73,17 @@
   #keyDisp { font:bold 34px monospace; letter-spacing:12px; background:#071018; border:2px solid #2a3a5a; border-radius:10px; padding:8px; margin:6px 40px 12px; min-height:60px; color:#7be0ff; }
   #keyDisp.bad { color:#ff4d4d; }
   .kp { display:grid; grid-template-columns:repeat(3,72px); gap:8px; justify-content:center; } .kp button { margin:0; font-size:22px; padding:12px 0; font-weight:bold; }
+  .ovl { position:absolute; display:none; pointer-events:auto; background:rgba(26,8,60,.9); border:2px solid #ff3fb4; border-radius:14px; padding:12px 14px; color:#e8eefc; font-size:12px; box-shadow:0 0 26px rgba(255,63,180,.38); z-index:4; }
+  #pwr { right:14px; top:140px; width:318px; } #camov { left:14px; bottom:14px; width:366px; }
+  .ovl h3 { font-size:13px; letter-spacing:1px; margin-bottom:6px; color:#2be8f0; display:flex; justify-content:space-between; }
+  .ovl button { font:inherit; font-size:11px; cursor:pointer; border:0; border-radius:8px; padding:5px 9px; background:#3a2a7a; color:#fff; } .ovl button:hover { filter:brightness(1.25); }
+  .ovl button.on { background:#1fae5a; } .ovl button.off { background:#4a2a5a; } .ovl button.warn { background:#b8741a; } .ovl button:disabled { opacity:.4; cursor:default; }
+  .sysr { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.1); } .sysr small { display:block; opacity:.6; font-size:10px; }
+  .cbar { height:9px; background:rgba(255,255,255,.14); border-radius:6px; overflow:hidden; margin:4px 0 8px; } .cbar i { display:block; height:100%; background:linear-gradient(90deg,#b6ff3a,#ffe14a); }
+  #camc { display:block; width:100%; background:#04141a; border-radius:8px; margin-bottom:6px; } .gbt { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+  #task.live { align-items:flex-end; justify-content:flex-start; background:none; pointer-events:none; } #task.live #taskBox { pointer-events:auto; margin:0 0 96px 20px; width:min(420px,92vw); }
+  .sqb { height:70px; border-radius:12px; opacity:.45; cursor:pointer; border:3px solid #0b0e18; } .sqb.lit { opacity:1; box-shadow:0 0 24px currentColor; }
+  .mod { display:block; } .mod.ok { color:#7dff6a; } .mod.no { color:#e8eefc; opacity:.85; }
   #prompt { position:absolute; bottom:70px; left:50%; transform:translateX(-50%); display:none; text-align:center; font-size:14px; padding:8px 16px;
     background:rgba(14,16,34,.7); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.2); border-radius:12px; }
   #prompt i { display:block; height:5px; margin-top:6px; border-radius:4px; background:linear-gradient(90deg,#33e08a,#9bff6a); width:0; }
@@ -120,19 +131,22 @@
   <canvas id="mini" width="200" height="127"></canvas>
   <div id="prompt"></div>
   <div id="task"><div id="taskBox"></div></div>
+  <div id="pwr" class="ovl"></div>
+  <div id="camov" class="ovl"></div>
   <div id="toast"></div>
   <div id="shop"></div>
   <div id="msg">
     <h1>LOS CONDENADOS</h1>
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido | H: efectos de brillo</p>
+    <p>NIVEL 2 BIOLAB: un hub con 3 modulos en cualquier orden (Energia, Muestra, Seguridad). El juego NO se pausa en los paneles. Reparte la energia (no alcanza para todo), usa camaras y compuertas para guiar o encerrar zombis, inunda sectores con gas y cuidado: la muestra se huele.</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas. Busca las cajas verdes de armas: ametralladora, lanzacohetes y francotirador.</p>
     <p>PRIMERA PERSONA (estilo CS): clic para capturar el mouse; mira arriba y abajo. Disparo a la CABEZA = muerte instantanea. ESPACIO saltar | C agacharse (mas precision) | E esquivar | Shift correr | [ y ] campo de vision. Salta sobre autos y cajas. Flechas rojas avisan de zombis fuera de pantalla.</p>
     <p>NIVEL 1 (MISIONES): una instalacion por secciones. Activa el generador, repara el panel de cables, consigue las tarjetas VERDE y AZUL, enciende los disyuntores, descarga los planos, encuentra la NOTA con el codigo y abre el reactor. Derrota al jefe y sube al elevador. E: interactuar (tareas, cajas, luces, barricadas, vehiculo). TORRE: entra por la puerta y dispara por la ranura. Activa la REJILLA ELECTRICA del salon de control para freir a los zombis que la crucen.</p>
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
-    <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button>
+    <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button>
   </div>
 </div>
 <script>
@@ -250,6 +264,7 @@ const Sfx = (() => {
       else if (k < 0.7) { const pan = Math.random() * 2 - 1, f = 180 + Math.random() * 120; tone(f, 0.9, 'sine', 0.06, f * 0.9, 0, pan); noise(0.25, 0.05, 2400, 'bandpass', null, 0, pan); }  // golpe metalico lejano
       else { const pan = Math.random() * 2 - 1; noise(1.2, 0.06, 500, 'lowpass', 140, 0, pan); tone(70, 1.1, 'sawtooth', 0.04, 48, 0, pan); }     // quejido de tuberia
     },
+    bubble() { const pan = Math.random() * 2 - 1; for (let i = 0; i < 3; i++) tone(260 + Math.random() * 360, 0.07, 'sine', 0.05, 760, i * 0.09, pan); tone(55, 1.4, 'sine', 0.03, 52); },
     task() { tone(660, 0.07, 'square', 0.1); },
     taskOk() { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', 0.16, null, i * 0.07)); },
     taskBad() { tone(160, 0.22, 'sawtooth', 0.2, 90); },
@@ -304,7 +319,7 @@ let ctx = cv.getContext('2d', { alpha:false });
 let DPR = 1, renderScale = 1;
 const $ = id => document.getElementById(id);
 const el = { hp:$('hp'), wpn:$('wpn'), ammo:$('ammo'), wave:$('wave'), pts:$('pts'), best:$('best'),
-  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
+  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), startL2:$('startL2'), pwr:$('pwr'), camov:$('camov'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
   obj:$('obj'), mini:$('mini'), waveLbl:$('waveLbl') };
 const mctx = el.mini.getContext('2d');
 
@@ -468,7 +483,7 @@ function resetState() {
   trauma = 0; freeze = 0; groanT = 2; heartT = 0; combo = 0; comboT = 0; comboPulse = 0; killsTotal = 0;
 }
 
-function newGame(m, fpFlag = false) {
+function newGame(m, fpFlag = false, lvl = 1) {
   mode = m; if (m === 'survival') { G = null; setMini(200, 127); el.facHud.style.display = 'none'; } fp = !!fpFlag && m === 'mission'; el.dashKey.textContent = fp ? 'E' : 'ESPACIO';
   resetState();
   el.msg.style.display = 'none';
@@ -484,31 +499,39 @@ function newGame(m, fpFlag = false) {
     el.waveLbl.textContent = fp ? 'MISION' : 'NIVEL';
     el.obj.style.display = 'block'; el.mini.style.display = 'block';
     player = makePlayer();
-    if (fp) startMission(0); else startFacility();
+    if (fp) startMission(0); else if (lvl === 2) startLab(); else startFacility();
   }
 }
 
 /* ============================== NIVEL 1: INSTALACION ============================== */
-const TS = 80, GC = 40, GR = 64;
-const ZINFO = [null,
+const TS = 80; let GC = 40, GR = 64;
+const ZINFO1 = [null,
   { name:'MUELLE DE CARGA', col:'#ffa12b', fl:'#ff9a4d', w1:'#ff7a2f', w2:'#c24a14', acc:'#ffe14a', tint:'rgba(255,170,60,.0)', mix:{ walker:1, runner:0.1 } },
   { name:'SALA DE MAQUINAS', col:'#18e8f5', fl:'#3fdcec', w1:'#1fb7e0', w2:'#0f6fa6', acc:'#ff3fb4', tint:'rgba(40,220,255,.0)', mix:{ walker:1, runner:0.4, spitter:0.1 } },
   { name:'CENTRO DE CONTROL', col:'#ff3fb4', fl:'#ff62c6', w1:'#e0369f', w2:'#8e1f7a', acc:'#2be8f0', tint:'rgba(255,60,180,.0)', mix:{ walker:1, runner:0.5, spitter:0.3, tank:0.1 } },
   { name:'NUCLEO DEL REACTOR', col:'#b6ff3a', fl:'#9a72ff', w1:'#7a4dff', w2:'#4126b8', acc:'#b6ff3a', tint:'rgba(150,110,255,.0)', mix:{ walker:1, runner:0.5, spitter:0.35, tank:0.2 } }];
+let ZINFO = ZINFO1;
+const ZINFO_LAB = [null,
+  { name:'HUB CENTRAL', col:'#27e0c0', fl:'#9ff0e0', w1:'#2fc9b4', w2:'#12776f', acc:'#ff3fb4', tint:'', mix:{ walker:1 } },
+  { name:'SALA DE ENERGIA', col:'#ffd02b', fl:'#ffe27a', w1:'#ffb21f', w2:'#b06a00', acc:'#2be8f0', tint:'', mix:{ walker:1, runner:0.25 } },
+  { name:'INVERNADERO', col:'#7dff6a', fl:'#a8ff9a', w1:'#3fdc5c', w2:'#1b7b3a', acc:'#ff3fb4', tint:'', mix:{ walker:1, runner:0.3, spitter:0.2 } },
+  { name:'SEGURIDAD', col:'#4aa8ff', fl:'#8fc4ff', w1:'#3a78ff', w2:'#1a3aa8', acc:'#ffe14a', tint:'', mix:{ walker:1, runner:0.4, spitter:0.2, tank:0.08 } },
+  { name:'NUCLEO ARGOS', col:'#ff5ac8', fl:'#ff9ae0', w1:'#d82f9a', w2:'#7a1a70', acc:'#b6ff3a', tint:'', mix:{ walker:1, runner:0.5, spitter:0.3, tank:0.15 } }];
 // recintos [x, y, ancho, alto, zona] y enlaces (pasillos y huecos) en celdas
 const FROOMS = [[13,54,12,9,1],[3,55,9,7,1],[26,55,9,7,1],[6,38,28,10,2],[1,39,4,8,2],[35,40,4,7,2],[8,21,24,11,3],[2,22,5,10,3],[33,22,6,10,3],[13,13,14,7,3],[7,3,26,8,4],[1,4,5,6,4],[34,4,5,6,4],[17,1,6,2,4]];
 const FLINKS = [[12,57,1,2,1],[25,57,1,2,1],[18,48,2,6,1],[5,42,1,2,2],[34,42,1,2,2],[18,32,2,6,2],[7,26,1,2,3],[32,26,1,2,3],[19,20,2,1,3],[19,11,2,2,3],[6,6,1,2,4],[33,6,1,2,4]];
 const FDOORS = [{ x:18, y:50, w:2, h:1, lock:'power' }, { x:18, y:34, w:2, h:1, lock:'green' }, { x:19, y:20, w:2, h:1, lock:'blue' }, { x:19, y:11, w:2, h:1, lock:'power2' },
   { x:12, y:57, w:1, h:2, lock:'none' }, { x:25, y:57, w:1, h:2, lock:'none' }, { x:5, y:42, w:1, h:2, lock:'none' }, { x:34, y:42, w:1, h:2, lock:'none' },
   { x:7, y:26, w:1, h:2, lock:'none' }, { x:32, y:26, w:1, h:2, lock:'none' }, { x:6, y:6, w:1, h:2, lock:'none' }, { x:33, y:6, w:1, h:2, lock:'none' }];
-const LOCKCOL = { none:'#2be8f0', power:'#ffe14a', green:'#b6ff3a', blue:'#2b9bff', power2:'#ff3fb4' };
-const LOCKTXT = { none:'', power:'SIN ENERGIA', green:'TARJETA VERDE', blue:'TARJETA AZUL', power2:'SIN ENERGIA' };
+const LOCKCOL = { gate:'#2be8f0', decon:'#ffe14a', none:'#2be8f0', power:'#ffe14a', green:'#b6ff3a', blue:'#2b9bff', power2:'#ff3fb4' };
+const LOCKTXT = { gate:'COMPUERTA', decon:'DESCONTAMINACION', none:'', power:'SIN ENERGIA', green:'TARJETA VERDE', blue:'TARJETA AZUL', power2:'SIN ENERGIA' };
 
 const gridV = (tx, ty) => (tx < 0 || ty < 0 || tx >= GC || ty >= GR) ? 1 : G.grid[ty * GC + tx];
 const floorAt = (x, y) => !G || gridV(Math.floor(x / TS), Math.floor(y / TS)) === 0;
 const zoneAt = (x, y) => (G && gridV(Math.floor(x / TS), Math.floor(y / TS)) !== 1) ? G.zone[Math.floor(y / TS) * GC + Math.floor(x / TS)] : 0;
 
 function buildFacility() {
+  GC = 40; GR = 64; ZINFO = ZINFO1; METAL = null; METALZ = [];
   const grid = new Uint8Array(GC * GR).fill(1), zone = new Uint8Array(GC * GR);
   const carve = (x, y, w, h, z) => { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) { grid[j * GC + i] = 0; zone[j * GC + i] = z; } };
   for (const r of FROOMS) carve(...r);
@@ -589,12 +612,13 @@ function buildFacility() {
 let taskObj = null, taskHook = null;
 const WCOL = ['#ff3b3b', '#3b8bff', '#ffd42a', '#3bff7a'];
 function closeTask(ok) {
-  el.task.style.display = 'none'; el.taskBox.innerHTML = '';
+  el.task.style.display = 'none'; el.task.classList.remove('live'); el.taskBox.innerHTML = '';
   if (state === 'task') { state = 'playing'; lastT = performance.now(); }
-  if (ok && taskObj) { Sfx.taskOk(); const o = taskObj, M = mission; taskObj = null; if (o.onDone === 'power') { M.power = true; toast('ENERGIA RESTAURADA: SE ABRIO LA PUERTA'); } else if (o.onDone === 'lights') toast('TERMINAL ENCENDIDO'); else if (o.onDone === 'power2') { M.power2 = true; toast('CODIGO ACEPTADO: PUERTA DEL REACTOR'); } advance(); } else taskObj = null;
+  if (ok && taskObj && taskObj.cb) { Sfx.taskOk(); const o = taskObj; taskObj = null; o.cb(); }
+  else if (ok && taskObj) { Sfx.taskOk(); const o = taskObj, M = mission; taskObj = null; if (o.onDone === 'power') { M.power = true; toast('ENERGIA RESTAURADA: SE ABRIO LA PUERTA'); } else if (o.onDone === 'lights') toast('TERMINAL ENCENDIDO'); else if (o.onDone === 'power2') { M.power2 = true; toast('CODIGO ACEPTADO: PUERTA DEL REACTOR'); } advance(); } else taskObj = null;
 }
 function openTask(o) {
-  taskObj = o; state = 'task'; Sfx.task(); el.task.style.display = 'flex';
+  taskObj = o; if (o.live) el.task.classList.add('live'); else state = 'task'; Sfx.task(); el.task.style.display = 'flex';
   const box = el.taskBox, title = '<h2>' + o.title + '</h2><p>' + o.hint + '</p>';
   if (o.kind === 'wires') {
     const order = [0, 1, 2, 3], right = [0, 1, 2, 3].sort(() => Math.random() - 0.5), done = [false, false, false, false]; let sel = -1;
@@ -628,6 +652,15 @@ function openTask(o) {
       else if (val.length < 4) val += k;
       disp.textContent = (val + '____').slice(0, 4);
     });
+  }
+  else if (o.kind === 'seq') {
+    const cols = ['#ff3a4a', '#2b9bff', '#ffe14a', '#7dff6a'], seq = Array.from({ length:5 }, () => Math.floor(Math.random() * 4)); let idx = 0, showing = true;
+    box.innerHTML = title + '<div id="sq" style="display:grid;grid-template-columns:repeat(2,110px);gap:10px;justify-content:center">' + cols.map((c, i) => '<div class="sqb" data-q="' + i + '" style="background:' + c + ';color:' + c + '"></div>').join('') + '</div><p id="sqm" style="margin-top:8px"></p><button id="tcancel">Cancelar</button>';
+    const msg = t => { const m = box.querySelector('#sqm'); if (m) m.textContent = t; };
+    const flash = c => { const b2 = box.querySelector('[data-q="' + c + '"]'); if (!b2) return; b2.classList.add('lit'); Sfx.task(); setTimeout(() => b2.classList.remove('lit'), 330); };
+    const play = () => { showing = true; msg('Observa la secuencia...'); seq.forEach((c, i) => setTimeout(() => { if (taskObj === o) flash(c); }, 600 + i * 640)); setTimeout(() => { if (taskObj === o) { showing = false; idx = 0; msg('Repitela'); } }, 600 + seq.length * 640); };
+    box.querySelectorAll('[data-q]').forEach(b2 => b2.onclick = () => { if (showing) return; const c = +b2.dataset.q; flash(c); if (c === seq[idx]) { idx++; if (idx >= seq.length) setTimeout(() => closeTask(true), 400); } else { Sfx.taskBad(); msg('Error: de nuevo'); setTimeout(() => { if (taskObj === o) play(); }, 700); } });
+    play();
   }
   const c = box.querySelector('#tcancel'); if (c) c.onclick = () => closeTask(false);
 }
@@ -845,10 +878,277 @@ function steer(z, tx, ty, dt) {
   return direct;
 }
 
+/* ============================== LOGICA DEL BIOLAB ============================== */
+const sysUsed = () => SYSD.reduce((a, d) => a + (mission.sys[d.k] ? d.c : 0), 0);
+const labRect = k => rects.find(r => r.kind === k);
+const centerOf = r => ({ x:r.x + r.w / 2, y:r.y + r.h / 2 });
+
+function startLab(retry = false) {
+  missionIdx = 0;
+  const keepCur = player.cur;
+  resetState(); buildLab();
+  WORLD.w = GC * TS; WORLD.h = GR * TS; setMini(168, 156);
+  const T0 = v => v * TS;
+  mission = { idx:1, facility:true, lab:true, def:{ name:'BIOLAB ARGOS', cap:0, patrols:0, mix:ZINFO[1].mix }, map:{ start:{ x:T0(28), y:T0(46.3) }, exit:{ x:T0(45.5), y:T0(39) }, lamps:[], decals:[], blocks:[], spots:[] },
+    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true,
+    cap:2, sys:{ doors:true, lights:true, turrets:false, vent:false, cams:false, cryo:false, elev:false }, done:{ decon:false, A:false, B:false, C:false },
+    cryo:{ stored:false, spoil:0 }, sampleTaken:false, sampleSpoiled:false, finalOpen:false, bossSpawned:false, elevReady:false, deconProg:0, camT:0, lastSting:0 };
+  const st = mission.map.start;
+  player.x = st.x; player.y = st.y; player.cur = keepCur; player.vx = 0; player.vy = 0; player.reloading = 0; player.dashT = 0; player.sample = false;
+  player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
+  player.hp = retry ? Math.max(player.hp, 60) : player.maxHp;
+  snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
+  el.facHud.style.display = 'block'; closeLabPanels();
+  const PK = [['ammo',22,23],['hp',34,23],['bomb',27,30.4],['ammo',24,44],['hp',31,47],['ammo',6,19],['hp',13,29],['scrap',8,33],['bomb',14,19],['scrap',10,22.5],['ammo',20,6],['hp',36,6],['bomb',27,12],['scrap',23,10],['ammo',43,20],['hp',50,30],['bomb',47,18],['scrap',42,29],['ammo',41,43],['hp',51,46],['scrap',46,38.4],['wpn',12.4,31.6,3],['wpn',51.2,22,4]];
+  PK.forEach(([k, tx, ty, slot], idx) => { if (diff > 0 && (k === 'ammo' || k === 'hp') && idx % (diff === 1 ? 3 : 2) === 1) return; pickups.push({ x:tx * TS, y:ty * TS, kind:k, slot, life:Infinity }); });
+  const NEST = [[22.5,23.5,2],[33,26,2],[6,19,2],[11,24,3,'blind'],[11,30,2],[20,6,2],[33,6,3],[27,9,2,'deaf'],[22,11,2],[43,20,2],[49,23,3],[44,29,2,'blind'],[49,31,2],[41,43,2],[50,43,2]];
+  for (const [tx, ty, n0, sense] of NEST) {
+    const z = zoneAt(tx * TS, ty * TS) || 2, n = Math.max(1, Math.round(n0 * DIFFS[diff].cnt * 0.8));
+    for (let k = 0; k < n; k++) {
+      const a2 = rand(0, 6.283), r2 = rand(15, 80), px = tx * TS + Math.cos(a2) * r2, py = ty * TS + Math.sin(a2) * r2;
+      if (!floorAt(px, py) || solidAt(px, py)) continue;
+      spawnZombie(pickType({ mix:ZINFO[z].mix }), { x:px, y:py }, false, undefined, undefined, undefined, sense);
+    }
+  }
+  const ROUTES = [[[21,22],[34,22],[34,29],[21,29]], [[42,19],[50,19],[50,31],[42,31]], [[5,19],[13,19],[13,31],[5,31]], [[27,5],[27,13]]];
+  for (const rt of ROUTES) { spawnZombie('walker', { x:rt[0][0] * TS, y:rt[0][1] * TS }, false); const z = zombies[zombies.length - 1]; z.patrol = rt.map(q => ({ x:q[0] * TS, y:q[1] * TS })); z.pp = 1; z.speed *= 1.15; }
+  state = 'playing'; el.shop.style.display = 'none'; el.wave.textContent = 2;
+  toast('NIVEL 2: BIOLAB ARGOS'); Sfx.wave();
+  setTimeout(() => { if (mission && mission.lab) toast('ESCLUSA: MANTEN E EN LA PLATAFORMA PARA DESCONTAMINARTE'); }, 2300);
+}
+
+function labTargets() {
+  const M = mission, out = [], at = (r, col) => { if (r) { const c = centerOf(r); out.push({ x:c.x, y:c.y, col }); } };
+  if (!M.done.decon) { at(labRect('decon'), '#ffe14a'); return out; }
+  if (!M.done.A) at(labRect('gen'), '#ffd02b');
+  if (!M.done.B) { if (!M.sampleTaken && !player.sample) at(labRect('samplep'), '#7dff6a'); else at(labRect('cryo'), '#7dff6a'); }
+  if (!M.done.C) at(labRect('seccon'), '#4aa8ff');
+  if (M.finalOpen) { if (player.sample) at(labRect('elev'), '#ff5ac8'); else at(labRect('cryo'), '#ff5ac8'); }
+  return out;
+}
+
+function labHint() {
+  const M = mission;
+  if (!M.done.decon) return 'Descontaminate en la esclusa (mantener E)';
+  if (M.finalOpen) { if (!M.boss || M.boss.hp > 0) return M.bossSpawned ? 'Elimina al Experimento' : 'Entra al nucleo ARGOS (compuerta FINAL)'; return player.sample ? (M.sys.elev ? 'Sube al ascensor con la muestra' : 'Enciende el ASCENSOR en el panel de energia') : 'Recoge la muestra de la refrigeracion'; }
+  const left = [!M.done.A && 'Energia', !M.done.B && 'Muestra', !M.done.C && 'Seguridad'].filter(Boolean);
+  return 'Completa los modulos pendientes: ' + left.join(', ');
+}
+
+function labObjHtml() {
+  const M = mission, m = (ok, t) => '<span class="mod ' + (ok ? 'ok' : 'no') + '">' + (ok ? '[x] ' : '[ ] ') + t + '</span>';
+  const z = ZINFO[M.curZone] ? ZINFO[M.curZone].name : '';
+  const carry = player.sample ? ' | <b style="color:#7dff6a">LLEVAS LA MUESTRA (olor alto)</b>' : '';
+  const spoil = M.cryo.stored && M.cryo.spoil > 0 ? ' | <b style="color:#ff6a7a">MUESTRA CALENTANDOSE ' + Math.max(0, Math.ceil(20 - M.cryo.spoil)) + 's</b>' : '';
+  return 'BIOLAB - ' + z + '<br>' + m(M.done.decon, 'Esclusa') + m(M.done.A, 'A. Energia (generador)') + m(M.done.B, 'B. Muestra (invernadero a refrigeracion)') + m(M.done.C, 'C. Seguridad (protocolo)') + m(M.finalOpen && M.elevReady, 'Final: escapar con la muestra')
+    + '<b>' + labHint() + '</b><br><span style="opacity:.8">Energia ' + sysUsed() + '/' + M.cap + ' | Alertas ' + M.alerts + carry + spoil + '</span>';
+}
+
+function labNearest() {
+  const M = mission; if (player.tower || player.driving) return null;
+  let best = null, bd = 1e9;
+  const consider = (type, ref, d, lim, label, hold, pr) => { if (d < lim && d < bd) { bd = d; best = { type, ref, label, hold, pr }; } };
+  const nd = r => Math.hypot(clamp(player.x, r.x, r.x + r.w) - player.x, clamp(player.y, r.y, r.y + r.h) - player.y);
+  for (const r of rects) {
+    if (r.kind === 'decon' && !M.done.decon) consider('decon', r, nd(r), 70, 'E (mantener) - Descontaminacion', true, M.deconProg / 4);
+    else if (r.kind === 'pwrpanel') consider('pwr', r, nd(r), 100, 'E - Panel de energia (el juego sigue corriendo)', false);
+    else if (r.kind === 'camcon') consider('cam', r, nd(r), 100, M.sys.cams ? 'E - Camaras, compuertas y gas' : 'E - Camaras (SIN ENERGIA: activalas en el panel)', false);
+    else if (r.kind === 'gen' && !M.done.A) consider('gen', r, nd(r), 110, 'E - Reparar generador (minijuego sin pausa)', false);
+    else if (r.kind === 'samplep' && !M.sampleTaken) consider('sample', r, nd(r), 100, 'E - Extraer muestra (hace ruido: ellos la huelen)', false);
+    else if (r.kind === 'seccon' && !M.done.C) consider('sec', r, nd(r), 100, M.sys.cams ? 'E - Desactivar protocolo de cuarentena' : 'SIN SENAL: activa las CAMARAS en el panel de energia', false);
+    else if (r.kind === 'cryo') {
+      if (player.sample && !M.cryo.stored) consider('cryo', r, nd(r), 100, M.sys.cryo ? 'E - Guardar la muestra en refrigeracion' : 'REFRIGERACION APAGADA: enciendela en el panel', false);
+      else if (M.cryo.stored && M.finalOpen && !player.sample) consider('cryo', r, nd(r), 100, 'E - Retirar la muestra (te delatara el olor)', false);
+    } else if (r.kind === 'elev') consider('elev', r, nd(r), 130, M.elevReady ? 'E - Subir al ascensor' : 'ASCENSOR: ' + labHint(), false);
+  }
+  for (const d of G.doors) if (d.lock === 'gate') {
+    const dd = Math.hypot(player.x - (d.px + d.pw / 2), player.y - (d.py + d.ph / 2));
+    consider('gate', d, dd, 140, d.final && !M.finalOpen ? 'COMPUERTA FINAL BLOQUEADA: completa los 3 modulos' : (M.sys.doors ? 'E - ' + (d.open ? 'Cerrar' : 'Abrir') + ' compuerta ' + d.name : 'COMPUERTAS SIN ENERGIA (actívalas en el panel)'), false);
+  }
+  return best;
+}
+
+function toggleGate(d, remote) {
+  const M = mission;
+  if (!M.sys.doors) { Sfx.deny(); toast('COMPUERTAS SIN ENERGIA'); return false; }
+  if (d.final && !M.finalOpen) { Sfx.deny(); toast('COMPUERTA FINAL BLOQUEADA'); return false; }
+  if (d.open) { const cx = d.px + d.pw / 2, cy = d.py + d.ph / 2; if (Math.abs(player.x - cx) < d.pw / 2 + 26 && Math.abs(player.y - cy) < d.ph / 2 + 26) { Sfx.deny(); toast('HAY ALGUIEN EN LA COMPUERTA'); return false; } }
+  d.open = !d.open; setDoorGrid(d, d.open ? 0 : 2); Sfx.door(); makeNoise(d.px + d.pw / 2, d.py + d.ph / 2, 240, '#2be8f0');
+  if (remote) toast('COMPUERTA ' + d.name + (d.open ? ' ABIERTA' : ' CERRADA'));
+  return true;
+}
+
+function takeSample() {
+  const M = mission; M.sampleTaken = true; M.sampleSpoiled = false; player.sample = true;
+  toast('MUESTRA EXTRAIDA: LLEVALA A REFRIGERACION'); Sfx.stinger(); makeNoise(labRect('samplep').x, labRect('samplep').y, 700, '#7dff6a');
+  for (const z of zombies) if (z.st === 'idle' && z.type !== 'tank' && Math.hypot(z.x - player.x, z.y - player.y) < 900 && zoneAt(z.x, z.y) === 3) { z.st = 'alert'; z.aggro = true; z.tx = player.x; z.ty = player.y; z.alertT = 8; }
+}
+
+function labPress() {
+  const ia = labNearest(); if (!ia || ia.hold) return; const M = mission;
+  if (ia.type === 'pwr') openPwr();
+  else if (ia.type === 'cam') { if (!M.sys.cams) { Sfx.deny(); toast('CAMARAS SIN ENERGIA'); } else openCam(); }
+  else if (ia.type === 'gate') toggleGate(ia.ref, false);
+  else if (ia.type === 'gen') { const c = centerOf(ia.ref); openTask({ kind:'wires', live:true, title:'GENERADOR PRINCIPAL', hint:'Conecta cada cable con su color. Puedes moverte, pero no te alejes.', pos:c, cb:() => { M.done.A = true; M.cap = 5; toast('GENERADOR REPARADO: CAPACIDAD 5'); Sfx.clear(); } }); }
+  else if (ia.type === 'sample') { const c = centerOf(ia.ref); openTask({ kind:'breakers', live:true, title:'CAPSULA DE CONTENCION', hint:'Sube todos los interruptores para liberar la muestra', pos:c, cb:() => takeSample() }); }
+  else if (ia.type === 'sec') { const c = centerOf(ia.ref); openTask({ kind:'seq', live:true, title:'PROTOCOLO DE CUARENTENA', hint:'Repite la secuencia para desbloquear el sistema', pos:c, cb:() => { M.done.C = true; toast('PROTOCOLO DESACTIVADO'); Sfx.clear(); } }); }
+  else if (ia.type === 'cryo') {
+    if (player.sample && !M.cryo.stored) { if (!M.sys.cryo) { Sfx.deny(); toast('ENCIENDE LA REFRIGERACION EN EL PANEL'); } else { M.cryo.stored = true; M.cryo.spoil = 0; player.sample = false; M.done.B = true; toast('MUESTRA ESTABLE EN REFRIGERACION'); Sfx.clear(); } }
+    else if (M.cryo.stored && M.finalOpen && !player.sample) { M.cryo.stored = false; player.sample = true; toast('LLEVAS LA MUESTRA: ESCAPA'); Sfx.stinger(); }
+  } else if (ia.type === 'elev') { if (M.elevReady) labVictory(); else { Sfx.deny(); toast(labHint()); } }
+}
+
+function labVictory() { player.pts += 900; completeMission(); }
+
+/* --- paneles (no pausan el juego) --- */
+function closeLabPanels() { if (el.pwr) { el.pwr.style.display = 'none'; el.pwr.innerHTML = ''; } if (el.camov) { el.camov.style.display = 'none'; el.camov.innerHTML = ''; } camOpen = false; pwrOpen = false; }
+let pwrOpen = false, camOpen = false, camHash = '';
+function openPwr() { pwrOpen = true; el.pwr.style.display = 'block'; renderPwr(); Sfx.task(); }
+function renderPwr() {
+  const M = mission, used = sysUsed();
+  el.pwr.innerHTML = '<h3><span>PANEL DE ENERGIA</span><button data-close="pwr">X</button></h3><div>Capacidad: <b>' + used + ' / ' + M.cap + '</b> ' + (M.done.A ? '' : '<span style="color:#ffd02b">(repara el generador para subir a 5)</span>') + '</div><div class="cbar"><i style="width:' + (used / 5 * 100) + '%"></i></div>'
+    + SYSD.map(d => { const on = M.sys[d.k]; return '<div class="sysr"><div><b>' + d.n + '</b> <span style="opacity:.7">(' + d.c + ')</span><small>' + d.d + '</small></div><button data-sys="' + d.k + '" class="' + (on ? 'on' : 'off') + '">' + (on ? 'ON' : 'OFF') + '</button></div>'; }).join('')
+    + '<small style="opacity:.6;display:block;margin-top:6px">El juego sigue corriendo mientras decides.</small>';
+}
+function toggleSys(k) {
+  const M = mission, d = SYSD.find(q => q.k === k);
+  if (M.sys[k]) { M.sys[k] = false; Sfx.deny(); }
+  else if (sysUsed() + d.c > M.cap) { Sfx.deny(); toast('SIN CAPACIDAD: apaga otro sistema'); return; }
+  else { M.sys[k] = true; Sfx.buy(); }
+  if (k === 'lights') for (let z = 1; z <= 5; z++) G.lit[z] = M.sys.lights;
+  renderPwr(); camHash = '';
+}
+function openCam() {
+  camOpen = true; el.camov.style.display = 'block';
+  el.camov.innerHTML = '<h3><span>CAMARAS DE SEGURIDAD</span><button data-close="cam">X</button></h3><canvas id="camc" width="336" height="312"></canvas><div id="camb"></div>';
+  camHash = ''; Sfx.task(); renderCam();
+}
+function renderCam() {
+  const M = mission, cv2 = document.getElementById('camc'); if (!cv2) return;
+  const c = cv2.getContext('2d'), K = 6;
+  c.fillStyle = '#04141a'; c.fillRect(0, 0, 336, 312);
+  if (!M.sys.cams) { for (let i = 0; i < 300; i++) { c.fillStyle = 'rgba(255,255,255,' + Math.random() * 0.25 + ')'; c.fillRect(Math.random() * 336, Math.random() * 312, 3, 3); } c.fillStyle = '#ff3a4a'; c.font = 'bold 22px monospace'; c.textAlign = 'center'; c.fillText('SIN SENAL', 168, 160); return; }
+  for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) { const v = G.grid[j * GC + i]; if (v === 1) continue; c.fillStyle = ZINFO[G.zone[j * GC + i]].col; c.globalAlpha = 0.28; c.fillRect(i * K, j * K, K, K); }
+  c.globalAlpha = 1;
+  for (const z in G.gas) { const g2 = G.gas[z], q = LGAS[z]; if (g2.st !== 'off') { c.fillStyle = g2.st === 'on' ? 'rgba(120,255,60,.4)' : 'rgba(255,220,60,.3)'; c.fillRect(q[0] * K, q[1] * K, q[2] * K, q[3] * K); } }
+  for (const d of G.doors) { c.fillStyle = d.open ? '#7dff6a' : '#ff3fb4'; c.fillRect(d.x * K, d.y * K, Math.max(K, d.w * K), Math.max(K, d.h * K)); }
+  c.strokeStyle = 'rgba(255,225,74,.8)'; c.lineWidth = 1.4;
+  for (const z of zombies) if (z.patrol && z.hp > 0) { c.beginPath(); z.patrol.forEach((q, i) => i ? c.lineTo(q.x / TS * K, q.y / TS * K) : c.moveTo(q.x / TS * K, q.y / TS * K)); c.closePath(); c.stroke(); }
+  for (const z of zombies) { if (z.hp <= 0) continue; c.fillStyle = z.boss ? '#ff4030' : z.patrol ? '#ffe14a' : z.st === 'chase' ? '#ff3a4a' : z.st && z.st !== 'idle' ? '#ffa12b' : '#e8eefc'; const r = z.boss ? 4 : 2.2; c.fillRect(z.x / TS * K - r / 2, z.y / TS * K - r / 2, r, r); }
+  const cr = labRect('cryo'); if (cr) { c.fillStyle = '#2be8f0'; c.fillRect(cr.x / TS * K, cr.y / TS * K, 7, 5); }
+  c.fillStyle = '#fff'; c.beginPath(); c.arc(player.x / TS * K, player.y / TS * K, 3.4, 0, 7); c.fill();
+  const hash = G.doors.map(d => d.open ? 1 : 0).join('') + Object.values(G.gas).map(g2 => g2.st + Math.ceil(g2.cd)).join('') + M.sys.doors + M.sys.vent;
+  if (hash !== camHash) {
+    camHash = hash; const b = el.camov.querySelector('#camb');
+    b.innerHTML = '<div class="gbt">' + G.doors.filter(d => d.lock === 'gate').map((d, i) => '<button data-gate="' + G.doors.indexOf(d) + '" class="' + (d.open ? 'on' : 'off') + '"' + (M.sys.doors ? '' : ' disabled') + '>' + d.name + ': ' + (d.open ? 'ABIERTA' : 'CERRADA') + '</button>').join('') + '</div>'
+      + '<div class="gbt">' + Object.keys(G.gas).map(z => { const g2 = G.gas[z]; return '<button data-gas="' + z + '" class="warn"' + (!M.sys.vent || g2.st !== 'off' || g2.cd > 0 ? ' disabled' : '') + '>GAS ' + ZINFO[z].name + (g2.st !== 'off' ? ' (' + g2.st + ')' : g2.cd > 0 ? ' ' + Math.ceil(g2.cd) + 's' : '') + '</button>'; }).join('') + '</div>'
+      + '<small style="opacity:.7;display:block;margin-top:5px">Amarillo: patrullas con su ruta. Blanco: zombis tranquilos. Rojo: persecucion. El gas tarda 5 s en soltarse: salvo tu del sector.</small>';
+  }
+}
+document.addEventListener('click', e => {
+  const t = e.target; if (!mission || !mission.lab || !t.closest) return;
+  const q = t.closest('button'); if (!q) return;
+  if (q.dataset.close === 'pwr') { el.pwr.style.display = 'none'; pwrOpen = false; }
+  else if (q.dataset.close === 'cam') { el.camov.style.display = 'none'; camOpen = false; }
+  else if (q.dataset.sys) toggleSys(q.dataset.sys);
+  else if (q.dataset.gate !== undefined) { toggleGate(G.doors[+q.dataset.gate], true); camHash = ''; }
+  else if (q.dataset.gas) {
+    const z = q.dataset.gas, g2 = G.gas[z], M = mission;
+    if (M.sys.vent && M.sys.cams && g2.st === 'off' && g2.cd <= 0) { g2.st = 'warn'; g2.t = 5; Sfx.siren(); toast('ALERTA: GAS EN ' + ZINFO[z].name + ' EN 5 SEGUNDOS'); camHash = ''; }
+  }
+});
+
+/* --- actualizacion del Biolab --- */
+function labUpdate(dt) {
+  const M = mission;
+  const zn = zoneAt(player.x, player.y);
+  if (zn && zn !== M.curZone) {
+    M.curZone = zn;
+    if (!M.zoneSeen[zn]) {
+      M.zoneSeen[zn] = true;
+      toast(ZINFO[zn].name + ({ 1:'  |  PANEL DE ENERGIA Y CAMARAS AL NORTE', 2:'  |  REPARA EL GENERADOR', 3:'  |  LA MUESTRA SE HUELE', 4:'  |  CUIDADO CON LA GUARDIA', 5:'  |  EL EXPERIMENTO' })[zn]);
+      if (zn === 5 && !M.bossSpawned) { M.bossSpawned = true; spawnZombie('boss', { x:45.5 * TS, y:43.5 * TS }, true); M.boss = zombies[zombies.length - 1]; for (let i = 0; i < 2; i++) spawnZombie('runner', { x:(41 + i * 8) * TS, y:44 * TS }, true); }
+    }
+  }
+  for (let z = 1; z <= 5; z++) G.lit[z] = M.sys.lights;
+  M.finalOpen = M.done.A && M.done.B && M.done.C;
+  if (M.finalOpen && !M.finalToast) { M.finalToast = true; toast('COMPUERTA FINAL DESBLOQUEADA'); Sfx.clear(); }
+  M.elevReady = !!(M.finalOpen && M.bossSpawned && M.boss && M.boss.hp <= 0 && player.sample && M.sys.elev);
+  for (const d of G.doors) { d.t += ((d.open ? 1 : 0) - d.t) * Math.min(1, 8 * dt); d.locked = !!(d.final && !M.finalOpen); d.near = Math.hypot(player.x - (d.px + d.pw / 2), player.y - (d.py + d.ph / 2)) < 220; }
+  const ia = labNearest(); player.ia = ia;
+  // descontaminacion (mantener E)
+  if (ia && ia.type === 'decon' && keys['e']) { M.deconProg += dt; if (Math.floor(M.deconProg * 6) % 2 === 0) Sfx.beep(); if (M.deconProg >= 4) { M.done.decon = true; openDoor(G.doors[0]); toast('DESCONTAMINADO: ESCLUSA ABIERTA'); } }
+  else M.deconProg = Math.max(0, M.deconProg - dt * 0.6);
+  // tareas vivas: se cancelan si te alejas
+  if (taskObj && taskObj.live && taskObj.pos && Math.hypot(taskObj.pos.x - player.x, taskObj.pos.y - player.y) > 220) { closeTask(false); toast('TE ALEJASTE DE LA TAREA'); }
+  if (pwrOpen) { const r = labRect('pwrpanel'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) { el.pwr.style.display = 'none'; pwrOpen = false; } else if ((M.camT += dt) > 0) { /* refresco del panel cada ~0.4 s */ } }
+  if (camOpen) { const r = labRect('camcon'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) { el.camov.style.display = 'none'; camOpen = false; } else { M.camAcc = (M.camAcc || 0) + dt; if (M.camAcc > 0.15) { M.camAcc = 0; renderCam(); } } }
+  // torretas
+  for (const r of rects) if (r.kind === 'turret') {
+    r.fl = Math.max(0, (r.fl || 0) - dt);
+    if (!M.sys.turrets) continue;
+    r.cd = Math.max(0, (r.cd || 0) - dt);
+    const c = centerOf(r); let tz = null, td = 400;
+    for (const z of zombies) { if (z.hp <= 0) continue; const d = Math.hypot(z.x - c.x, z.y - c.y); if (d < td && losClear(c.x, c.y, z.x, z.y)) { td = d; tz = z; } }
+    if (tz) {
+      const a = Math.atan2(tz.y - c.y, tz.x - c.x); r.ang += Math.atan2(Math.sin(a - r.ang), Math.cos(a - r.ang)) * Math.min(1, 12 * dt);
+      if (r.cd <= 0) { r.cd = 0.5; r.fl = 0.07; bullets.push({ x:c.x + Math.cos(a) * 46, y:c.y + Math.sin(a) * 46, px:c.x, py:c.y, vx:Math.cos(a) * 1100, vy:Math.sin(a) * 1100, ang:a, dmg:26, kb:70, life:0.5, pierce:0, hit:[], tr:28 }); tz.aggro = true; if (Math.hypot(c.x - player.x, c.y - player.y) < 800) Sfx.shot(0); makeNoise(c.x, c.y, 260, '#ff3fb4'); }
+    }
+  }
+  // gas
+  for (const zk in G.gas) {
+    const g2 = G.gas[zk], R = G.gasR[zk];
+    if (g2.st === 'warn') { g2.t -= dt; if (g2.t <= 0) { g2.st = 'on'; g2.t = 16; toast('GAS LIBERADO EN ' + ZINFO[zk].name); camHash = ''; } }
+    else if (g2.st === 'on') {
+      g2.t -= dt;
+      for (const z of zombies) if (z.hp > 0 && z.x > R.x && z.x < R.x + R.w && z.y > R.y && z.y < R.y + R.h) { z.hp -= 18 * dt; z.flash = 0.08; if (z.st === 'idle') { z.st = 'alert'; z.aggro = true; } }
+      if (player.x > R.x && player.x < R.x + R.w && player.y > R.y && player.y < R.y + R.h && !player.tower) { player.gasT = (player.gasT || 0) - dt; if (player.gasT <= 0) { player.gasT = 0.5; damagePlayer(6); } }
+      if (g2.t <= 0) { g2.st = 'off'; g2.cd = 40; camHash = ''; }
+    } else if (g2.cd > 0) { g2.cd -= dt; if (g2.cd <= 0) camHash = ''; }
+  }
+  // muestra: se echa a perder sin frio
+  const cy2 = M.cryo;
+  if (cy2.stored) { if (!M.sys.cryo) { cy2.spoil += dt; if (cy2.spoil > 20) { cy2.stored = false; cy2.spoil = 0; M.done.B = false; M.sampleTaken = false; M.sampleSpoiled = true; toast('MUESTRA ARRUINADA: EXTRAE OTRA'); Sfx.taskBad(); } } else cy2.spoil = Math.max(0, cy2.spoil - dt * 2); }
+  // ambiente y apariciones lentas
+  M.ambT -= dt;
+  if (M.ambT <= 0) { M.ambT = rand(7, 12); Sfx.bubble(); if (Math.random() < 0.3 && zombies.length < 48) { const q = ringPos(750, 1100); if (q) spawnZombie('walker', q, false); } }
+  if (player.sample && Math.random() < dt * 0.6) burst(player.x, player.y, 1, '#7dff6a', 60, 0.8, 2.5);
+}
+
+function drawLabMarkers(tNow) {
+  const pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const t of labTargets()) { ctx.strokeStyle = t.col; ctx.lineWidth = 3; ctx.globalAlpha = 0.4 + pulse * 0.4; ctx.beginPath(); ctx.arc(t.x, t.y, 70 + pulse * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(t.x, t.y, 90, t.col, 0.18 * pulse); }
+  ctx.restore();
+}
+
+function drawGas(t) {
+  for (const zk in G.gas) {
+    const g2 = G.gas[zk]; if (g2.st === 'off') continue; const R = G.gasR[zk]; if (!vis(R.x, R.y, R.w, R.h)) continue;
+    ctx.save(); ctx.beginPath(); ctx.rect(R.x, R.y, R.w, R.h); ctx.clip();
+    if (g2.st === 'warn') { ctx.fillStyle = 'rgba(255,214,40,' + (0.1 + 0.12 * Math.abs(Math.sin(t * 6))) + ')'; ctx.fillRect(R.x, R.y, R.w, R.h); ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 26px sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#000'; ctx.lineWidth = 5; ctx.strokeText('GAS EN ' + Math.ceil(g2.t) + ' ...SAL!', R.x + R.w / 2, R.y + R.h / 2); ctx.fillText('GAS EN ' + Math.ceil(g2.t) + ' ...SAL!', R.x + R.w / 2, R.y + R.h / 2); }
+    else { ctx.fillStyle = 'rgba(110,255,60,.18)'; ctx.fillRect(R.x, R.y, R.w, R.h); for (let i = 0; i < 26; i++) { const bx = R.x + ((i * 173.3 + t * 14 * (1 + i % 3)) % R.w), by = R.y + ((i * 97.7 + Math.sin(t * 0.7 + i) * 60 + t * 6) % R.h), rr = 70 + (i % 5) * 18; if (bx > cam.x - rr && bx < cam.x + cam.vw + rr && by > cam.y - rr && by < cam.y + cam.vh + rr) glow(bx, by, rr, '#9dff4a', 0.16); } }
+    ctx.restore();
+  }
+}
+
+function drawSpores() {
+  const t = performance.now() / 1000; ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 34; i++) { const x = ((i * 97.3 + t * (6 + i % 5 * 3)) % (W + 20)) - 10, y = H - ((i * 53.7 + t * (10 + i % 4 * 4)) % (H + 20)) + 10, r = 1.6 + (i % 3); ctx.globalAlpha = 0.25 + 0.2 * Math.sin(t * 2 + i); ctx.fillStyle = i % 3 === 0 ? '#ff3fb4' : i % 3 === 1 ? '#7dff6a' : '#2be8f0'; ctx.fillRect(x, y, r * 2, r * 2); }
+  ctx.restore();
+}
+
 function nightF() {
-  if (!mission || !mission.facility) return 0;
+  if (!mission || !mission.facility || mission.lab) return 0;
   const t = mission.cycleT % 150;
   return t < 90 ? 0 : t < 100 ? (t - 90) / 10 : t < 140 ? 1 : 1 - (t - 140) / 10;
+}
+
+function patrolStep(z, dt) {
+  const wp = z.patrol[z.pp], a = steer(z, wp.x, wp.y, dt);
+  z.face = a; z.x += Math.cos(a) * z.speed * 0.55 * dt; z.y += Math.sin(a) * z.speed * 0.55 * dt; z.ph += dt * z.speed * 0.034;
+  if (Math.hypot(wp.x - z.x, wp.y - z.y) < 46) z.pp = (z.pp + 1) % z.patrol.length;
+  if (rects.length) pushOutRects(z);
 }
 
 // percepcion: cono de vision, oido y memoria
@@ -861,6 +1161,8 @@ function aiStep(z, dt, d, ap) {
   sightR *= DIFFS[diff].sight;
   if (G && !G.lit[zoneAt(player.x, player.y)]) sightR *= 0.55;   // en una zona apagada te ven menos
   sightR *= 1 - 0.35 * nightF();
+  if (z.patrol) sightR *= 1.35;
+  if (player.sample && mission && mission.lab && z.st === 'idle' && d < 300) { z.st = 'alert'; z.tx = player.x; z.ty = player.y; z.alertT = 6; z.aggro = true; }   // la muestra se huele
   let cone = 0.95, hear = hearR;
   if (z.sense === 'blind') { sightR = d < 90 ? 90 : 0; hear = player.sprinting ? 380 : still ? 0 : 260; }
   else if (z.sense === 'deaf') { hear = 0; sightR *= 1.35; cone = 1.15; }
@@ -966,6 +1268,89 @@ let diff = 1;
 try { const v = localStorage.getItem('condenados_diff'); if (v !== null && +v >= 0 && +v <= 2) diff = +v; } catch (e) {}
 const NESTS = [[6,60,2],[30,58.4,3],[10,43,4],[26,41,3,'deaf'],[29,45,3],[14,40.4,3],[2.6,43,3],[36.5,43.4,2],[12,28,4,'blind'],[22,24,4],[27,28,3,'deaf'],[14,24.4,3],[4,27,3],[35,25.4,4,'blind'],[35,29,2],[12,6,3],[27,7,3],[20,8.6,3,'deaf'],[3,6.6,3,'blind'],[36,6.6,3]];
 const FPICKS = [['ammo',15.5,56.2],['hp',22,61.2],['ammo',33,60.6],['bomb',9.5,57],['scrap',16,61.5],['scrap',4.6,58.2],['scrap',27.6,60.4],['ammo',8.5,43],['hp',14,46.4],['scrap',31,40.8],['bomb',24,45.8],['ammo',2.4,41],['hp',37,44.6],['scrap',35.6,41.4],['ammo',12,22.4],['scrap',27,24.4],['hp',13,29.8],['bomb',22,28.8],['ammo',4,23.4],['scrap',36,23.4],['hp',34.6,30],['ammo',16,15],['scrap',24,18],['ammo',12,6],['hp',26,4.8],['scrap',29,7.4],['bomb',16,9.4],['wpn',33.8,55.8,3],['wpn',3.8,29.4,4]];
+
+/* ============================== NIVEL 2: BIOLABORATORIO ARGOS ============================== */
+const LROOMS = [[19,20,18,12,1],[23,42,10,7,1],[3,16,13,18,2],[17,3,22,12,3],[40,16,13,18,4],[38,38,15,10,5]];
+const LLINKS = [[27,32,2,10,1],[16,25,3,2,1],[27,15,2,5,1],[37,25,3,2,1],[33,32,2,7,1],[33,38,5,2,1]];
+const LDOORS = [{ x:27, y:40, w:2, h:1, lock:'decon', name:'ESCLUSA' }, { x:17, y:25, w:1, h:2, lock:'gate', name:'OESTE' }, { x:27, y:16, w:2, h:1, lock:'gate', name:'NORTE' },
+  { x:38, y:25, w:1, h:2, lock:'gate', name:'ESTE' }, { x:33, y:34, w:2, h:1, lock:'gate', name:'FINAL', final:true }];
+const LGAS = { 2:[3, 16, 13, 18], 3:[17, 3, 22, 12], 4:[40, 16, 13, 18] };
+const SYSD = [
+  { k:'doors',   n:'COMPUERTAS',    c:1, d:'Sin energia las compuertas quedan trabadas como estan' },
+  { k:'lights',  n:'ILUMINACION',   c:1, d:'Sin luz te ven menos, pero tu ves menos tambien' },
+  { k:'turrets', n:'TORRETAS',      c:1, d:'Disparan a zombis en el hub' },
+  { k:'vent',    n:'VENTILACION',   c:1, d:'Necesaria para inundar un sector con gas' },
+  { k:'cams',    n:'CAMARAS',       c:1, d:'Vista de patrullas, compuertas y gas a distancia' },
+  { k:'cryo',    n:'REFRIGERACION', c:1, d:'Sin frio la muestra guardada se echa a perder' },
+  { k:'elev',    n:'ASCENSOR',      c:2, d:'Necesario para escapar' }];
+
+function buildLab() {
+  GC = 56; GR = 52; ZINFO = ZINFO_LAB; METAL = null; METALZ = [];
+  const grid = new Uint8Array(GC * GR).fill(1), zone = new Uint8Array(GC * GR);
+  const carve = (x, y, w, h, z) => { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) { grid[j * GC + i] = 0; zone[j * GC + i] = z; } };
+  for (const r of LROOMS) carve(...r);
+  for (const l of LLINKS) carve(...l);
+  const doors = LDOORS.map(d => ({ ...d, px:d.x * TS, py:d.y * TS, pw:d.w * TS, ph:d.h * TS, open:false, t:0 }));
+  for (const d of doors) for (let j = d.y; j < d.y + d.h; j++) for (let i = d.x; i < d.x + d.w; i++) grid[j * GC + i] = 2;
+  const wallZ = new Uint8Array(GC * GR);
+  for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) {
+    if (grid[j * GC + i] !== 1) continue;
+    for (let dj = -1; dj <= 1 && !wallZ[j * GC + i]; dj++) for (let di = -1; di <= 1; di++) {
+      const a = i + di, b = j + dj;
+      if (a >= 0 && b >= 0 && a < GC && b < GR && grid[b * GC + a] !== 1) { wallZ[j * GC + i] = zone[b * GC + a] || 1; break; }
+    }
+  }
+  G = { zap:{ x:-9e4, y:-9e4, w:10, h:10, on:false, t:0, cd:0, zt:0 }, grid, zone, wallZ, doors, lit:[0, true, true, true, true, true], items:[], decos:[], mini:null, chunks:{}, chs:Math.min(1.5, Math.max(1, window.devicePixelRatio || 1)),
+    gas:{ 2:{ st:'off', t:0, cd:0 }, 3:{ st:'off', t:0, cd:0 }, 4:{ st:'off', t:0, cd:0 } }, gasR:{} };
+  for (const z in LGAS) { const q = LGAS[z]; G.gasR[z] = { x:q[0] * TS, y:q[1] * TS, w:q[2] * TS, h:q[3] * TS }; }
+  const out = [];
+  const O = (kind, x, y, w, h, extra) => { const r = { kind, x:x * TS, y:y * TS, w:w * TS, h:h * TS, seed:Math.random(), ...extra }; out.push(r); return r; };
+  const P = (spr, x, y, w, h, extra) => O('prop', x, y, w, h, { spr, sc:spr === 'p_barrier' || spr === 'p_barricade' ? 1.12 : 1.25, flip:Math.random() < 0.5, dir:1, ...extra });
+  // ---- HUB ----
+  O('pwrpanel', 19.5, 20.1, 2.6, 0.9, { walk:true }); O('cryo', 22.8, 20.1, 2, 1); O('camcon', 31.4, 20.1, 3, 0.9);
+  O('turret', 22, 29.5, 1, 1, { ang:-1.2, cd:0, fl:0 }); O('turret', 33.5, 29.5, 1, 1, { ang:-1.9, cd:0, fl:0 });
+  O('tube', 26.8, 24.0, 2.4, 2.8); O('labtable', 21, 24.6, 2.2, 1); O('labtable', 33, 24.6, 2.2, 1);
+  P('p_barrier', 24.2, 27.4, 2.2, 0.7); P('p_sandbags', 30.2, 27.6, 1.6, 1); P('p_dumpster', 34.2, 22, 1.6, 1, { hide:true }); P('p_crates', 20.2, 22.6, 1, 1);
+  O('fan', 26.6, 29.5, 1.4, 1.4, { walk:true });
+  // ---- ESCLUSA ----
+  O('decon', 27.2, 44.3, 1.6, 1.6, { walk:true }); P('p_crates', 24, 43, 1, 1); O('console', 30.4, 43, 1.6, 0.8); O('tube', 24.1, 46.2, 1, 1.6); O('tube', 31.9, 46.2, 1, 1.6);
+  // ---- SALA DE ENERGIA ----
+  O('gen', 4.4, 21.5, 2.2, 1.8); O('tank', 4, 17.2, 2.8, 0.9); O('tank', 4, 31.8, 2.8, 0.9); O('console', 5, 26, 1.8, 0.8); O('console', 13.2, 17.6, 1.8, 0.8);
+  for (const [x, y] of [[8, 18], [8, 22.5], [8, 27], [11.6, 19.5], [11.6, 24], [11.6, 28.5]]) O('rack', x, y, 0.9, 2.2);
+  O('pillar', 9.8, 21, 1, 1); O('pillar', 9.8, 26, 1, 1); O('supply', 13.8, 21, 1.4, 1); O('tube', 13.7, 25.6, 1, 1.8);
+  P('p_barrels', 14, 31, 1, 1, { explosive:true }); P('p_barrels', 6.4, 24.6, 1, 1, { explosive:true }); P('p_crates', 6, 29.5, 1, 1); P('p_barrier', 9.4, 31.2, 2.2, 0.7);
+  O('fan', 11.2, 22.4, 1.2, 1.2, { walk:true });
+  // ---- INVERNADERO ----
+  for (const y of [5, 8, 11.2]) { O('planter', 19, y, 6, 1); O('planter', 31, y, 6, 1); }
+  for (const x of [18, 21.4, 33.6, 36.6]) O('tube', x, 3.2, 1, 1.8);
+  O('samplep', 27.2, 4.4, 1.6, 1.6); O('labtable', 29.2, 10.4, 2, 1); O('supply', 37, 12.7, 1.4, 1); P('p_barrels', 31.2, 3.8, 1, 1, { explosive:true }); P('p_crates', 24.8, 12.6, 1, 1);
+  O('planter', 25.6, 9.2, 1, 1.6); O('planter', 29.6, 6.8, 1, 1.6);
+  // ---- SEGURIDAD ----
+  O('seccon', 49.2, 17.2, 2.8, 0.9);
+  for (const [x, y] of [[43, 19.5], [43, 24], [43, 28.5], [46.4, 21.8], [46.4, 26.4]]) O('rack', x, y, 0.9, 2.2);
+  O('console', 41.4, 17.4, 1.8, 0.8); O('console', 50.4, 31.4, 1.8, 0.8); O('labtable', 45, 30.4, 2.2, 1); O('labtable', 49.6, 25, 2, 1); O('tube', 51, 19.6, 1, 1.8); O('tube', 51, 28, 1, 1.8);
+  P('p_barrier', 45.6, 24, 2.2, 0.7); P('p_sandbags', 48.4, 28.4, 1.6, 1); P('p_dumpster', 41, 31.5, 1.6, 1, { hide:true }); P('p_barrels', 51, 32, 1, 1, { explosive:true }); P('p_crates', 41.4, 21.4, 1, 1);
+  O('pillar', 48, 21, 1, 1); O('supply', 41.2, 26.5, 1.4, 1);
+  // ---- NUCLEO ARGOS ----
+  O('elev', 43, 38.2, 5, 1.8); for (const [x, y] of [[41, 41], [50, 41], [41, 45], [50, 45]]) O('pillar', x, y, 1, 1);
+  O('tube', 44.5, 41.6, 2.8, 3); O('console', 39.2, 43, 1.8, 0.8); O('console', 51, 43, 1.8, 0.8);
+  P('p_barrels', 47.5, 45.5, 1, 1, { explosive:true }); P('p_barrels', 42.2, 45.5, 1, 1, { explosive:true }); P('p_sandbags', 39.4, 40.4, 1.6, 1); P('p_sandbags', 49.8, 40.4, 1.6, 1);
+  for (const r of out) if (r.kind === 'taskpt' || r.kind === 'zapsw' || r.kind === 'switch' || r.kind === 'conv') r.walk = true;
+  rects = out;
+  // ---- decoraciones de suelo ----
+  const D = (t, x, y, w, h, col) => G.decos.push({ t, x:x * TS, y:y * TS, w:w * TS, h:h * TS, col });
+  D('haz', 27, 39.4, 2, 0.8); D('haz', 27, 31.6, 2, 0.8); D('haz', 16.3, 25, 0.7, 2); D('haz', 38.1, 25, 0.7, 2); D('haz', 27, 15, 2, 0.7); D('haz', 33, 33.6, 2, 0.7);
+  D('strip', 20, 23.2, 16, 0.1, '#ff3fb4'); D('strip', 4, 20.2, 11, 0.1, '#2be8f0'); D('strip', 18, 6.2, 20, 0.1, '#ff3fb4'); D('strip', 41, 21.2, 11, 0.1, '#ffe14a'); D('strip', 39, 40.6, 13, 0.1, '#b6ff3a');
+  D('pad', 28, 45.1, 1.5, 0, '#ffe14a'); D('pad', 28, 5.2, 1.6, 0, '#7dff6a'); D('pad', 28, 25.4, 3.2, 0, '#27e0c0'); D('pad', 45.5, 43.2, 3, 0, '#ff5ac8'); D('pad', 50.5, 18.4, 1.4, 0, '#4aa8ff');
+  D('pipe', 0, 0, 0, 0, [[4, 19.6], [14, 19.6], [14, 23]]); D('pipe', 0, 0, 0, 0, [[18, 13.2], [37, 13.2]]); D('pipe', 0, 0, 0, 0, [[41, 32.2], [52, 32.2], [52, 28]]);
+  D('vent', 24, 22.4, 1, 1); D('vent', 30, 22.4, 1, 1); D('vent', 9, 30, 1, 1); D('vent', 34, 8.6, 1, 1); D('vent', 47, 30, 1, 1);
+  for (const [x, y, w] of [[27.6, 27.4, 1.3], [29.2, 21.4, 0.9], [8.4, 25.4, 1.1], [32.8, 12.6, 1.2], [29, 7.6, 0.9], [47.2, 22.6, 1.0], [44, 44.2, 1.2], [26, 46.8, 0.9]]) D('puddle', x, y, w, w * 0.6, ZINFO[zone[Math.floor(y) * GC + Math.floor(x)] || 1].acc);
+  const mc = document.createElement('canvas'); mc.width = GC * 3; mc.height = GR * 3; const mg = mc.getContext('2d');
+  mg.fillStyle = '#06141c'; mg.fillRect(0, 0, mc.width, mc.height);
+  for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) { const v = grid[j * GC + i]; if (v === 1) continue; mg.fillStyle = ZINFO[zone[j * GC + i]].col; mg.globalAlpha = 0.34; mg.fillRect(i * 3, j * 3, 3, 3); }
+  mg.globalAlpha = 1; G.mini = mc;
+  return out;
+}
 
 function setupFacilityMission(retry) {
   const T0 = v => v * TS, Hc = (x, y) => ({ x:T0(x), y:T0(y) });
@@ -1082,7 +1467,7 @@ function retryMission() {
   Object.assign(player, { pts:snap.pts, dmgMul:snap.dmgMul, hp:snap.hp, ws:snap.ws.map(w => ({ ...w })) });
   el.msg.style.display = 'none';
   Sfx.music(true);
-  if (mission && mission.facility) startFacility(true); else startMission(missionIdx, true);
+  if (mission && mission.lab) startLab(true); else if (mission && mission.facility) startFacility(true); else startMission(missionIdx, true);
 }
 
 function objText() {
@@ -1097,6 +1482,7 @@ function objText() {
 }
 
 function targets() {
+  if (mission && mission.lab) return labTargets();
   const o = mission && mission.objs[mission.cur];
   if (!o) return [];
   if (o.t === 'collect') return o.items.filter(i => !i.got).map(i => ({ x:i.x, y:i.y, col:'#ffd24a' }));
@@ -1112,7 +1498,7 @@ function advance() {
 }
 
 function completeMission() {
-  if (mission.facility) { player.pts += 500 + Math.max(0, 400 - 25 * mission.alerts); zombies = []; spits = []; victory(); return; }
+  if (mission.facility) { player.pts += (mission.lab ? 900 : 500) + Math.max(0, 400 - 25 * mission.alerts); zombies = []; spits = []; victory(); return; }
   const stealth = Math.max(0, 300 - 25 * mission.alerts);
   player.pts += 200 * (mission.idx + 1) + stealth;
   zombies = []; spits = [];
@@ -1133,8 +1519,8 @@ function victory() {
     el.best.textContent = best;
   }
   const ps = el.msg.querySelectorAll('p');
-  el.msg.querySelector('h1').textContent = mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
-  ps[0].textContent = mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
+  el.msg.querySelector('h1').textContent = mission && mission.lab ? 'NIVEL 2 COMPLETADO' : mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
+  ps[0].textContent = mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
   el.start.textContent = 'JUGAR DE NUEVO'; el.startS.textContent = 'SUPERVIVENCIA';
   setTimeout(() => { if (state === 'won') el.msg.style.display = 'flex'; }, 1200);
@@ -1172,6 +1558,7 @@ function destroyBarricade(r) {
 
 function nearestInteract() {
   if (!G || state !== 'playing') return null;
+  if (mission && mission.lab) return labNearest();
   if (player.tower) return { type:'tower', ref:player.tower, label:'E - Salir de la torre' };
   if (player.driving) return { type:'vehicle', ref:vehicle, label:'E - Bajar del carro' };
   let best = null, bd = 1e9;
@@ -1197,6 +1584,7 @@ function nearestInteract() {
 
 function interactPress() {
   if (state !== 'playing' || !G) return;
+  if (mission && mission.lab) { labPress(); return; }
   const ia = nearestInteract(); if (!ia || ia.hold) return;
   if (ia.type === 'switch') { G.lit[ia.ref.zn] = !G.lit[ia.ref.zn]; Sfx.pin(); toast(G.lit[ia.ref.zn] ? 'LUCES ENCENDIDAS' : 'LUCES APAGADAS'); makeNoise(ia.ref.x, ia.ref.y, 140); }
   else if (ia.type === 'build') { if (player.scrap >= 3) { player.scrap -= 3; buildBarricade(ia.ref); } else { Sfx.deny(); toast('FALTA CHATARRA'); } }
@@ -1247,6 +1635,7 @@ function driveUpdate(dt) {
 }
 
 function facilityUpdate(dt) {
+  if (mission.lab) { labUpdate(dt); return; }
   const M = mission, o = M.objs[M.cur];
   const nf0 = nightF(); M.cycleT += dt;
   if (nf0 < 0.5 && nightF() >= 0.5) { toast('EMERGENCIA: APAGON - ZOMBIS MAS RAPIDOS'); Sfx.siren(); }
@@ -1392,7 +1781,7 @@ function spawnZombie(type, pos, aggro = true, st, tx, ty, sense) {
     mode:'walk', mt:3, dx:0, dy:0, ph:rand(0, 6), aggro:!!(st ? st !== 'idle' : aggro), wt:0, wa:0, wm:0, slide:0, sx:0, sy:0,
     st:st || (t.boss || aggro ? 'chase' : 'idle'), face:rand(0, 6.283), tx:tx === undefined ? p.x : tx, ty:ty === undefined ? p.y : ty,
     alertT:0, lost:0, seeT:0, seesC:false, lx2:p.x, ly2:p.y, hx:p.x, hy:p.y, sense:sense || null, path:null, pi:0, plan:0 });
-  if (t.boss) { Sfx.boss(); addShake(0.9); toast('JEFE: EL ALCAIDE'); }
+  if (t.boss) { Sfx.boss(); addShake(0.9); toast('JEFE: ' + bossName()); }
 }
 
 function nextWave() {
@@ -1831,6 +2220,7 @@ function update(dt, now) {
     let a = ap;
     if (mis) {
       aiStep(z, dt, d, ap);
+      if (z.st === 'idle' && z.patrol) { patrolStep(z, dt); continue; }
       if (z.st === 'idle') { // en reposo: deambula cerca de su zona
         z.wt -= dt;
         if (z.wt <= 0) {
@@ -2077,6 +2467,7 @@ const PUPPET = {
   boss:   { t:'t_boss',    sh:[-0.04, 0.3],  hip:0.19, fat:1.6,  pal:{ sleeve:'#5f6773', cuff:'#9aa1ab', hand:'#86a07e', pants:'#3c424d', shoe:'#17181c', sole:'#0a0a0c' }, arms:'reach', chain:true }
 };
 const PW = { walker:4.0, runner:4.0, tank:3.8, spitter:4.2, boss:2.6 };
+const bossName = () => mission && mission.lab ? 'EL EXPERIMENTO' : 'EL ALCAIDE';
 const WGRIP = [[0.26, 0.58], [0.2, 0.6], [0.2, 0.6], [0.18, 0.55], [0.34, 0.62], [0.2, 0.62]];  // manos: fraccion del arma (agarre trasero, delantero)
 let charSel = 'f';
 try { const c = localStorage.getItem('condenados_char'); if (c === 'f' || c === 'm') charSel = c; } catch (e) {}
@@ -2241,6 +2632,7 @@ function drawZombie(z) {
   const a = Math.atan2(player.y - z.y, player.x - z.x);
   if (mode === 'mission' && z.st && !z.boss) { // lectura tactica: cono de vision, estado y marcador
     if (z.st !== 'chase') { ctx.save(); ctx.translate(z.x, z.y); ctx.fillStyle = z.st === 'idle' ? 'rgba(255,255,255,.05)' : 'rgba(255,190,60,.085)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 330, z.face - 0.95, z.face + 0.95); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    if (z.patrol && z.st !== 'chase') { ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; const gy = z.y - z.r * 2.4; ctx.fillStyle = 'rgba(8,10,20,.8)'; ctx.fillRect(z.x - 26, gy - 10, 52, 14); ctx.strokeStyle = '#ffe14a'; ctx.lineWidth = 1; ctx.strokeRect(z.x - 26, gy - 10, 52, 14); ctx.fillStyle = '#ffe14a'; ctx.fillText('GUARDIA', z.x, gy + 1); }
     if (z.sense && z.st !== 'chase') { const tx = z.sense === 'blind' ? 'CIEGO' : 'SORDO', col = z.sense === 'blind' ? '#7be0ff' : '#c9a0ff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; const w = ctx.measureText(tx).width + 10, by = z.y - z.r * 2.4; ctx.fillStyle = 'rgba(8,10,20,.8)'; ctx.fillRect(z.x - w / 2, by - 10, w, 14); ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(z.x - w / 2, by - 10, w, 14); ctx.fillStyle = col; ctx.fillText(tx, z.x, by + 1); }
     if (z.st !== 'idle') { const rc = z.st === 'chase' ? '#ff3a4a' : '#ffc24a'; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = rc; ctx.globalAlpha = 0.7; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.ellipse(z.x, z.y + z.r * 0.7, z.r * 1.15, z.r * 0.6, 0, 0, 7); ctx.stroke(); ctx.restore();
       ctx.font = 'bold ' + (z.st === 'chase' ? 22 : 19) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; const my = z.y - z.r * 3.1 - (z.st === 'chase' ? Math.abs(Math.sin(performance.now() / 120)) * 4 : 0), mt = z.st === 'chase' ? '!' : '?'; ctx.strokeText(mt, z.x, my); ctx.fillStyle = rc; ctx.fillText(mt, z.x, my); }
@@ -2610,7 +3002,7 @@ function drawFP() {
     const bw = Math.min(520, W - 60), bx = (W - bw) / 2;
     ctx.fillStyle = '#000a'; ctx.fillRect(bx - 3, H - 47, bw + 6, 20); ctx.fillStyle = '#5a1010'; ctx.fillRect(bx, H - 44, bw, 14);
     ctx.fillStyle = '#d03030'; ctx.fillRect(bx, H - 44, bw * clamp(boss.hp / boss.maxHp, 0, 1), 14);
-    ctx.fillStyle = '#eee'; ctx.font = 'bold 11px monospace'; ctx.textAlign = 'center'; ctx.fillText('EL ALCAIDE', W / 2, H - 33);
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 11px monospace'; ctx.textAlign = 'center'; ctx.fillText(bossName(), W / 2, H - 33);
   }
   if (combo >= 3) {
     const mult = Math.min(3, 1 + Math.floor(combo / 5) * 0.5);
@@ -2769,11 +3161,23 @@ const rrect = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.ar
 const hashT = (a, b) => ((a * 73856093) ^ (b * 19349663)) >>> 0;
 
 let METAL = null, METALZ = [];
+// baldosa de laboratorio: blanca, brillante y con juntas finas
+function makeLabTile() {
+  const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d');
+  g.fillStyle = '#9aa2ae'; g.fillRect(0, 0, 160, 160);
+  for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) {
+    const x = i * 80, y = j * 80, gd = g.createLinearGradient(x, y, x + 80, y + 80); gd.addColorStop(0, '#b9c0cb'); gd.addColorStop(1, '#8e97a4');
+    g.fillStyle = gd; g.fillRect(x + 2, y + 2, 76, 76);
+    g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.moveTo(x + 6, y + 6); g.lineTo(x + 46, y + 6); g.lineTo(x + 6, y + 46); g.closePath(); g.fill();   // reflejo
+    g.strokeStyle = 'rgba(40,50,70,.55)'; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, 78, 78);
+  }
+  return c;
+}
 function metalFor(z) {
   if (METALZ[z]) return METALZ[z];
   const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d');
   g.drawImage(METAL, 0, 0);
-  g.globalCompositeOperation = 'overlay'; g.globalAlpha = 0.95; g.fillStyle = ZINFO[z].fl; g.fillRect(0, 0, 160, 160);
+  g.globalCompositeOperation = 'overlay'; g.globalAlpha = mission && mission.lab ? 0.8 : 0.95; g.fillStyle = ZINFO[z].fl; g.fillRect(0, 0, 160, 160);
   g.globalCompositeOperation = 'soft-light'; g.globalAlpha = 0.6; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 160, 160);
   g.globalCompositeOperation = 'source-over'; g.globalAlpha = 0.22; g.strokeStyle = ZINFO[z].acc; g.lineWidth = 2;
   for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) g.strokeRect(i * 80 + 5, j * 80 + 5, 70, 70);
@@ -2820,6 +3224,8 @@ function drawFloorDeco(tNow, kind, inView) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (let k = 1; k <= 3; k++) { ctx.strokeStyle = d.col; ctx.globalAlpha = (0.55 - k * 0.12) * pu; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(d.x, d.y, d.w * (k / 3), 0, 7); ctx.stroke(); }
       glow(d.x, d.y, d.w * 1.15, d.col, 0.22 * pu); ctx.restore();
+    } else if (d.t === 'puddle') {
+      ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = d.col; ctx.beginPath(); ctx.ellipse(d.x + d.w / 2, d.y + d.h / 2, d.w / 2, d.h / 2, 0.3, 0, 7); ctx.fill(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(d.x + d.w * 0.38, d.y + d.h * 0.38, d.w * 0.14, d.h * 0.1, 0.3, 0, 7); ctx.fill(); ctx.restore();
     } else if (d.t === 'vent') {
       ctx.fillStyle = '#22262b'; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.strokeStyle = '#0c0e10'; ctx.lineWidth = 3; ctx.strokeRect(d.x, d.y, d.w, d.h);
       for (let k = 1; k < 6; k++) { ctx.fillStyle = '#0e1013'; ctx.fillRect(d.x + 6, d.y + k * d.h / 6 - 2, d.w - 12, 5); }
@@ -2841,7 +3247,12 @@ function drawFacilityWall(tx, ty) {
   else if (northFloor) { ctx.fillStyle = 'rgba(20,0,50,.3)'; ctx.fillRect(x, y, TS, 12); }
   if (westFloor) { ctx.fillStyle = 'rgba(20,0,50,.3)'; ctx.fillRect(x, y, 10, TS); }
   if (eastFloor) { ctx.fillStyle = 'rgba(20,0,50,.3)'; ctx.fillRect(x + TS - 10, y, 10, TS); }
-  if (h % 6 < 2 && (southFloor || northFloor)) {   // franja de neon
+  if (mission && mission.lab && southFloor && h % 4 === 1) {   // ventana de cristal
+    ctx.fillStyle = '#0a1430'; ctx.fillRect(x + 8, y + 14, TS - 16, TS - 40);
+    const gl = ctx.createLinearGradient(x, y + 14, x + TS, y + TS - 26); gl.addColorStop(0, 'rgba(120,255,240,.85)'); gl.addColorStop(1, 'rgba(60,140,255,.55)');
+    ctx.fillStyle = gl; ctx.fillRect(x + 10, y + 16, TS - 20, TS - 44); ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.beginPath(); ctx.moveTo(x + 14, y + 18); ctx.lineTo(x + 34, y + 18); ctx.lineTo(x + 14, y + 40); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#0a1430'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x + TS / 2, y + 14); ctx.lineTo(x + TS / 2, y + TS - 26); ctx.stroke();
+  } else if (h % 6 < 2 && (southFloor || northFloor)) {   // franja de neon
     const sy = southFloor ? y + TS - 13 : y + 6;
     ctx.fillStyle = Z.acc; ctx.globalAlpha = 0.95; ctx.fillRect(x + 10, sy, TS - 20, 5); ctx.globalAlpha = 1;
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.3; ctx.fillStyle = Z.acc; ctx.fillRect(x + 4, sy - 7, TS - 8, 19); ctx.restore();
@@ -2856,7 +3267,7 @@ const CHN = 8, CHP = CHN * TS, CHM = 6;
 function getChunk(cx, cy) {
   const k = cy * 100 + cx;
   if (G.chunks[k]) return G.chunks[k];
-  if (!METAL) METAL = makeMetal();
+  if (!METAL) METAL = mission && mission.lab ? makeLabTile() : makeMetal();
   const sc = G.chs, size = Math.ceil((CHP + CHM * 2) * sc), cvs = document.createElement('canvas');
   cvs.width = cvs.height = size;
   const main = ctx; ctx = cvs.getContext('2d');
@@ -2872,12 +3283,13 @@ function getChunk(cx, cy) {
 }
 
 function drawFacilityGround(tNow) {
-  { const bg = ctx.createLinearGradient(0, cam.y, 0, cam.y + cam.vh); bg.addColorStop(0, '#1c0a46'); bg.addColorStop(1, '#0c1450'); ctx.fillStyle = bg; ctx.fillRect(cam.x - 40, cam.y - 40, cam.vw + 80, cam.vh + 80); }
+  { const bg = ctx.createLinearGradient(0, cam.y, 0, cam.y + cam.vh); if (mission && mission.lab) { bg.addColorStop(0, '#06323a'); bg.addColorStop(1, '#0a1f4a'); } else { bg.addColorStop(0, '#1c0a46'); bg.addColorStop(1, '#0c1450'); } ctx.fillStyle = bg; ctx.fillRect(cam.x - 40, cam.y - 40, cam.vw + 80, cam.vh + 80); }
   const c0 = Math.max(0, Math.floor(cam.x / CHP)), c1 = Math.min(Math.ceil(GC / CHN) - 1, Math.floor((cam.x + cam.vw) / CHP));
   const r0 = Math.max(0, Math.floor(cam.y / CHP)), r1 = Math.min(Math.ceil(GR / CHN) - 1, Math.floor((cam.y + cam.vh) / CHP));
   for (let cy = r0; cy <= r1; cy++) for (let cx = c0; cx <= c1; cx++) ctx.drawImage(getChunk(cx, cy), cx * CHP - CHM, cy * CHP - CHM, CHP + CHM * 2, CHP + CHM * 2);
   drawFloorDeco(tNow, 'dyn', vis);
   drawZapGrid(tNow);
+  if (mission && mission.lab) drawGas(tNow);
   for (const r of rects) if (r.belt && vis(r.x, r.y, r.w, r.h)) drawConv(r, tNow);
   for (const d of G.doors) if (vis(d.px - 30, d.py - 30, d.pw + 60, d.ph + 60)) drawFacilityDoor(d);
   for (const r of rects) if (!r.belt && vis(r.x, r.y, r.w, r.h)) drawRectObj(r);
@@ -2932,7 +3344,8 @@ function drawConv(r, t) {
 }
 
 function drawFacilityDoor(d) {
-  const horiz = d.pw >= d.ph, col = d.lock === 'none' ? (d.open ? '#3bff7a' : '#7be0ff') : LOCKCOL[d.lock], k = d.t;
+  const horiz = d.pw >= d.ph, col = d.lock === 'none' ? (d.open ? '#3bff7a' : '#7be0ff') : (d.lock === 'gate' || d.lock === 'decon') ? (d.open ? '#b6ff3a' : (d.locked ? '#ff3a4a' : '#ff3fb4')) : LOCKCOL[d.lock], k = d.t;
+  if (mission && mission.lab && d.name) { ctx.fillStyle = col; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; const lbl = (d.locked ? 'BLOQUEADA ' : '') + d.name; ctx.strokeText(lbl, d.px + d.pw / 2, d.py - 9); ctx.fillText(lbl, d.px + d.pw / 2, d.py - 9); }
   ctx.fillStyle = '#20252b'; ctx.fillRect(d.px, d.py, d.pw, d.ph);
   const half = (horiz ? d.pw : d.ph) / 2, move = half * k * 0.92;
   ctx.fillStyle = '#7e8893'; ctx.strokeStyle = '#161a1e'; ctx.lineWidth = 3;
@@ -2983,7 +3396,7 @@ function drawFacilityObj(r, tNow) {
     ctx.fillStyle = '#17181a'; for (const [a, b] of [[0, 0], [r.w - 14, r.h - 14]]) { ctx.beginPath(); ctx.moveTo(r.x + a, r.y + b + 14); ctx.lineTo(r.x + a + 14, r.y + b); ctx.lineTo(r.x + a + 14, r.y + b + 14); ctx.fill(); }
   } else if (k === 'gen') {
     sh(); rrect(r.x, r.y, r.w, r.h, 9); ctx.fillStyle = '#b86a1a'; ctx.fill(); ctx.strokeStyle = '#2a1706'; ctx.lineWidth = 3; ctx.stroke();
-    const run = mission && mission.power;
+    const run = mission && (mission.lab ? mission.done && mission.done.A : mission.power);
     ctx.fillStyle = '#23201c'; ctx.beginPath(); ctx.arc(r.x + r.h * 0.5, cy, r.h * 0.36, 0, 7); ctx.fill();
     ctx.save(); ctx.translate(r.x + r.h * 0.5, cy); ctx.rotate(run ? tNow * 9 : 0); ctx.fillStyle = '#6b6f75'; for (let i = 0; i < 4; i++) { ctx.rotate(Math.PI / 2); ctx.fillRect(-3, 0, 6, r.h * 0.33); } ctx.restore();
     ctx.fillStyle = '#d7d2c8'; ctx.fillRect(r.x + r.h + 10, r.y + 12, r.w - r.h - 22, r.h - 24); ctx.fillStyle = '#31363d'; ctx.fillRect(r.x + r.h + 16, r.y + 18, r.w - r.h - 34, 14);
@@ -3051,6 +3464,76 @@ function drawFacilityObj(r, tNow) {
     else if (r.tk === 'breakers') { for (let i = 0; i < 6; i++) { ctx.fillStyle = '#0b0e18'; ctx.fillRect(r.x + 6 + i * (r.w - 12) / 6, r.y + 6, (r.w - 12) / 6 - 3, r.h - 12); ctx.fillStyle = act ? '#ffd24a' : '#6a7a9a'; ctx.fillRect(r.x + 9 + i * (r.w - 12) / 6, r.y + 8 + (i % 2) * (r.h - 24), (r.w - 12) / 6 - 9, 8); } }
     else { ctx.fillStyle = '#071018'; ctx.fillRect(r.x + 8, r.y + 8, r.w - 16, r.h * 0.35); ctx.fillStyle = col; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center'; ctx.fillText(act ? '____' : 'LOCK', cx, r.y + 8 + r.h * 0.27); for (let i = 0; i < 6; i++) { ctx.fillStyle = '#3a4a6a'; ctx.fillRect(r.x + 10 + (i % 3) * (r.w - 20) / 3, r.y + r.h * 0.5 + Math.floor(i / 3) * 9, (r.w - 20) / 3 - 4, 6); } }
     if (act) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, Math.max(r.w, r.h) * 1.2, '#2ad4ff', 0.35 * pu); ctx.restore(); ctx.fillStyle = '#9fe9ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('E: TAREA', cx, r.y - 8); }
+  } else if (k === 'tube') {
+    const L = mission && mission.lab, col = ZINFO[zoneAt(cx, cy)] ? ZINFO[zoneAt(cx, cy)].acc : '#27e0c0', big = r.w > 150;
+    sh(); const rad = Math.min(r.w, r.h) / 2;
+    ctx.fillStyle = '#10182a'; rrect(r.x - 4, r.y - 4, r.w + 8, r.h + 8, rad); ctx.fill();
+    const gl = ctx.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h); gl.addColorStop(0, 'rgba(255,255,255,.9)'); gl.addColorStop(0.18, col); gl.addColorStop(1, '#0a3a5a');
+    ctx.fillStyle = gl; rrect(r.x + 3, r.y + 3, r.w - 6, r.h - 6, rad); ctx.fill();
+    ctx.save(); rrect(r.x + 3, r.y + 3, r.w - 6, r.h - 6, rad); ctx.clip();
+    for (let i = 0; i < (big ? 14 : 7); i++) { const bx = r.x + 8 + ((i * 37 + r.seed * 100) % (r.w - 16)), by = r.y + r.h - ((tNow * (26 + i * 3) + i * 41) % (r.h - 8)); ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.arc(bx, by, 2 + (i % 3), 0, 7); ctx.fill(); }
+    ctx.fillStyle = 'rgba(8,20,40,.55)'; ctx.beginPath(); ctx.ellipse(cx, cy + Math.sin(tNow * 1.4 + r.seed * 9) * 4, r.w * 0.26, r.h * 0.28, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(8,20,40,.55)'; ctx.lineWidth = 3; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(cx + i * 6, cy + r.h * 0.2); ctx.quadraticCurveTo(cx + i * 14 + Math.sin(tNow * 2 + i) * 6, cy + r.h * 0.34, cx + i * 8, cy + r.h * 0.42); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle = '#1b2236'; rrect(r.x - 6, r.y - 6, r.w + 12, 12, 5); ctx.fill(); rrect(r.x - 6, r.y + r.h - 6, r.w + 12, 12, 5); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; rrect(r.x + 8, r.y + 10, 5, r.h - 20, 3); ctx.fill();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, Math.max(r.w, r.h) * (big ? 1.1 : 0.9), col, 0.28 + Math.sin(tNow * 2 + r.seed * 7) * 0.06); ctx.restore();
+  } else if (k === 'planter') {
+    sh(); ctx.fillStyle = '#10302a'; rrect(r.x - 2, r.y - 2, r.w + 4, r.h + 4, 8); ctx.fill(); ctx.fillStyle = '#3a2418'; rrect(r.x + 4, r.y + 4, r.w - 8, r.h - 8, 6); ctx.fill();
+    const n = Math.max(2, Math.floor(Math.max(r.w, r.h) / 30)), horiz = r.w >= r.h;
+    for (let i = 0; i < n; i++) {
+      const px = horiz ? r.x + 16 + i * (r.w - 32) / Math.max(1, n - 1) : cx, py = horiz ? cy : r.y + 16 + i * (r.h - 32) / Math.max(1, n - 1), sw = Math.sin(tNow * 1.6 + i + r.seed * 9) * 2;
+      for (const [dx2, dy2, rr, c2] of [[-7, 2, 10, '#1fa84a'], [7, -2, 11, '#38d65a'], [0, -6, 9, '#7dff6a'], [-2, 7, 8, '#26c25a']]) { ctx.fillStyle = c2; ctx.beginPath(); ctx.arc(px + dx2 + sw, py + dy2, rr, 0, 7); ctx.fill(); }
+      ctx.fillStyle = i % 2 ? '#ff3fb4' : '#ffe14a'; ctx.beginPath(); ctx.arc(px + sw + 2, py - 4, 3.4, 0, 7); ctx.fill();
+    }
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#ff3fb4'; ctx.globalAlpha = 0.65; ctx.lineWidth = 3; ctx.strokeRect(r.x + 2, r.y + 2, r.w - 4, r.h - 4); glow(cx, cy, Math.max(r.w, r.h) * 0.75, '#7dff6a', 0.18); ctx.restore();
+  } else if (k === 'labtable') {
+    sh(); rrect(r.x, r.y, r.w, r.h, 6); ctx.fillStyle = '#e8eef5'; ctx.fill(); ctx.strokeStyle = '#2a3550'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#c4cfdd'; ctx.fillRect(r.x + 5, r.y + r.h - 10, r.w - 10, 5);
+    for (let i = 0; i < 4; i++) { const bx = r.x + 14 + i * (r.w - 28) / 3, c2 = ['#ff3fb4', '#2be8f0', '#7dff6a', '#ffe14a'][i]; ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(bx, cy - 3, 9, 0, 7); ctx.fill(); ctx.fillStyle = c2; ctx.beginPath(); ctx.arc(bx, cy - 3, 6, 0, 7); ctx.fill(); ctx.strokeStyle = '#1a2236'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(bx, cy - 3, 9, 0, 7); ctx.stroke(); }
+    ctx.fillStyle = '#2a3550'; ctx.fillRect(r.x + r.w - 26, r.y + 6, 10, 18); ctx.beginPath(); ctx.arc(r.x + r.w - 21, r.y + 28, 6, 0, 7); ctx.fill();
+  } else if (k === 'cryo') {
+    const M = mission, st = M && M.cryo && M.cryo.stored, on = M && M.sys && M.sys.cryo;
+    sh(); rrect(r.x, r.y, r.w, r.h, 7); const gc = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h); gc.addColorStop(0, '#e6faff'); gc.addColorStop(1, on ? '#7fd0ff' : '#8a94a8'); ctx.fillStyle = gc; ctx.fill(); ctx.strokeStyle = '#1a2a44'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = on ? 'rgba(160,230,255,.55)' : 'rgba(40,50,70,.5)'; rrect(r.x + 8, r.y + 8, r.w * 0.55, r.h - 16, 4); ctx.fill();
+    ctx.fillStyle = st ? '#7dff6a' : '#364058'; ctx.fillRect(r.x + 16, r.y + r.h * 0.35, 12, r.h * 0.3);
+    ctx.fillStyle = on ? '#2be8f0' : '#ff3a4a'; ctx.beginPath(); ctx.arc(r.x + r.w - 16, r.y + 14, 5, 0, 7); ctx.fill(); ctx.fillStyle = '#0a1226'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.fillText(on ? '-18C' : 'OFF', r.x + r.w - 20, r.y + r.h - 10);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 0.9, on ? '#2be8f0' : '#ff3a4a', 0.2); if (st) glow(r.x + 22, cy, 26, '#7dff6a', 0.5); ctx.restore();
+  } else if (k === 'turret') {
+    const M = mission, on = M && M.sys && M.sys.turrets;
+    ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.ellipse(cx + 3, cy + 6, r.w * 0.5, r.h * 0.42, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#1a2236'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.48, 0, 7); ctx.fill(); ctx.fillStyle = '#475270'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.38, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(r.ang || 0); ctx.fillStyle = '#10182a'; ctx.fillRect(2, -6, 44, 12); ctx.fillStyle = on ? '#ff3fb4' : '#5a6480'; ctx.fillRect(34, -4, 14, 8); ctx.fillStyle = '#2a3550'; rrect(-12, -12, 24, 24, 6); ctx.fill(); if (r.fl > 0) { ctx.globalCompositeOperation = 'lighter'; glow(52, 0, 40, '#ffe14a', 0.9); } ctx.restore();
+    ctx.fillStyle = on ? '#7dff6a' : '#ff3a4a'; ctx.beginPath(); ctx.arc(cx - 10, cy - 10, 3, 0, 7); ctx.fill();
+    if (on) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = 'rgba(255,63,180,.35)'; ctx.lineWidth = 2; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.arc(cx, cy, 380, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+  } else if (k === 'pwrpanel') {
+    const M = mission; ctx.fillStyle = '#0c1226'; rrect(r.x, r.y, r.w, r.h, 6); ctx.fill(); ctx.strokeStyle = '#ff3fb4'; ctx.lineWidth = 3; ctx.stroke();
+    for (let i = 0; i < SYSD.length; i++) { const on = M && M.sys && M.sys[SYSD[i].k]; ctx.fillStyle = on ? '#7dff6a' : '#3a2448'; ctx.fillRect(r.x + 8 + i * (r.w - 16) / SYSD.length, r.y + 8, (r.w - 16) / SYSD.length - 4, r.h * 0.42); }
+    ctx.fillStyle = '#2be8f0'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ENERGIA ' + (M && M.sys ? sysUsed() + '/' + M.cap : ''), cx, r.y + r.h - 9);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 0.7, '#ff3fb4', 0.2); ctx.restore(); ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('E: PANEL', cx, r.y - 6);
+  } else if (k === 'camcon') {
+    const on = mission && mission.sys && mission.sys.cams; ctx.fillStyle = '#0c1226'; rrect(r.x, r.y, r.w, r.h, 6); ctx.fill(); ctx.strokeStyle = '#2be8f0'; ctx.lineWidth = 3; ctx.stroke();
+    for (let i = 0; i < 3; i++) { const mx = r.x + 8 + i * (r.w - 16) / 3, mw = (r.w - 16) / 3 - 6; ctx.fillStyle = on ? '#06361f' : '#10141e'; ctx.fillRect(mx, r.y + 7, mw, r.h - 16); if (on) { ctx.fillStyle = '#7dff6a'; for (let q = 0; q < 4; q++) ctx.fillRect(mx + 4, r.y + 10 + ((q * 5 + tNow * 20 + i * 7) % (r.h - 22)), mw - 8, 1.5); } }
+    ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('E: CAMARAS', cx, r.y - 6); if (on) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 0.7, '#7dff6a', 0.18); ctx.restore(); }
+  } else if (k === 'seccon') {
+    const done = mission && mission.done && mission.done.C; sh(); rrect(r.x, r.y, r.w, r.h, 7); ctx.fillStyle = '#10182e'; ctx.fill(); ctx.strokeStyle = done ? '#7dff6a' : '#ff3a4a'; ctx.lineWidth = 3; ctx.stroke();
+    for (let i = 0; i < 4; i++) { ctx.fillStyle = ['#ff3a4a', '#2b9bff', '#ffe14a', '#7dff6a'][i]; ctx.globalAlpha = done ? 1 : (0.35 + 0.65 * (Math.floor(tNow * 1.5) % 4 === i)); ctx.beginPath(); ctx.arc(r.x + 22 + i * (r.w - 44) / 3, cy, 8, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
+    ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(done ? 'PROTOCOLO OFF' : 'E: CUARENTENA', cx, r.y - 6);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 0.7, done ? '#7dff6a' : '#ff3a4a', 0.22); ctx.restore();
+  } else if (k === 'samplep') {
+    const gone = mission && mission.sampleTaken && !(mission.sampleSpoiled), pu = 0.6 + Math.sin(tNow * 3) * 0.3;
+    sh(); ctx.fillStyle = '#1a2236'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.48, 0, 7); ctx.fill(); ctx.fillStyle = '#3a4668'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.38, 0, 7); ctx.fill();
+    if (!gone) { ctx.fillStyle = 'rgba(160,255,240,.45)'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.3, 0, 7); ctx.fill(); ctx.fillStyle = '#7dff6a'; ctx.fillRect(cx - 5, cy - 14, 10, 24); ctx.beginPath(); ctx.arc(cx, cy + 10, 8, 0, 7); ctx.fill(); ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 1.3, '#7dff6a', 0.45 * pu); ctx.restore(); }
+    ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(gone ? 'VACIO' : 'MUESTRA', cx, r.y - 6);
+  } else if (k === 'decon') {
+    const done = mission && mission.done && mission.done.decon, pu = (tNow * 1.2) % 1;
+    ctx.save(); ctx.strokeStyle = done ? '#7dff6a' : '#ffe14a'; ctx.lineWidth = 4; ctx.setLineDash([16, 10]); ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.55, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.globalCompositeOperation = 'lighter'; for (let i = 0; i < 14; i++) { const a = i / 14 * 6.283 + tNow * 0.6, rr = r.w * (0.1 + ((tNow * 0.8 + i * 0.07) % 1) * 0.5); ctx.fillStyle = 'rgba(120,255,235,.6)'; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 3, 0, 7); ctx.fill(); }
+    glow(cx, cy, r.w * 0.9, done ? '#7dff6a' : '#ffe14a', 0.25); ctx.restore(); ctx.fillStyle = '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(done ? 'LIMPIO' : 'DESCONTAMINACION', cx, r.y - 6);
+  } else if (k === 'fan') {
+    ctx.fillStyle = '#10182a'; ctx.fillRect(r.x, r.y, r.w, r.h); ctx.strokeStyle = '#05080f'; ctx.lineWidth = 3; ctx.strokeRect(r.x, r.y, r.w, r.h);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(tNow * (mission && mission.sys && mission.sys.vent ? 9 : 1.2)); ctx.fillStyle = '#6a7690'; for (let i = 0; i < 4; i++) { ctx.rotate(Math.PI / 2); rrect(2, -7, r.w * 0.38, 14, 6); ctx.fill(); } ctx.restore();
+    ctx.fillStyle = '#2a3550'; ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2; for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(r.x + 4, r.y + i * r.h / 4); ctx.lineTo(r.x + r.w - 4, r.y + i * r.h / 4); ctx.stroke(); }
   } else if (k === 'zapsw') {
     const on = G.zap.on, rd = G.zap.cd <= 0; ctx.fillStyle = '#1b2026'; ctx.fillRect(r.x, r.y, r.w, r.h); ctx.strokeStyle = '#0a0c0f'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
     ctx.fillStyle = on ? '#7be0ff' : rd ? '#ffd24a' : '#ff4d4d'; ctx.fillRect(r.x + 5, r.y + 5, r.w - 10, r.h - 10); ctx.fillStyle = '#10141a'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('\u26A1', cx, cy + 4);
@@ -3071,7 +3554,7 @@ function drawFacilityObj(r, tNow) {
     ctx.globalAlpha = 1; glow(cx, cy, r.w * 1.1, '#2ad4ff', hold ? 0.5 : 0.28); ctx.restore();
     ctx.fillStyle = '#0b2430'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.26, 0, 7); ctx.fill(); ctx.fillStyle = '#9fe9ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('DATOS', cx, cy + 4);
   } else if (k === 'elev') {
-    const open = mission && mission.objs[mission.cur] && mission.objs[mission.cur].t === 'escape';
+    const open = mission && (mission.lab ? mission.elevReady : (mission.objs[mission.cur] && mission.objs[mission.cur].t === 'escape'));
     ctx.fillStyle = '#20252b'; ctx.fillRect(r.x, r.y, r.w, r.h); ctx.fillStyle = '#9aa4af'; const hw = r.w / 2 - 4, mv = open ? hw * 0.8 : 0;
     ctx.fillRect(r.x + 4, r.y + 6, hw - mv, r.h - 12); ctx.fillRect(r.x + r.w - 4 - hw + mv, r.y + 6, hw - mv, r.h - 12);
     ctx.strokeStyle = '#11151a'; ctx.lineWidth = 3; ctx.strokeRect(r.x, r.y, r.w, r.h);
@@ -3160,6 +3643,7 @@ function drawGround() {
 
 // marcadores de objetivo en el mundo
 function drawFacilityMarkers(tNow) {
+  if (mission.lab) { drawLabMarkers(tNow); return; }
   const M = mission, o = M.objs[M.cur], pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
   if (!o) return;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -3398,7 +3882,7 @@ function draw() {
 
   ctx.restore();
 
-  if (G && mission && mission.facility) { drawDarkness(); drawTopMarkers(); }
+  if (G && mission && mission.facility) { drawDarkness(); drawTopMarkers(); if (mission.lab) drawSpores(); }
   // oscuridad con linterna
   const g = ctx.createRadialGradient(player.x - cam.x, player.y - cam.y, 120, player.x - cam.x, player.y - cam.y, Math.max(W, H) * 0.7);
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(40,6,90,.34)');
@@ -3433,7 +3917,7 @@ function draw() {
     ctx.fillStyle = '#5a1010'; ctx.fillRect(bx, 20, bw, 14);
     ctx.fillStyle = '#d03030'; ctx.fillRect(bx, 20, bw * clamp(boss.hp / boss.maxHp, 0, 1), 14);
     ctx.fillStyle = '#eee'; ctx.font = 'bold 11px monospace'; ctx.textAlign = 'center';
-    ctx.fillText('EL ALCAIDE', W / 2, 31);
+    ctx.fillText(bossName(), W / 2, 31);
   }
 
   // combo
@@ -3516,7 +4000,7 @@ function hud() {
     el.scr.textContent = player.scrap + (vehicle ? ' | COMBUSTIBLE: ' + Math.ceil(vehicle.fuel) + 's' : '');
     const ia = player.ia;
     if (ia) {
-      const pr = ia.type === 'gen' ? ia.ref.prog / ia.ref.sec : ia.type === 'supply' ? (ia.ref.hold || 0) / 3 : 0;
+      const pr = ia.pr !== undefined ? ia.pr : ia.type === 'gen' ? ia.ref.prog / ia.ref.sec : ia.type === 'supply' ? (ia.ref.hold || 0) / 3 : 0;
       el.prompt.style.display = 'block'; el.prompt.innerHTML = ia.label + (ia.hold ? '<i style="width:' + clamp(pr, 0, 1) * 100 + '%"></i>' : '');
     } else el.prompt.style.display = 'none';
   } else el.prompt.style.display = 'none';
@@ -3530,7 +4014,7 @@ function hud() {
   if (mode === 'mission' && mission) {
     el.left.textContent = aggroCount;
     const vis = player.hidden ? 'OCULTO' : player.sprinting ? 'ALTA' : Math.hypot(player.vx, player.vy) < 60 ? 'BAJA' : 'MEDIA';
-    el.obj.innerHTML = (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
+    el.obj.innerHTML = mission.lab ? labObjHtml() : (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
     drawMini();
   } else {
     el.left.textContent = zombies.length + spawnQueue.length;
@@ -3566,6 +4050,7 @@ window.addEventListener('keydown', e => {
   if (!keys) return;
   keys[k] = true;
   if (state === 'task') { if (k === 'escape') closeTask(false); return; }
+  if (k === 'escape' && taskObj && taskObj.live) { closeTask(false); return; }
   if (state === 'paused') { if (k === 'p') { state = prePause; lastT = performance.now(); Sfx.music(true); } return; }
   if (k === 'p' && (state === 'playing' || state === 'between')) { prePause = state; state = 'paused'; Sfx.music(false); return; }
   if (state !== 'playing' && state !== 'between') return;
@@ -3619,6 +4104,7 @@ const setDiffLabel = () => { el.startD.textContent = 'DIFICULTAD: ' + DIFFS[diff
 setDiffLabel();
 el.startD.addEventListener('click', () => { diff = (diff + 1) % 3; try { localStorage.setItem('condenados_diff', diff); } catch (e) {} setDiffLabel(); });
 el.startS.addEventListener('click', () => { Sfx.init(); newGame('survival'); });
+el.startL2.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 2); });
 el.startF.addEventListener('click', () => { Sfx.init(); newGame('mission', true); if (cv.requestPointerLock) cv.requestPointerLock(); });
 
 loadCartoon();
