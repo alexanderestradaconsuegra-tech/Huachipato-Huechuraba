@@ -365,13 +365,20 @@ function hueVariant(img, hue) {
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const g = c.getContext('2d');
   g.drawImage(img, 0, 0);
-  g.globalCompositeOperation = 'color'; g.fillStyle = 'hsl(' + hue + ',72%,52%)'; g.fillRect(0, 0, c.width, c.height);
-  g.globalCompositeOperation = 'destination-in'; g.drawImage(img, 0, 0);
+  g.globalCompositeOperation = 'color'; g.fillStyle = 'hsl(' + hue + ',96%,56%)'; g.fillRect(0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'soft-light'; g.globalAlpha = 0.55; g.fillStyle = 'hsl(' + hue + ',100%,60%)'; g.fillRect(0, 0, c.width, c.height);   // empuja el brillo y el color
+  g.globalAlpha = 1; g.globalCompositeOperation = 'destination-in'; g.drawImage(img, 0, 0);
   return c;
 }
+// objetos del mapa en la paleta fluorescente (se conservan las sombras y detalles del sprite)
+const NEON_HUE = { p_barrels:345, p_crates:38, p_sandbags:272, p_barrier:52, p_tires:182, p_barricade:22, p_dumpster:140, p_wreck:305, car_policia:200 };
 const HUES = [0, 200, 305, 48, 135, 345];
 function buildVariants() {
-  for (const k of ['car_policia', 'p_wreck', 'p_dumpster']) if (IMG[k] && !IMG[k + '#1']) for (let i = 1; i < HUES.length; i++) IMG[k + '#' + i] = hueVariant(IMG[k], HUES[i]);
+  for (const k in NEON_HUE) if (IMG[k] && !IMG[k + '_o']) {
+    IMG[k + '_o'] = IMG[k];                              // original (para las variantes de color)
+    if (k !== 'p_dumpster' && k !== 'p_wreck' && k !== 'car_policia') IMG[k] = hueVariant(IMG[k + '_o'], NEON_HUE[k]);
+  }
+  for (const k of ['car_policia', 'p_wreck', 'p_dumpster']) if (IMG[k + '_o'] && !IMG[k + '#1']) { for (let i = 1; i < HUES.length; i++) IMG[k + '#' + i] = hueVariant(IMG[k + '_o'], HUES[i]); IMG[k] = hueVariant(IMG[k + '_o'], NEON_HUE[k]); }
   for (const k of ['asfalto', 'acera', 'pasto']) if (IMG[k] && !PAT[k]) PAT[k] = ctx.createPattern(IMG[k], 'repeat');
   // sprites propios (vista frontal): reemplazan el tinte y llevan su silueta blanca para el destello
   for (const t of UPRIGHT_TYPES) if (IMG[t]) { VAR[t] = IMG[t]; VAR['w_' + t] = tintCanvas(IMG[t], '#ffffff', 1); }
@@ -3028,8 +3035,8 @@ function drawFacilityObj(r, tNow) {
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(pcx, pcy, r.w * 1.2, occ ? '#b6ff3a' : '#ff3fb4', (occ ? 0.3 : 0.2) * pulse + 0.05); ctx.restore();
     ctx.fillStyle = '#0b0d14'; rrect(lx - 28, gy1 + 22, 56, 15, 4); ctx.fill(); ctx.fillStyle = occ ? '#b6ff3a' : '#ffe14a'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(occ ? 'EN LA TORRE' : 'E: SUBIR', lx, gy1 + 33);
   } else if (k === 'supply') {
-    sh(); rrect(r.x, r.y, r.w, r.h, 6); ctx.fillStyle = r.open ? '#2b3b22' : '#47642f'; ctx.fill(); ctx.strokeStyle = '#141c0f'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#d6b53a'; ctx.fillRect(r.x + r.w * 0.2, r.y + 2, 8, r.h - 4); ctx.fillRect(r.x + r.w * 0.8 - 8, r.y + 2, 8, r.h - 4);
+    sh(); rrect(r.x, r.y, r.w, r.h, 6); ctx.fillStyle = r.open ? '#3a2a6a' : '#22d68a'; ctx.fill(); ctx.strokeStyle = '#0c0a24'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#ff3fb4'; ctx.fillRect(r.x + r.w * 0.2, r.y + 2, 8, r.h - 4); ctx.fillRect(r.x + r.w * 0.8 - 8, r.y + 2, 8, r.h - 4);
     ctx.fillStyle = r.open ? '#8a8f86' : '#f1e6a8'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(r.open ? 'VACIA' : '+', cx, cy + 5);
     if (!r.open) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 0.9, '#9fff6a', 0.14 + Math.sin(tNow * 3 + r.seed * 9) * 0.05); ctx.restore(); }
   } else if (k === 'switch') {
