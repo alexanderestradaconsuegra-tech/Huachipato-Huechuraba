@@ -6,6 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Los Condenados: shooter de zombis con sigilo, estrategia y plantas mutantes. Juega gratis en tu navegador.">
 <meta name="theme-color" content="#07040f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="robots" content="noindex">
 <title>Los Condenados</title>
 <style>
@@ -233,6 +237,25 @@
   .pc > *:not(.pbar):not(.keep) { display:none !important; } .pc { min-width:0 !important; } .pc .pbar { margin-bottom:0; }
   .hud.pc { width:auto; } .hud .keep { min-width:190px; } .pdrag { transition:none !important; }
   #msg #startL3 { order:2; box-shadow:0 8px 24px rgba(138,31,255,.45); } #msg #startL2 { order:3; } #msg #startS { order:4; } #msg #toHero { order:5; }
+  /* controles tactiles (movil) */
+  html, body { overscroll-behavior:none; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; }
+  #touch { position:absolute; inset:0; display:none; z-index:3; touch-action:none; user-select:none; -webkit-user-select:none; pointer-events:auto; }
+  body.touch.ingame #touch { display:block; }
+  .stick { position:absolute; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.07); border:2px solid rgba(43,232,240,.55); display:none; transform:translate(-50%,-50%); pointer-events:none; }
+  #stR { border-color:rgba(255,63,180,.6); }
+  .knob { position:absolute; left:50%; top:50%; width:56px; height:56px; border-radius:50%; background:rgba(43,232,240,.5); border:2px solid #fff; transform:translate(-50%,-50%); box-shadow:0 0 14px rgba(43,232,240,.6); }
+  #stR .knob { background:rgba(255,63,180,.55); box-shadow:0 0 14px rgba(255,63,180,.6); }
+  .tb, .tt { font:800 12px/1 'Arial Black',system-ui,sans-serif; letter-spacing:.5px; color:#fff; background:rgba(26,8,60,.72); border:2px solid var(--c-line); border-radius:var(--r2); touch-action:none; cursor:pointer; backdrop-filter:blur(4px); }
+  .tb { min-width:72px; height:46px; padding:0 6px; } .tb.main { background:rgba(255,45,143,.7); border-color:#fff; } .tb.on, .tt.on { background:rgba(43,232,240,.7); }
+  #tbtns { position:absolute; right:8px; bottom:8px; display:grid; grid-template-columns:repeat(5,72px); gap:6px; }
+  #tshop { position:absolute; left:50%; bottom:70px; transform:translateX(-50%); display:none; gap:6px; } #tshop.on { display:flex; }
+  #ttop { position:absolute; right:8px; top:56px; display:flex; gap:6px; } .tt { height:40px; min-width:54px; padding:0 8px; font-size:12px; }
+  #rot { position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; text-align:center; padding:24px; background:rgba(7,4,15,.96); color:#fff; font:800 20px/1.4 'Arial Black',system-ui,sans-serif; }
+  @media (orientation:portrait) { body.touch.ingame #rot { display:flex; } }
+  @media (max-width:760px) { #tbtns { grid-template-columns:repeat(4,64px); } .tb { min-width:64px; font-size:11.5px; } }
+  body.touch .hud { transform:scale(.8); transform-origin:top left; } body.touch .hud.r { transform-origin:top right; } body.touch #obj { max-width:min(420px,60vw); font-size:12px; }
+  body.touch #mini { width:132px !important; height:auto !important; right:8px; top:104px; bottom:auto; }
+  body.touch #seedhud { bottom:auto; top:46px; font-size:12px; } body.touch #prompt { bottom:70px; } body.touch #toast { top:26%; }
 </style>
 </head>
 <body>
@@ -264,6 +287,13 @@
   <div id="camov" class="ovl"></div>
   <div id="expp" class="ovl"></div>
   <div id="seedhud"></div>
+  <div id="touch" aria-hidden="false">
+    <div class="stick" id="stL"><div class="knob"></div></div><div class="stick" id="stR"><div class="knob"></div></div>
+    <div id="ttop"><button class="tt" data-t="pause" aria-label="Pausa">II</button><button class="tt" data-t="zoom" aria-label="Cambiar zoom del mapa">ZOOM</button><button class="tt" data-t="hud" aria-label="Ocultar paneles">PANEL</button><button class="tt" data-t="fs" aria-label="Pantalla completa">FULL</button></div>
+    <div id="tbtns"><button class="tb main" data-k="e">ACCION</button><button class="tb" data-k=" ">ESQUIVA</button><button class="tb" data-k="r">RECARGA</button><button class="tb" data-k="g">GRANADA</button><button class="tb" data-k="q">ARMA</button><button class="tb" data-k="c">SEMBRAR</button><button class="tb" data-k="v">SEMILLA</button><button class="tb" data-k="t">SENUELO</button><button class="tb" data-k="f">CUCHILLO</button></div>
+    <div id="tshop"><button class="tb" data-k="b">BOTIQUIN</button><button class="tb" data-k="n">MUNICION</button><button class="tb" data-k="m">DANO</button><button class="tb" data-k="v">GRANADAS</button><button class="tb main" data-k="enter">CONTINUAR</button></div>
+  </div>
+  <div id="rot"><div>Gira tu celular a horizontal para jugar</div></div>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="shop"></div>
   <div id="hero" role="main" aria-label="Los Condenados, menu principal">
@@ -284,7 +314,7 @@
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
         <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
         <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
-        <p class="hwarn" role="note">Este juego se controla con teclado y mouse. Para jugarlo abrelo en una computadora.</p>
+        <p class="hwarn" role="note">En el celular se juega en horizontal: joystick izquierdo para moverte y derecho para apuntar y disparar. Al tocar JUGAR se abre en pantalla completa.</p>
         <ul class="hstats"><li><b>3</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
@@ -677,7 +707,7 @@ let state = 'menu', prePause = 'playing';
 let plants = [], player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
 let spawnQueue, spawnTimer, hordeDone, trauma, freeze, groanT, heartT, combo, comboT, comboPulse, killsTotal;
 let grenades = [], blasts = [], scorch = [], rockets = [], dying = [], decoys = [], noiseRings = [], pendingBlasts = [];
-let camZoom = 1, camZoomT = 1, G = null, lastHitRect = null, vehicle = null;
+let zoomUser = 1, camZoom = 1, camZoomT = 1, G = null, lastHitRect = null, vehicle = null;
 const mwx = () => cam.x + mouse.x / camZoom, mwy = () => cam.y + mouse.y / camZoom;
 const NOISE = [420, 720, 680, 820, 900, 650]; // radio de ruido de cada arma
 const PAL = ['#ff4d9a', '#2ad4ff', '#ffb347', '#7dff6a', '#a66bff', '#ff6a4d'];
@@ -697,7 +727,7 @@ function makePlayer() {
 function resetState() {
   zombies = []; plants = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = []; decoys = []; noiseRings = []; pendingBlasts = []; vehicle = null; G = null;
   keys = {}; mouse = { x:W/2, y:H/2, down:false };
-  cam = { x:0, y:0, kx:0, ky:0, lx:0, ly:0, vw:W, vh:H }; camZoom = 1; camZoomT = 1;
+  cam = { x:0, y:0, kx:0, ky:0, lx:0, ly:0, vw:W, vh:H }; camZoom = zoomUser; camZoomT = 1;
   wave = 0; toastT = 0; lastT = performance.now();
   spawnQueue = []; spawnTimer = 0; hordeDone = false;
   trauma = 0; freeze = 0; groanT = 2; heartT = 0; combo = 0; comboT = 0; comboPulse = 0; killsTotal = 0;
@@ -2734,7 +2764,7 @@ function update(dt, now) {
   // camara que mira un poco hacia donde apuntas
   const tlx = fp ? 0 : clamp((mouse.x - W / 2) * 0.28, -200, 200), tly = fp ? 0 : clamp((mouse.y - H / 2) * 0.28, -140, 140);
   cam.lx += (tlx - cam.lx) * Math.min(1, 5 * dt); cam.ly += (tly - cam.ly) * Math.min(1, 5 * dt);
-  camZoom += (camZoomT - camZoom) * Math.min(1, 4 * dt);
+  camZoom += (camZoomT * zoomUser - camZoom) * Math.min(1, 4 * dt);
   cam.vw = W / camZoom; cam.vh = H / camZoom;
   cam.x = clamp(player.x - cam.vw / 2 + cam.lx, 0, Math.max(0, WORLD.w - cam.vw));
   cam.y = clamp(player.y - cam.vh / 2 + cam.ly, 0, Math.max(0, WORLD.h - cam.vh));
@@ -4774,10 +4804,68 @@ function initPanels() {
 }
 function togglePanels() { const anyOpen = panEls.some(([p]) => !p.classList.contains('pc')); panEls.forEach(([p, key]) => setPanCollapsed(p, key, anyOpen)); savePan(); }
 initPanels();
+/* ---- controles tactiles ---- */
+const IS_TOUCH = matchMedia('(pointer:coarse)').matches || /[?&]touch=1/.test(location.search);
+const ZOOMS = [0.4, 0.52, 0.66, 0.85, 1.1];
+if (IS_TOUCH) {
+  document.body.classList.add('touch'); let zi = 1; try { const v = +localStorage.getItem('condenados_zoom'); if (v >= 0 && v < ZOOMS.length && localStorage.getItem('condenados_zoom') !== null) zi = v; } catch (e) {} zoomUser = ZOOMS[zi];
+  const tl = $('touch'), stL = $('stL'), stR = $('stR'), TZ = { L:null, R:null }; const MAXR = 58;
+  const kd = k => { if (!keys) return; window.dispatchEvent(new KeyboardEvent('keydown', { key:k, bubbles:true })); };
+  const ku = k => { window.dispatchEvent(new KeyboardEvent('keyup', { key:k, bubbles:true })); };
+  const place = (st, x, y) => { st.style.left = x + 'px'; st.style.top = y + 'px'; st.style.display = 'block'; st.firstElementChild.style.transform = 'translate(-50%,-50%)'; };
+  const knob = (st, dx, dy) => { st.firstElementChild.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))'; };
+  const setMove = (nx, ny) => { if (!keys) return; keys['d'] = nx > 0.3; keys['a'] = nx < -0.3; keys['s'] = ny > 0.3; keys['w'] = ny < -0.3; keys['shift'] = Math.hypot(nx, ny) > 0.97; };
+  tl.addEventListener('touchstart', e => {
+    if (e.target.closest('.tb,.tt')) return; e.preventDefault();
+    for (const t of e.changedTouches) {
+      const left = t.clientX < innerWidth * 0.45;
+      if (left && !TZ.L) { TZ.L = { id:t.identifier, ox:t.clientX, oy:t.clientY, nx:0, ny:0 }; place(stL, t.clientX, t.clientY); }
+      else if (!left && !TZ.R) { TZ.R = { id:t.identifier, ox:t.clientX, oy:t.clientY, nx:0, ny:0, on:false }; place(stR, t.clientX, t.clientY); }
+    }
+  }, { passive:false });
+  tl.addEventListener('touchmove', e => {
+    e.preventDefault();
+    for (const t of e.changedTouches) for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue;
+      let dx = t.clientX - z.ox, dy = t.clientY - z.oy; const m = Math.hypot(dx, dy); if (m > MAXR) { dx = dx / m * MAXR; dy = dy / m * MAXR; }
+      z.nx = dx / MAXR; z.ny = dy / MAXR; z.on = Math.hypot(dx, dy) > 14; knob(k === 'L' ? stL : stR, dx, dy); if (k === 'L') setMove(z.nx, z.ny);
+    }
+  }, { passive:false });
+  const tEnd = e => {
+    for (const t of e.changedTouches) for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue; TZ[k] = null; (k === 'L' ? stL : stR).style.display = 'none'; if (k === 'L') setMove(0, 0); else if (mouse) mouse.down = false; }
+  };
+  tl.addEventListener('touchend', tEnd); tl.addEventListener('touchcancel', tEnd);
+  // el apuntado y el disparo se calculan cada cuadro porque la camara se mueve
+  (function tick() {
+    requestAnimationFrame(tick);
+    if (!document.body.classList.contains('ingame') || !player || !mouse || state !== 'playing') return;
+    const sx = (player.x - cam.x) * camZoom, sy = (player.y + GUN_DY - cam.y) * camZoom;
+    const a = TZ.R && TZ.R.on ? { x:TZ.R.nx, y:TZ.R.ny } : TZ.L && TZ.L.on ? { x:TZ.L.nx, y:TZ.L.ny } : null;
+    if (a) { const m = Math.hypot(a.x, a.y) || 1; mouse.x = sx + a.x / m * 160; mouse.y = sy + a.y / m * 160; }
+    if (TZ.R && TZ.R.on) { mouse.down = true; if (!WEAPONS[player.cur].auto) shoot(performance.now()); } else if (mouse.down && !TZ.R) mouse.down = false;
+  })();
+  tl.querySelectorAll('.tb').forEach(b => {
+    const k = b.dataset.k;
+    b.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); b.classList.add('on'); kd(k); }, { passive:false });
+    const up = e => { e.preventDefault(); b.classList.remove('on'); ku(k); };
+    b.addEventListener('touchend', up, { passive:false }); b.addEventListener('touchcancel', up, { passive:false });
+  });
+  const fsToggle = () => { const d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); };
+  tl.querySelectorAll('.tt').forEach(b => b.addEventListener('touchstart', e => {
+    e.preventDefault(); e.stopPropagation(); const t = b.dataset.t;
+    if (t === 'pause') { kd('p'); ku('p'); } else if (t === 'hud') togglePanels(); else if (t === 'fs') fsToggle();
+    else if (t === 'zoom') { zi = (zi + 1) % ZOOMS.length; zoomUser = ZOOMS[zi]; try { localStorage.setItem('condenados_zoom', zi); } catch (er) {} toast('ZOOM DEL MAPA ' + (zi + 1) + '/' + ZOOMS.length); }
+  }, { passive:false }));
+  setInterval(() => { $('tshop').classList.toggle('on', state === 'between'); }, 300);
+  // paneles compactos por defecto en el celular
+  try { if (!localStorage.getItem(PAN_KEY)) for (const [pp, key] of panEls) setPanCollapsed(pp, key, true); } catch (e) {}
+}
 /* ---- pagina principal ---- */
 const hero = $('hero');
-const showHero = () => { Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
-hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => { state = 'menu'; hero.style.display = 'none'; el[b.dataset.play].click(); }));
+const showHero = () => { document.body.classList.remove('ingame'); Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
+hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => {
+  state = 'menu'; hero.style.display = 'none'; document.body.classList.add('ingame');
+  if (IS_TOUCH) { const d = document.documentElement; if (d.requestFullscreen && !document.fullscreenElement) d.requestFullscreen().then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); }
+  el[b.dataset.play].click(); }));
 hero.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => { const t = document.getElementById(a.dataset.go); if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); }));
 $('toHero').addEventListener('click', showHero);
 const syncOpts = () => { $('hChar').textContent = el.startC.textContent; $('hDiff').textContent = el.startD.textContent; };
@@ -4793,6 +4881,7 @@ if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es =
 el.startF.addEventListener('click', () => { Sfx.init(); newGame('mission', true); if (cv.requestPointerLock) cv.requestPointerLock(); });
 
 loadCartoon();
+try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
 requestAnimationFrame(loop);
 })();
 </script>
