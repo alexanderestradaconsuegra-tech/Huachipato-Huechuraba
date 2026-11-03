@@ -218,8 +218,11 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
+const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp']]
+  .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.png']))
+  .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.png']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
-const UPRIGHT_W = { walker:5.8, runner:6.4, tank:6.2, spitter:5.6, boss:5.0 };
+const UPRIGHT_W = { walker:5.0, runner:5.6, tank:5.8, spitter:4.9, boss:5.0 };
 function tintCanvas(img, color, alpha) {
   const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
   const g = c.getContext('2d');
@@ -240,7 +243,7 @@ function buildVariants() {
 const BASE = location.pathname.replace(/[^/]*\.html$/, '').replace(/\/?$/, '/');
 [['player', 'jugador.png'], ['walker', 'zombi.png'], ['runner', 'corredor.png'], ['tank', 'tanque.png'],
   ['spitter', 'escupidor.png'], ['boss', 'jefe.png'], ['pwalk', 'jugador_walk.png'],
-  ['asfalto', 'suelo_asfalto.jpg'], ['acera', 'suelo_acera.jpg'], ['pasto', 'suelo_pasto.jpg'], ['techo', 'techo.jpg'], ['fachada', 'fachada.jpg']].forEach(([k, f]) => {
+  ['asfalto', 'suelo_asfalto.jpg'], ['acera', 'suelo_acera.jpg'], ['pasto', 'suelo_pasto.jpg'], ['techo', 'techo.jpg'], ['fachada', 'fachada.jpg'], ...EXTRA_IMGS].forEach(([k, f]) => {
   const src = BASE + 'img/' + f;
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
@@ -268,7 +271,7 @@ function drawAnim(img, x, y, w, flip, lean, ph, amp) {
 }
 // jugador con hoja de 6 cuadros de caminata (3 pasos por mitad de ciclo); en reposo usa el cuadro con las piernas juntas
 function drawPlayerFrames() {
-  const sh = VAR.pwalk, n = 6, cw = Math.floor(sh.width / n), ch = sh.height, h = 124, w = h * cw / ch;
+  const sh = VAR.pwalk, n = 6, cw = Math.floor(sh.width / n), ch = sh.height, h = 108, w = h * cw / ch;
   const walking = player.amp > 0.2;
   const idx = walking ? Math.floor((((player.ph / (Math.PI * 2)) % 1) + 1) % 1 * n) : 2;
   const bob = walking ? -Math.abs(Math.sin(player.ph * 2)) * 1.5 : Math.sin(performance.now() / 450) * 0.8;
@@ -353,7 +356,7 @@ function genMap() {
     const x = road + i * (bw + road), y = road + j * (bh + road);
     blocks.push({ i, j, x, y, w:bw, h:bh, cx:x + bw / 2, cy:y + bh / 2 });
   }
-  const start = { x:260, y:WORLD.h - 260, r:170 }, exit = { x:WORLD.w - 260, y:260, r:170 };
+  const start = { x:330, y:WORLD.h - 330, r:340 }, exit = { x:WORLD.w - 260, y:260, r:170 };
   const free = blocks.filter(b => !(b.i === 0 && b.j === rows - 1) && !(b.i === cols - 1 && b.j === 0));
   for (let i = free.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [free[i], free[k]] = [free[k], free[i]]; }
   const spots = free.slice(0, 8).map(b => ({ x:b.cx + rand(-60, 60), y:b.cy + rand(-60, 60), r:120 }));
@@ -365,7 +368,7 @@ function genMap() {
   for (const b of blocks) {
     if (Math.random() < 0.2) { // plaza con cajas
       for (let n = 0; n < 5; n++) {
-        const r = { x:b.x + rand(60, bw - 110), y:b.y + rand(60, bh - 110), w:46, h:46, kind:'crate', seed:Math.random() };
+        const r = { x:b.x + rand(60, bw - 110), y:b.y + rand(60, bh - 110), w:62, h:62, kind:'crate', seed:Math.random(), spr:Math.random() < 0.5 ? 'p_crates' : 'p_barrels', sc:1.5, flip:Math.random() < 0.5 };
         if (clear(r, 30)) out.push(r);
       }
       continue;
@@ -378,15 +381,49 @@ function genMap() {
     }
   }
   const carCols = ['#6a2a2a', '#2a3f6a', '#4a4a4a', '#6a5a2a', '#2f5a3a'];
+  // posicion aleatoria sobre una calle (horizontal o vertical)
+  const onRoad = (w, h) => {
+    if (Math.random() < 0.5) { const hw = Math.max(w, h), hh = Math.min(w, h); return { x:rand(60, WORLD.w - 60 - hw), y:road / 2 + Math.floor(rand(0, rows + 1)) * (bh + road) - hh / 2 + rand(-55, 55), w:hw, h:hh }; }
+    const hw = Math.min(w, h), hh = Math.max(w, h); return { x:road / 2 + Math.floor(rand(0, cols + 1)) * (bw + road) - hw / 2 + rand(-55, 55), y:rand(60, WORLD.h - 60 - hh), w:hw, h:hh };
+  };
   let cars = 0;
-  for (let n = 0; n < 80 && cars < 22; n++) {
-    let r;
-    if (Math.random() < 0.5) r = { x:rand(60, WORLD.w - 160), y:road / 2 + Math.floor(rand(0, rows + 1)) * (bh + road) - 23 + rand(-50, 50), w:96, h:46 };
-    else r = { x:road / 2 + Math.floor(rand(0, cols + 1)) * (bw + road) - 23 + rand(-50, 50), y:rand(60, WORLD.h - 160), w:46, h:96 };
+  for (let n = 0; n < 90 && cars < 18; n++) {
+    const r = onRoad(150, 72);
     r.kind = 'car'; r.col = carCols[Math.floor(rand(0, carCols.length))]; r.seed = Math.random();
+    r.spr = Math.random() < 0.5 ? 'car_policia' : 'p_wreck'; r.sc = 1.1; r.flip = Math.random() < 0.5; r.dir = Math.random() < 0.5 ? 1 : -1;
     if (clear(r, 60)) { out.push(r); cars++; }
   }
-  return { blocks, rects:out, spots, start, exit, road, bw, bh, rows, cols };
+  // obstaculos: barreras, sacos, contenedores, llantas, barricadas, barriles
+  const PROPS = [
+    { spr:'p_barrier', w:175, h:54, sc:1.12 }, { spr:'p_sandbags', w:124, h:76, sc:1.12 }, { spr:'p_dumpster', w:130, h:84, sc:1.1 },
+    { spr:'p_tires', w:92, h:84, sc:1.2 }, { spr:'p_barricade', w:162, h:62, sc:1.1 }, { spr:'p_barrels', w:78, h:78, sc:1.25 }, { spr:'p_crates', w:80, h:80, sc:1.25 }
+  ];
+  let props = 0;
+  for (let n = 0; n < 160 && props < 20; n++) {
+    const d = PROPS[Math.floor(rand(0, PROPS.length))], r = onRoad(d.w, d.h);
+    r.kind = 'prop'; r.spr = d.spr; r.sc = d.sc; r.seed = Math.random(); r.flip = Math.random() < 0.5; r.dir = Math.random() < 0.5 ? 1 : -1;
+    if (clear(r, 70)) { out.push(r); props++; }
+  }
+  // refugio: campamento con vallas y dos portones (norte y sur)
+  const S = 560, x0 = start.x - S / 2, y0 = start.y - S / 2, ins = 29, t = 30, gap = 150, seg = (S - 2 * ins - gap) / 2;
+  const camp = { x:start.x, y:start.y, S, key:Math.random() < 0.5 ? 'camp1' : 'camp2' };
+  out.push({ x:x0 + ins, y:y0 + ins, w:t, h:S - 2 * ins, kind:'wall' }, { x:x0 + S - ins - t, y:y0 + ins, w:t, h:S - 2 * ins, kind:'wall' },
+    { x:x0 + ins, y:y0 + ins, w:seg, h:t, kind:'wall' }, { x:x0 + ins + seg + gap, y:y0 + ins, w:seg, h:t, kind:'wall' },
+    { x:x0 + ins, y:y0 + S - ins - t, w:seg, h:t, kind:'wall' }, { x:x0 + ins + seg + gap, y:y0 + S - ins - t, w:seg, h:t, kind:'wall' });
+  // decoraciones del suelo: sangre, grietas, alcantarillas, manchas, casquillos, vidrio, huellas
+  const inside = (x, y, pad) => out.some(o => x > o.x - pad && x < o.x + o.w + pad && y > o.y - pad && y < o.y + o.h + pad);
+  const DSZ = [170, 190, 220, 90, 190, 150, 80, 110, 160, 150, 230, 200];
+  const DW = [10, 7, 9, 0, 4, 7, 6, 5, 9, 6, 0, 6]; let tot = 0; for (const w of DW) tot += w;
+  const decals = [];
+  const roadPt = () => { const o = onRoad(10, 10); return { x:o.x, y:o.y, horiz:o.w >= o.h }; };
+  for (let n = 0; n < 100; n++) {
+    let k = 0, r = Math.random() * tot; for (let i = 0; i < DW.length; i++) { r -= DW[i]; if (r <= 0) { k = i; break; } }
+    const x = rand(60, WORLD.w - 60), y = rand(60, WORLD.h - 60);
+    if (!inside(x, y, 6) && Math.hypot(x - start.x, y - start.y) > S * 0.55) decals.push({ k, x, y, w:DSZ[k] * rand(0.8, 1.25), rot:rand(0, 6.283), a:rand(0.75, 0.95) });
+  }
+  for (let n = 0; n < 8; n++) { const q = roadPt(); if (!inside(q.x, q.y, 20)) decals.push({ k:3, x:q.x, y:q.y, w:92, rot:rand(0, 6.283), a:1 }); }
+  for (let n = 0; n < 10; n++) { const q = roadPt(); if (!inside(q.x, q.y, 20)) decals.push({ k:10, x:q.x, y:q.y, w:DSZ[10] * rand(0.9, 1.3), rot:q.horiz ? Math.PI / 2 + rand(-0.12, 0.12) : rand(-0.12, 0.12), a:rand(0.6, 0.85) }); }
+  return { blocks, rects:out, spots, start, exit, road, bw, bh, rows, cols, camp, decals };
 }
 
 function inRect(x, y, pad = 0) {
@@ -680,7 +717,7 @@ function explode(g) {
   const R = 170, x = g.x, y = g.y;
   Sfx.explosion(); addShake(1); freeze = 0.06;
   blasts.push({ x, y, t:0, R });
-  scorch.push({ x, y, r:R * 0.55 }); if (scorch.length > 40) scorch.shift();
+  scorch.push({ x, y, r:R * 0.55, rot:rand(0, 6.283) }); if (scorch.length > 40) scorch.shift();
   burst(x, y, 46, '#ff9a30', 560, 0.55, 4.5);
   burst(x, y, 28, '#ffe08a', 420, 0.35, 3);
   burst(x, y, 34, '#4a4a4a', 220, 1.2, 8);
@@ -772,8 +809,8 @@ function killZombie(z) {
   if (floaters.length < 40)
     floaters.push({ x:z.x, y:z.y - z.r - 12, vy:-45, text:'+' + gain, life:0.9, max:0.9, color:'#9acd32', big:false });
   const big = z.boss ? 3 : z.r > 20 ? 1.6 : 1;
-  blood.push({ x:z.x, y:z.y, r:z.r * rand(1, 1.5) * big });
-  for (let i = 0; i < 3 * big; i++) blood.push({ x:z.x + rand(-z.r, z.r), y:z.y + rand(-z.r, z.r), r:rand(3, 9) });
+  blood.push({ x:z.x, y:z.y, r:z.r * rand(1, 1.5) * big, d:[0, 1, 8][Math.floor(Math.random() * 3)], rot:rand(0, 6.283) });
+  for (let i = 0; i < 3 * big; i++) blood.push({ x:z.x + rand(-z.r, z.r), y:z.y + rand(-z.r, z.r), r:rand(3, 9), d:-1 });
   while (blood.length > 220) blood.shift();
   burst(z.x, z.y, Math.round(16 * big), '#6a1212', 280 * big, 0.7, 3);
   burst(z.x, z.y, Math.round(7 * big), z.color, 220 * big, 0.8, 4.5);
@@ -1086,7 +1123,27 @@ function drawBuilding(r) {
   ctx.strokeStyle = '#0b0a09'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
 }
 
+function drawDecal(img, x, y, w, rot, alpha) {
+  const h = w * img.height / img.width;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rot); ctx.drawImage(img, -w / 2, -h / 2, w, h); ctx.restore();
+}
+
+// sprite que ocupa un rectangulo de colision; los alargados giran 90 grados en calles verticales
+function drawFit(r) {
+  const img = IMG[r.spr]; if (!img) return false;
+  const asp = img.width / img.height, horiz = r.w >= r.h, L = Math.max(r.w, r.h) * r.sc, cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+  ctx.fillStyle = 'rgba(0,0,0,.38)'; ctx.beginPath(); ctx.ellipse(cx + 5, cy + 9, r.w * 0.56, r.h * 0.56, 0, 0, 7); ctx.fill();
+  ctx.save(); ctx.translate(cx, cy);
+  if (!horiz && asp > 1.3) ctx.rotate((r.dir || 1) * Math.PI / 2);
+  if (r.flip) ctx.scale(-1, 1);
+  ctx.drawImage(img, -L / 2, -L / asp / 2, L, L / asp);
+  ctx.restore();
+  return true;
+}
+
 function drawRectObj(r) {
+  if (r.kind === 'wall') return;
+  if (r.spr && drawFit(r)) return;
   if (r.kind === 'b') {
     drawBuilding(r);
   } else if (r.kind === 'car') {
@@ -1124,9 +1181,17 @@ function drawGround() {
     for (let j = 0; j <= m.rows; j++) { const y = m.road / 2 + j * (m.bh + m.road); if (y > cam.y - 10 && y < cam.y + H + 10) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD.w, y); ctx.stroke(); } }
     for (let i = 0; i <= m.cols; i++) { const x = m.road / 2 + i * (m.bw + m.road); if (x > cam.x - 10 && x < cam.x + W + 10) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD.h); ctx.stroke(); } }
     ctx.setLineDash([]);
-    // refugio de inicio
-    ctx.fillStyle = 'rgba(70,130,200,.10)'; ctx.beginPath(); ctx.arc(m.start.x, m.start.y, 150, 0, 7); ctx.fill();
-    ctx.fillStyle = 'rgba(160,200,240,.35)'; ctx.font = 'bold 14px monospace'; ctx.textAlign = 'center'; ctx.fillText('REFUGIO', m.start.x, m.start.y + 4);
+    // decoraciones del suelo
+    for (const d of m.decals) {
+      const im = IMG['d' + d.k]; if (!im) continue;
+      if (!vis(d.x - d.w, d.y - d.w, d.w * 2, d.w * 2)) continue;
+      drawDecal(im, d.x, d.y, d.w, d.rot, d.a);
+    }
+    // refugio de inicio (campamento)
+    const cimg = IMG[m.camp.key];
+    if (cimg) { const ch = m.camp.S * cimg.height / cimg.width; ctx.drawImage(cimg, m.camp.x - m.camp.S / 2, m.camp.y - ch / 2, m.camp.S, ch); }
+    else { ctx.fillStyle = 'rgba(70,130,200,.10)'; ctx.beginPath(); ctx.arc(m.start.x, m.start.y, 150, 0, 7); ctx.fill(); }
+    ctx.fillStyle = 'rgba(160,200,240,.55)'; ctx.font = 'bold 13px monospace'; ctx.textAlign = 'center'; ctx.fillText('REFUGIO', m.camp.x, m.camp.y - m.camp.S / 2 - 10);
     for (const r of rects) if (vis(r.x, r.y, r.w, r.h)) drawRectObj(r);
   } else if (PAT.asfalto) {
     ctx.fillStyle = PAT.asfalto; ctx.fillRect(cam.x - 80, cam.y - 80, W + 160, H + 160);
@@ -1193,10 +1258,15 @@ function draw() {
 
   drawGround();
 
-  ctx.fillStyle = 'rgba(0,0,0,.45)';
-  for (const sc of scorch) { ctx.beginPath(); ctx.arc(sc.x, sc.y, sc.r, 0, 7); ctx.fill(); }
-  ctx.fillStyle = 'rgba(80,10,10,.4)';
-  for (const b of blood) { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fill(); }
+  for (const sc of scorch) {
+    if (IMG.d4) drawDecal(IMG.d4, sc.x, sc.y, sc.r * 2.9, sc.rot, 0.95);
+    else { ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.beginPath(); ctx.arc(sc.x, sc.y, sc.r, 0, 7); ctx.fill(); }
+  }
+  for (const b of blood) {
+    const im = b.d >= 0 && IMG['d' + b.d];
+    if (im) drawDecal(im, b.x, b.y, b.r * 3.6, b.rot, 0.88);
+    else { ctx.fillStyle = 'rgba(80,10,10,.4)'; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fill(); }
+  }
 
   const tNow = performance.now() / 1000;
   if (mode === 'mission' && mission) drawMissionWorld(tNow);
@@ -1255,7 +1325,7 @@ function draw() {
 
   // jugador
   ctx.fillStyle = 'rgba(0,0,0,.35)';
-  ctx.beginPath(); ctx.ellipse(player.x + 2, player.y + (VAR.pwalk ? 46 : 10), 15, 7, 0, 0, 7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(player.x + 2, player.y + (VAR.pwalk ? 40 : 10), 14, 6.5, 0, 0, 7); ctx.fill();
   if (VAR.pwalk) {
     drawPlayerFrames();
   } else if (VAR.player) {
