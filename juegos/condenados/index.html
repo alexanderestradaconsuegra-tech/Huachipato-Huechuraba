@@ -256,6 +256,16 @@
   body.touch .hud { transform:scale(.8); transform-origin:top left; } body.touch .hud.r { transform-origin:top right; } body.touch #obj { max-width:min(420px,60vw); font-size:12px; }
   body.touch #mini { width:132px !important; height:auto !important; right:8px; top:104px; bottom:auto; }
   body.touch #seedhud { bottom:auto; top:46px; font-size:12px; } body.touch #prompt { bottom:70px; } body.touch #toast { top:26%; }
+  /* controles tactiles compactos */
+  #tbtns { position:absolute; right:10px; bottom:10px; display:grid; grid-template-columns:repeat(3,52px); grid-template-areas:'more arma gran' '. rec esq'; gap:8px; }
+  #tbtns [data-k=q] { grid-area:arma; } #tbtns [data-k=g] { grid-area:gran; } #tbtns [data-k=r] { grid-area:rec; } #tbtns [data-k=' '] { grid-area:esq; } #tbtns .more { grid-area:more; }
+  .tb.rnd { width:52px; min-width:52px; height:52px; padding:0; border-radius:50%; font-size:10.5px; background:rgba(26,8,60,.45); border:2px solid rgba(255,255,255,.35); opacity:.85; }
+  .tb.rnd.more { font-size:22px; } .tb.rnd.on { background:rgba(255,63,180,.7); }
+  #tmore { position:absolute; right:130px; bottom:12px; display:none; gap:6px; } #tmore.on { display:flex; } #tmore .tb { min-width:76px; height:42px; font-size:11px; }
+  #ttop { top:auto; bottom:auto; right:158px; top:12px; } .tt { height:32px; min-width:42px; font-size:10.5px; padding:0 6px; opacity:.8; }
+  body.touch #prompt { z-index:6; pointer-events:auto; bottom:14px; max-width:40vw; padding:10px 18px; font:800 13px 'Arial Black',system-ui,sans-serif; letter-spacing:.5px; background:rgba(255,45,143,.82); border:2px solid #fff; border-radius:14px; box-shadow:0 6px 22px rgba(255,45,143,.5); touch-action:none; }
+  body.touch #prompt:active { transform:translateX(-50%) scale(.96); }
+  body.touch.ingame #seedhud { display:none !important; }
 </style>
 </head>
 <body>
@@ -289,8 +299,9 @@
   <div id="seedhud"></div>
   <div id="touch" aria-hidden="false">
     <div class="stick" id="stL"><div class="knob"></div></div><div class="stick" id="stR"><div class="knob"></div></div>
-    <div id="ttop"><button class="tt" data-t="pause" aria-label="Pausa">II</button><button class="tt" data-t="zoom" aria-label="Cambiar zoom del mapa">ZOOM</button><button class="tt" data-t="hud" aria-label="Ocultar paneles">PANEL</button><button class="tt" data-t="fs" aria-label="Pantalla completa">FULL</button></div>
-    <div id="tbtns"><button class="tb main" data-k="e">ACCION</button><button class="tb" data-k=" ">ESQUIVA</button><button class="tb" data-k="r">RECARGA</button><button class="tb" data-k="g">GRANADA</button><button class="tb" data-k="q">ARMA</button><button class="tb" data-k="c">SEMBRAR</button><button class="tb" data-k="v">SEMILLA</button><button class="tb" data-k="t">SENUELO</button><button class="tb" data-k="f">CUCHILLO</button></div>
+    <div id="ttop"><button class="tt" data-t="pause" aria-label="Pausa">II</button><button class="tt" data-t="zoom" aria-label="Cambiar zoom del mapa">ZOOM</button><button class="tt" data-t="hud" aria-label="Ocultar paneles">HUD</button></div>
+    <div id="tbtns"><button class="tb rnd" data-k=" " aria-label="Esquivar">ESQ</button><button class="tb rnd" data-k="g" aria-label="Granada">GRAN</button><button class="tb rnd" data-k="r" aria-label="Recargar">REC</button><button class="tb rnd" data-k="q" aria-label="Cambiar arma">ARMA</button><button class="tb rnd more" id="tMore" aria-label="Mas acciones">+</button></div>
+    <div id="tmore"><button class="tb" data-k="c">SEMBRAR</button><button class="tb" data-k="v">SEMILLA</button><button class="tb" data-k="t">SENUELO</button><button class="tb" data-k="f">CUCHILLO</button></div>
     <div id="tshop"><button class="tb" data-k="b">BOTIQUIN</button><button class="tb" data-k="n">MUNICION</button><button class="tb" data-k="m">DANO</button><button class="tb" data-k="v">GRANADAS</button><button class="tb main" data-k="enter">CONTINUAR</button></div>
   </div>
   <div id="rot"><div>Gira tu celular a horizontal para jugar</div></div>
@@ -314,7 +325,7 @@
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
         <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
         <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
-        <p class="hwarn" role="note">En el celular se juega en horizontal: joystick izquierdo para moverte y derecho para apuntar y disparar. Al tocar JUGAR se abre en pantalla completa.</p>
+        <p class="hwarn" role="note">En el celular se juega en horizontal: arrastra a la izquierda para moverte. Tu personaje dispara solo a los zombis que te persiguen; toca un zombi para atacarlo y toca un objeto para usarlo.</p>
         <ul class="hstats"><li><b>3</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
@@ -708,7 +719,7 @@ let state = 'menu', prePause = 'playing';
 let plants = [], player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
 let spawnQueue, spawnTimer, hordeDone, trauma, freeze, groanT, heartT, combo, comboT, comboPulse, killsTotal;
 let grenades = [], blasts = [], scorch = [], rockets = [], dying = [], decoys = [], noiseRings = [], pendingBlasts = [];
-let touchMove = null, zoomUser = 1, camZoom = 1, camZoomT = 1, G = null, lastHitRect = null, vehicle = null;
+let touchMove = null, tapLock = null, autoTgt = null, zoomUser = 1, camZoom = 1, camZoomT = 1, G = null, lastHitRect = null, vehicle = null;
 const mwx = () => cam.x + mouse.x / camZoom, mwy = () => cam.y + mouse.y / camZoom;
 const NOISE = [420, 720, 680, 820, 900, 650]; // radio de ruido de cada arma
 const PAL = ['#ff4d9a', '#2ad4ff', '#ffb347', '#7dff6a', '#a66bff', '#ff6a4d'];
@@ -4536,6 +4547,7 @@ function draw() {
     }
   }
   if (!fp) drawPlants(tNow);
+  if (TOUCH_DEV) for (const [z, c] of [[tapLock, '#ff3a4a'], [autoTgt !== tapLock ? autoTgt : null, '#ffe14a']]) if (z && z.hp > 0) { const pu = 0.6 + Math.sin(tNow * 8) * 0.4, R = z.r * 1.7; ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = 3; ctx.globalAlpha = 0.5 + pu * 0.4; ctx.beginPath(); ctx.arc(z.x, z.y, R, 0, 7); ctx.stroke(); for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + tNow; ctx.beginPath(); ctx.moveTo(z.x + Math.cos(a) * (R - 8), z.y + Math.sin(a) * (R - 8)); ctx.lineTo(z.x + Math.cos(a) * (R + 10), z.y + Math.sin(a) * (R + 10)); ctx.stroke(); } ctx.restore(); }
   if (fxOn && !fp) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(player.x, player.y + 10, 78, '#2be8f0', 0.30 + Math.sin(tNow * 3) * 0.05);
     for (const z of zombies) { if (z.x < cam.x - 200 || z.x > cam.x + cam.vw + 200 || z.y < cam.y - 200 || z.y > cam.y + cam.vh + 200) continue; glow(z.x, z.y + z.r * 0.5, z.r * 2.4, z.st === 'chase' ? '#ff3a4a' : z.st && z.st !== 'idle' ? '#ffa12b' : z.boss ? '#ff3a4a' : '#7dff6a', z.st === 'chase' ? 0.34 : 0.2); }
     ctx.restore(); }
@@ -4764,7 +4776,7 @@ function hud() {
     const ia = player.ia;
     if (ia) {
       const pr = ia.pr !== undefined ? ia.pr : ia.type === 'gen' ? ia.ref.prog / ia.ref.sec : ia.type === 'supply' ? (ia.ref.hold || 0) / 3 : 0;
-      el.prompt.style.display = 'block'; el.prompt.innerHTML = ia.label + (ia.hold ? '<i style="width:' + clamp(pr, 0, 1) * 100 + '%"></i>' : '');
+      el.prompt.style.display = 'block'; el.prompt.innerHTML = (TOUCH_DEV ? 'TOCA: ' + ia.label.replace(/^E( \(mantener\))? - /, '').replace(/^Manten E para /, 'MANTEN PARA ').split(':')[0].split(' (')[0] : ia.label) + (ia.hold ? '<i style="width:' + clamp(pr, 0, 1) * 100 + '%"></i>' : '');
     } else el.prompt.style.display = 'none';
   } else el.prompt.style.display = 'none';
   el.stm.style.width = player.stamina + '%'; el.stm.style.background = player.winded ? '#c0562b' : '';
@@ -4913,41 +4925,75 @@ if (IS_TOUCH) {
   const place = (st, x, y) => { st.style.left = x + 'px'; st.style.top = y + 'px'; st.style.display = 'block'; st.firstElementChild.style.transform = 'translate(-50%,-50%)'; };
   const knob = (st, dx, dy) => { st.firstElementChild.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))'; };
   const setMove = (nx, ny) => { if (!keys) return; const m = Math.hypot(nx, ny); touchMove = m > 0.16 ? { x:nx, y:ny } : null; keys['shift'] = m > 0.97; };
+  const TAPS = {};
   tl.addEventListener('touchstart', e => {
     if (e.target.closest('.tb,.tt')) return; e.preventDefault();
     for (const t of e.changedTouches) {
+      TAPS[t.identifier] = { x:t.clientX, y:t.clientY, t:performance.now(), moved:false };
       const left = t.clientX < innerWidth * 0.45;
       if (left && !TZ.L) { TZ.L = { id:t.identifier, ox:t.clientX, oy:t.clientY, nx:0, ny:0 }; place(stL, t.clientX, t.clientY); }
-      else if (!left && !TZ.R) { TZ.R = { id:t.identifier, ox:t.clientX, oy:t.clientY, nx:0, ny:0, on:false }; place(stR, t.clientX, t.clientY); }
+      else if (!left && !TZ.R) { TZ.R = { id:t.identifier, ox:t.clientX, oy:t.clientY, nx:0, ny:0, on:false }; }
     }
   }, { passive:false });
   tl.addEventListener('touchmove', e => {
     e.preventDefault();
-    for (const t of e.changedTouches) for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue;
-      let dx = t.clientX - z.ox, dy = t.clientY - z.oy; const m = Math.hypot(dx, dy); if (m > MAXR) { dx = dx / m * MAXR; dy = dy / m * MAXR; }
-      z.nx = dx / MAXR; z.ny = dy / MAXR; z.on = Math.hypot(dx, dy) > 14; knob(k === 'L' ? stL : stR, dx, dy); if (k === 'L') setMove(z.nx, z.ny);
+    for (const t of e.changedTouches) {
+      const tp = TAPS[t.identifier]; if (tp && Math.hypot(t.clientX - tp.x, t.clientY - tp.y) > 16) tp.moved = true;
+      for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue;
+        let dx = t.clientX - z.ox, dy = t.clientY - z.oy; const m = Math.hypot(dx, dy); if (m > MAXR) { dx = dx / m * MAXR; dy = dy / m * MAXR; }
+        z.nx = dx / MAXR; z.ny = dy / MAXR; z.on = Math.hypot(dx, dy) > 16;
+        if (k === 'R' && z.on && stR.style.display !== 'block') place(stR, z.ox, z.oy);
+        knob(k === 'L' ? stL : stR, dx, dy); if (k === 'L') setMove(z.nx, z.ny);
+      }
     }
   }, { passive:false });
+  const boxOf = r => r.px !== undefined ? { x:r.px, y:r.py, w:r.pw, h:r.ph } : r;
+  function handleTap(sx, sy) {
+    if (state !== 'playing' || !player) return;
+    const wx = cam.x + sx / camZoom, wy = cam.y + sy / camZoom;
+    let bz = null, bd = 1e9;   // tocar un zombi: lo marcas como objetivo y le disparas
+    for (const z of zombies) { if (z.hp <= 0) continue; const d = Math.min(Math.hypot(z.x - wx, z.y - wy), Math.hypot(z.x - wx, z.y - z.r * 1.4 - wy)); if (d < Math.max(70, z.r * 2.2) && d < bd) { bd = d; bz = z; } }
+    if (bz) { tapLock = bz; Sfx.task(); return; }
+    const ia = player.ia; if (ia && ia.ref) { const q = boxOf(ia.ref); if (wx > q.x - 90 && wx < q.x + q.w + 90 && wy > q.y - 90 && wy < q.y + q.h + 90) { kd('e'); setTimeout(() => ku('e'), 90); return; } }
+    for (const r of rects) { if (!r.kind || r.kind === 'roof' || r.kind === 'wall' || r.kind === 'prop' && !r.jtask && !r.hide) continue; if (wx > r.x - 30 && wx < r.x + r.w + 30 && wy > r.y - 30 && wy < r.y + r.h + 30) { toast('ACERCATE PARA USARLO'); return; } }
+    tapLock = null;
+  }
   const tEnd = e => {
-    for (const t of e.changedTouches) for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue; TZ[k] = null; (k === 'L' ? stL : stR).style.display = 'none'; if (k === 'L') setMove(0, 0); else if (mouse) mouse.down = false; }
+    for (const t of e.changedTouches) {
+      const tp = TAPS[t.identifier]; delete TAPS[t.identifier];
+      if (tp && !tp.moved && performance.now() - tp.t < 280) handleTap(tp.x, tp.y);
+      for (const k of ['L', 'R']) { const z = TZ[k]; if (!z || z.id !== t.identifier) continue; TZ[k] = null; (k === 'L' ? stL : stR).style.display = 'none'; if (k === 'L') setMove(0, 0); }
+    }
   };
   tl.addEventListener('touchend', tEnd); tl.addEventListener('touchcancel', tEnd);
-  // el apuntado y el disparo se calculan cada cuadro porque la camara se mueve
+  // tocar el cartel de accion = E (y mantenerlo = mantener E)
+  el.prompt.addEventListener('touchstart', e => { e.preventDefault(); kd('e'); }, { passive:false });
+  el.prompt.addEventListener('touchend', e => { e.preventDefault(); ku('e'); }, { passive:false });
+  $('tMore').addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); $('tmore').classList.toggle('on'); }, { passive:false });
+  // apuntado automatico: dispara solo a quien te persigue (asi no rompe el sigilo) o al zombi que tocaste
+  const seen = z => z && z.hp > 0 && Math.hypot(z.x - player.x, z.y - player.y) < 800 && losClear(player.x, player.y, z.x, z.y);
   (function tick() {
     requestAnimationFrame(tick);
-    if (!document.body.classList.contains('ingame') || !player || !mouse || state !== 'playing') return;
+    if (!document.body.classList.contains('ingame') || !player || !mouse || state !== 'playing') { if (mouse && TOUCH_DEV) mouse.down = false; return; }
     const sx = (player.x - cam.x) * camZoom, sy = (player.y + GUN_DY - cam.y) * camZoom;
-    const a = TZ.R && TZ.R.on ? { x:TZ.R.nx, y:TZ.R.ny } : TZ.L && TZ.L.on ? { x:TZ.L.nx, y:TZ.L.ny } : null;
-    if (a) {
-      let ang = Math.atan2(a.y, a.x);
-      if (TZ.R && TZ.R.on) {   // asistencia: si hay un zombi cerca de la linea de tiro, la mira se corrige hacia el
-        let best = null, bs = 0.36;
-        for (const z of zombies) { if (z.hp <= 0) continue; const dx = z.x - player.x, dy = z.y - player.y, dd = Math.hypot(dx, dy); if (dd > 700 || dd < 1) continue; const da = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - ang), Math.cos(Math.atan2(dy, dx) - ang))), sc = da + dd / 4000; if (sc < bs && losClear(player.x, player.y, z.x, z.y)) { bs = sc; best = z; } }
-        if (best) { const ta = Math.atan2(best.y - player.y, best.x - player.x); ang += Math.atan2(Math.sin(ta - ang), Math.cos(ta - ang)) * 0.8; }
-      }
-      mouse.x = sx + Math.cos(ang) * 160; mouse.y = sy + Math.sin(ang) * 160;
+    if (tapLock && (tapLock.hp <= 0 || Math.hypot(tapLock.x - player.x, tapLock.y - player.y) > 900)) tapLock = null;
+    let tgt = tapLock && seen(tapLock) ? tapLock : null;
+    if (!tgt) { let bd = 560; for (const z of zombies) { if (z.hp <= 0 || !(z.st === 'chase' || z.boss || z.root && z.hp < z.maxHp)) continue; const d = Math.hypot(z.x - player.x, z.y - player.y); if (d < bd && losClear(player.x, player.y, z.x, z.y)) { bd = d; tgt = z; } } }
+    autoTgt = tgt;
+    const manual = TZ.R && TZ.R.on;
+    if (manual) {
+      let ang = Math.atan2(TZ.R.ny, TZ.R.nx);
+      let best = null, bs = 0.36;
+      for (const z of zombies) { if (z.hp <= 0) continue; const dx = z.x - player.x, dy = z.y - player.y, dd = Math.hypot(dx, dy); if (dd > 700 || dd < 1) continue; const da = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - ang), Math.cos(Math.atan2(dy, dx) - ang))), sc = da + dd / 4000; if (sc < bs && losClear(player.x, player.y, z.x, z.y)) { bs = sc; best = z; } }
+      if (best) { const ta = Math.atan2(best.y - player.y, best.x - player.x); ang += Math.atan2(Math.sin(ta - ang), Math.cos(ta - ang)) * 0.8; }
+      mouse.x = sx + Math.cos(ang) * 160; mouse.y = sy + Math.sin(ang) * 160; mouse.down = true;
+    } else if (tgt) {
+      mouse.x = (tgt.x - cam.x) * camZoom; mouse.y = (tgt.y - cam.y) * camZoom; mouse.down = true;
+    } else {
+      mouse.down = false;
+      if (TZ.L && TZ.L.on) { const m = Math.hypot(TZ.L.nx, TZ.L.ny) || 1; mouse.x = sx + TZ.L.nx / m * 160; mouse.y = sy + TZ.L.ny / m * 160; }
     }
-    if (TZ.R && TZ.R.on) { mouse.down = true; if (!WEAPONS[player.cur].auto) shoot(performance.now()); } else if (mouse.down && !TZ.R) mouse.down = false;
+    if (mouse.down && !WEAPONS[player.cur].auto) shoot(performance.now());
   })();
   tl.querySelectorAll('.tb').forEach(b => {
     const k = b.dataset.k;
@@ -4958,7 +5004,7 @@ if (IS_TOUCH) {
   const fsToggle = () => { const d = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); };
   tl.querySelectorAll('.tt').forEach(b => b.addEventListener('touchstart', e => {
     e.preventDefault(); e.stopPropagation(); const t = b.dataset.t;
-    if (t === 'pause') { kd('p'); ku('p'); } else if (t === 'hud') togglePanels(); else if (t === 'fs') fsToggle();
+    if (t === 'pause') { kd('p'); ku('p'); } else if (t === 'hud') togglePanels();
     else if (t === 'zoom') { zi = (zi + 1) % ZOOMS.length; zoomUser = ZOOMS[zi]; try { localStorage.setItem('condenados_zoom', zi); } catch (er) {} toast('ZOOM DEL MAPA ' + (zi + 1) + '/' + ZOOMS.length); }
   }, { passive:false }));
   setInterval(() => { $('tshop').classList.toggle('on', state === 'between'); }, 300);
