@@ -105,6 +105,72 @@
   #msg p { font-size:12.5px; line-height:1.55; max-width:720px; margin-bottom:5px; }
   #msg h1 { margin-bottom:8px; }
   #msg button { margin-top:12px; }
+  /* ===== PAGINA PRINCIPAL (HERO) ===== */
+  #hero { position:absolute; inset:0; z-index:30; overflow-y:auto; overflow-x:hidden; background:#07040f; color:#eef0ff; font-family:'Inter','Segoe UI',system-ui,sans-serif; letter-spacing:.2px; scroll-behavior:smooth; pointer-events:auto; user-select:none; }
+  #hero * { box-sizing:border-box; }
+  #hero .hbg { position:fixed; inset:0; background:url(img/promo/bg.webp) center/cover; filter:blur(3px) saturate(1.2) brightness(.55); transform:scale(1.08); z-index:0; animation:hpan 26s ease-in-out infinite alternate; }
+  #hero .hov { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 70% 30%, rgba(255,63,180,.25), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(43,232,240,.18), transparent 50%), linear-gradient(180deg, rgba(7,4,15,.35), rgba(7,4,15,.92)); }
+  #hero .hdots { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  #hero .hdots i { position:absolute; bottom:-12px; width:6px; height:6px; border-radius:50%; background:#7dff6a; box-shadow:0 0 12px 3px currentColor; color:#7dff6a; opacity:0; animation:hrise 9s linear infinite; }
+  #hero .hdots i:nth-child(3n) { background:#ff3fb4; color:#ff3fb4; } #hero .hdots i:nth-child(3n+1) { background:#2be8f0; color:#2be8f0; }
+  #hero section, #hero nav, #hero footer { position:relative; z-index:1; }
+  .hnav { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px clamp(16px,4vw,48px); background:linear-gradient(180deg, rgba(7,4,15,.85), transparent); position:sticky !important; top:0; z-index:5 !important; backdrop-filter:blur(6px); }
+  .hlogo { font:900 18px/1 'Arial Black',Impact,system-ui,sans-serif; letter-spacing:3px; background:linear-gradient(90deg,#ff3fb4,#ffe14a); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 8px rgba(255,63,180,.6)); }
+  .hlinks { display:flex; gap:22px; font-size:13px; font-weight:600; } .hlinks a { color:#cfd4ff; cursor:pointer; opacity:.85; } .hlinks a:hover { color:#2be8f0; opacity:1; }
+  .hbtn { font:800 15px/1 'Arial Black',system-ui,sans-serif; letter-spacing:2px; color:#fff; border:0; border-radius:12px; padding:16px 30px; cursor:pointer; position:relative; overflow:hidden; text-transform:uppercase; transition:transform .15s, filter .15s; }
+  .hbtn:hover { transform:translateY(-2px) scale(1.03); filter:brightness(1.12); } .hbtn:active { transform:scale(.98); }
+  .hbtn.main { background:linear-gradient(135deg,#ff2d8f,#ff8a3d); box-shadow:0 0 0 2px rgba(255,255,255,.15) inset, 0 10px 34px rgba(255,45,143,.55); animation:hpulse 2.2s ease-in-out infinite; }
+  .hbtn.main::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent); transform:skewX(-20deg); animation:hshine 3.2s ease-in-out infinite; }
+  .hbtn.alt { background:linear-gradient(135deg,#12b8a0,#3ad66a); box-shadow:0 10px 30px rgba(43,232,160,.4); }
+  .hbtn.ghost { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.25); box-shadow:none; } .hbtn.sm { padding:11px 18px; font-size:12px; }
+  .hbtn:disabled { opacity:.45; cursor:default; transform:none; filter:grayscale(.6); animation:none; }
+  .hhero { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); align-items:center; gap:34px; padding:clamp(18px,4vw,50px) clamp(16px,5vw,70px) 50px; min-height:calc(100vh - 62px); max-width:1400px; margin:0 auto; }
+  .hbadge { display:inline-block; font-size:12px; font-weight:800; letter-spacing:2px; padding:7px 14px; border-radius:30px; background:rgba(43,232,240,.12); border:1px solid #2be8f0; color:#2be8f0; box-shadow:0 0 18px rgba(43,232,240,.35); margin-bottom:18px; }
+  .htitle { font:900 clamp(40px,5.5vw,84px)/.9 'Arial Black',Impact,system-ui,sans-serif; letter-spacing:-1px; text-transform:uppercase; margin:0 0 18px; background:linear-gradient(180deg,#fff 5%,#ffb3e6 40%,#ff3fb4 75%,#8a1fff); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 4px 0 #2a0a4a) drop-shadow(0 0 26px rgba(255,63,180,.65)); animation:hglitch 6s steps(1) infinite; }
+  .htitle span { display:block; font-size:.3em; letter-spacing:.2em; background:linear-gradient(90deg,#2be8f0,#7dff6a); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:6px; filter:none; }
+  .htag { font-size:clamp(18px,2.1vw,26px); font-weight:700; line-height:1.3; margin:0 0 10px; color:#fff; text-shadow:0 2px 14px rgba(0,0,0,.8); } .hsub { font-size:clamp(14px,1.4vw,17px); line-height:1.6; color:#c9ceee; max-width:560px; margin:0 0 26px; }
+  .hcta { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:26px; }
+  .hstats { display:flex; flex-wrap:wrap; gap:10px; list-style:none; padding:0; margin:0; } .hstats li { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:12px; padding:9px 14px; font-size:12px; color:#c9ceee; backdrop-filter:blur(4px); } .hstats b { display:block; font-size:22px; color:#ffe14a; font-family:'Arial Black',system-ui,sans-serif; }
+  .hart { position:relative; aspect-ratio:16/10; } .hart .frame { position:absolute; inset:0; border-radius:22px; overflow:hidden; border:3px solid #ff3fb4; box-shadow:0 0 0 6px rgba(255,63,180,.14), 0 0 60px rgba(255,63,180,.55), 0 30px 80px rgba(0,0,0,.7); transform:perspective(1200px) rotateY(-9deg) rotateX(3deg); animation:hfloat 7s ease-in-out infinite; }
+  .hart .frame img { width:100%; height:100%; object-fit:cover; animation:hzoom 18s ease-in-out infinite alternate; } .hart .frame::after { content:''; position:absolute; inset:0; background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.14) 50%,transparent 60%); animation:hshine2 5s ease-in-out infinite; }
+  .hart .chr { position:absolute; filter:drop-shadow(0 10px 18px rgba(0,0,0,.7)) drop-shadow(0 0 14px rgba(255,63,180,.5)); animation:hbob 4s ease-in-out infinite; pointer-events:none; }
+  .hscroll { position:absolute; left:50%; bottom:6px; transform:translateX(-50%); font-size:11px; letter-spacing:3px; color:#9aa0d8; animation:hbob 2s ease-in-out infinite; }
+  .hmarq { overflow:hidden; background:linear-gradient(90deg,#ff2d8f,#8a1fff,#12b8a0); transform:rotate(-1.2deg); margin:10px -20px 30px; padding:12px 0; box-shadow:0 10px 40px rgba(255,45,143,.35); }
+  .hmarq div { display:flex; width:max-content; gap:46px; font:900 20px/1 'Arial Black',Impact,sans-serif; letter-spacing:3px; text-transform:uppercase; animation:hmarq 24s linear infinite; white-space:nowrap; text-shadow:0 2px 0 rgba(0,0,0,.35); }
+  .hsec { max-width:1300px; margin:0 auto; padding:56px clamp(16px,4vw,50px); }
+  .hsec h2 { font:900 clamp(28px,4.6vw,52px)/1 'Arial Black',Impact,sans-serif; text-transform:uppercase; margin:0 0 8px; background:linear-gradient(90deg,#fff,#ff9ae0); -webkit-background-clip:text; background-clip:text; color:transparent; } .hsec .hlead { color:#b8bee8; font-size:16px; margin:0 0 30px; max-width:640px; line-height:1.55; }
+  .hgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+  .hcard { background:linear-gradient(160deg,rgba(40,16,80,.78),rgba(12,8,34,.82)); border:1px solid rgba(255,255,255,.14); border-radius:20px; overflow:hidden; backdrop-filter:blur(6px); transition:transform .25s, border-color .25s, box-shadow .25s; }
+  .hcard:hover { transform:translateY(-6px); border-color:#ff3fb4; box-shadow:0 18px 44px rgba(255,63,180,.35); }
+  .hcard .pic { height:170px; background-size:cover; background-position:center; border-bottom:2px solid rgba(255,63,180,.5); position:relative; } .hcard .body { padding:16px 18px 20px; } .hcard h3 { font:900 18px/1.1 'Arial Black',sans-serif; text-transform:uppercase; margin:0 0 8px; color:#fff; } .hcard p { margin:0; font-size:14px; line-height:1.55; color:#c3c8ee; }
+  .hcard .pic .tag { position:absolute; top:10px; left:10px; font-size:11px; font-weight:800; letter-spacing:1.5px; padding:5px 10px; border-radius:20px; background:#7dff6a; color:#052a0c; }
+  .hcard.lock { border-style:dashed; border-color:rgba(255,255,255,.25); } .hcard.lock .pic { filter:grayscale(1) brightness(.5) blur(2px); } .hcard.lock .pic .tag { background:#ffe14a; color:#2a2200; filter:none; }
+  .hview { display:grid; grid-template-columns:1.6fr 1fr; gap:22px; align-items:center; }
+  .hmon { position:relative; aspect-ratio:16/9; border-radius:18px; overflow:hidden; border:2px solid #2be8f0; box-shadow:0 0 50px rgba(43,232,240,.35), 0 24px 60px rgba(0,0,0,.6); background:#000; }
+  .hmon img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .8s; } .hmon img.on { opacity:1; }
+  .hmon::before,.hmon::after { content:''; position:absolute; width:38px; height:38px; border:4px solid #ff3fb4; z-index:2; } .hmon::before { top:10px; left:10px; border-right:0; border-bottom:0; } .hmon::after { bottom:10px; right:10px; border-left:0; border-top:0; }
+  .hthumbs { display:flex; flex-direction:column; gap:12px; } .hthumb { display:flex; gap:12px; align-items:center; padding:10px; border-radius:14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); cursor:pointer; color:#fff; font:inherit; text-align:left; transition:.2s; } .hthumb.on,.hthumb:hover { background:rgba(255,63,180,.18); border-color:#ff3fb4; }
+  .hthumb img { width:96px; height:54px; object-fit:cover; border-radius:8px; } .hthumb b { display:block; font-size:14px; } .hthumb small { color:#aab; font-size:12px; }
+  .hen { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; } .hen .e { text-align:center; padding:16px 10px 14px; border-radius:18px; background:radial-gradient(circle at 50% 35%, rgba(255,63,180,.28), rgba(14,8,34,.8) 70%); border:1px solid rgba(255,255,255,.12); transition:.25s; } .hen .e:hover { transform:translateY(-6px) rotate(-1.5deg); border-color:#7dff6a; }
+  .hen .e img { height:104px; object-fit:contain; filter:drop-shadow(0 8px 10px rgba(0,0,0,.6)); animation:hbob 3.5s ease-in-out infinite; } .hen .e b { display:block; margin-top:10px; font-size:14px; text-transform:uppercase; letter-spacing:1px; } .hen .e small { color:#aab0dd; font-size:12px; line-height:1.4; display:block; margin-top:4px; } .hen .e.boss { border-color:#ff3a4a; box-shadow:0 0 26px rgba(255,58,74,.35); }
+  .hwpn { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; } .hwpn div { flex:1 1 140px; max-width:190px; padding:14px 10px; text-align:center; border-radius:16px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); } .hwpn img { width:100%; max-height:62px; object-fit:contain; filter:drop-shadow(0 0 10px rgba(255,225,74,.5)); } .hwpn small { display:block; margin-top:8px; font-weight:700; letter-spacing:1px; font-size:12px; }
+  .hplants { display:grid; grid-template-columns:1fr 1.2fr; gap:26px; align-items:center; } .hplants .row { display:flex; gap:14px; flex-wrap:wrap; } .hplants .pl { flex:1 1 130px; text-align:center; padding:14px 8px; border-radius:18px; background:rgba(255,255,255,.06); border:1px solid rgba(125,255,106,.3); } .hplants .pl img { height:92px; object-fit:contain; animation:hbob 3s ease-in-out infinite; } .hplants .pl b { display:block; font-size:13px; margin-top:6px; } .hplants .pl small { color:#aab0dd; font-size:11.5px; }
+  .hplants .ings { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; } .hplants .ings img { height:54px; filter:drop-shadow(0 0 10px rgba(125,255,106,.6)); } .hplants .ings span { font-size:22px; color:#ffe14a; font-weight:900; }
+  .hmodes { display:flex; flex-wrap:wrap; gap:14px; }
+  .hkeys { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px 24px; } .hkeys div { display:flex; align-items:center; gap:10px; font-size:14px; color:#cfd4ff; } .hkeys kbd { min-width:38px; text-align:center; padding:7px 10px; border-radius:8px; background:linear-gradient(180deg,#3a2d7a,#201650); border:1px solid #6a5cff; border-bottom-width:4px; font:800 13px 'Arial Black',monospace; color:#fff; }
+  .hcta2 { text-align:center; padding:70px 20px 90px; } .hcta2 h2 { font-size:clamp(30px,5vw,64px); margin-bottom:22px; background:linear-gradient(90deg,#ffe14a,#ff3fb4,#2be8f0); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hfoot { text-align:center; padding:26px 20px 40px; color:#7d82b8; font-size:12px; border-top:1px solid rgba(255,255,255,.08); }
+  .hrev { opacity:0; transform:translateY(34px); transition:opacity .7s, transform .7s; } .hrev.in { opacity:1; transform:none; }
+  @keyframes hpan { from { transform:scale(1.08) translateX(-1.5%); } to { transform:scale(1.16) translateX(1.5%); } }
+  @keyframes hrise { 0% { transform:translateY(0) translateX(0); opacity:0; } 10% { opacity:.9; } 100% { transform:translateY(-105vh) translateX(40px); opacity:0; } }
+  @keyframes hpulse { 0%,100% { box-shadow:0 0 0 2px rgba(255,255,255,.15) inset, 0 10px 34px rgba(255,45,143,.55); } 50% { box-shadow:0 0 0 2px rgba(255,255,255,.25) inset, 0 10px 60px rgba(255,45,143,.95); } }
+  @keyframes hshine { 0%,55% { left:-60%; } 100% { left:140%; } } @keyframes hshine2 { 0%,45% { transform:translateX(-120%); } 100% { transform:translateX(120%); } }
+  @keyframes hfloat { 0%,100% { transform:perspective(1200px) rotateY(-9deg) rotateX(3deg) translateY(0); } 50% { transform:perspective(1200px) rotateY(-7deg) rotateX(2deg) translateY(-12px); } }
+  @keyframes hzoom { from { transform:scale(1); } to { transform:scale(1.12); } } @keyframes hbob { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-10px) rotate(2deg); } }
+  @keyframes hmarq { to { transform:translateX(-50%); } }
+  @keyframes hglitch { 0%,93%,100% { text-shadow:none; transform:none; } 94% { transform:translate(3px,-1px) skewX(-3deg); } 95% { transform:translate(-4px,1px); } 96% { transform:none; } }
+  @media (max-width:900px) { .hhero { grid-template-columns:1fr; min-height:0; } .hlinks { display:none; } .hview,.hplants { grid-template-columns:1fr; } .hart { order:-1; } .hscroll { display:none; } }
+  @media (prefers-reduced-motion:reduce) { #hero *, #hero *::before, #hero *::after { animation:none !important; transition:none !important; } .hrev { opacity:1; transform:none; } }
 </style>
 </head>
 <body>
@@ -138,7 +204,98 @@
   <div id="seedhud"></div>
   <div id="toast"></div>
   <div id="shop"></div>
-  <div id="msg">
+  <div id="hero">
+    <div class="hbg"></div><div class="hov"></div>
+    <div class="hdots"></div>
+    <nav class="hnav">
+      <div class="hlogo">LOS CONDENADOS</div>
+      <div class="hlinks"><a data-go="h-ver">El juego</a><a data-go="h-niv">Niveles</a><a data-go="h-ene">Enemigos</a><a data-go="h-pla">Plantas</a><a data-go="h-ctl">Controles</a></div>
+      <button class="hbtn main sm" data-play="start">Jugar</button>
+    </nav>
+    <section class="hhero">
+      <div class="hcopy">
+        <span class="hbadge">NUEVO · NIVEL 2: BIOLABORATORIO ARGOS</span>
+        <h1 class="htitle"><span>SHOOTER DE ZOMBIS</span>LOS<br>CONDENADOS</h1>
+        <p class="htag">Los ejecutados volvieron de la tumba. Tu eres el ultimo justiciero.</p>
+        <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
+        <div class="hcta"><button class="hbtn main" data-play="start">Jugar ahora</button><button class="hbtn alt" data-play="startL2">Nivel 2: Biolab</button></div>
+        <ul class="hstats"><li><b>2</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
+      </div>
+      <div class="hart">
+        <div class="frame"><img src="img/promo/hero.webp" alt="Los Condenados"></div>
+        <img class="chr" src="img/cartoon/t_f.webp" alt="" style="left:-4%;bottom:-8%;width:23%">
+        <img class="chr" src="img/cartoon/t_boss.webp" alt="" style="right:-5%;top:-9%;width:22%;animation-delay:-1.4s">
+        <img class="chr" src="img/lab/pl_shoot.webp" alt="" style="right:6%;bottom:-10%;width:17%;animation-delay:-2.2s">
+      </div>
+      <div class="hscroll">DESLIZA</div>
+    </section>
+    <div class="hmarq"><div><span>ZOMBIS</span><span>★</span><span>SIGILO</span><span>★</span><span>ESTRATEGIA</span><span>★</span><span>PLANTAS MUTANTES</span><span>★</span><span>JEFES</span><span>★</span><span>ZOMBIS</span><span>★</span><span>SIGILO</span><span>★</span><span>ESTRATEGIA</span><span>★</span><span>PLANTAS MUTANTES</span><span>★</span><span>JEFES</span><span>★</span></div></div>
+    <section class="hsec hrev" id="h-ver">
+      <h2>No es solo disparar</h2><p class="hlead">Aqui cada decision cuenta. Los zombis no te persiguen todos a la vez: piensan, escuchan y se reparten por el mapa.</p>
+      <div class="hgrid">
+        <div class="hcard"><div class="pic" style="background-image:url(img/promo/hub.webp)"></div><div class="body"><h3>Sigilo inteligente</h3><p>Los zombis ven en un cono y oyen tus disparos y pasos. Usa senuelos, escondites y el silencio para pasar.</p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:url(img/promo/green.webp)"></div><div class="body"><h3>Energia limitada</h3><p>Reparte la energia entre compuertas, torretas, camaras y gas toxico. No alcanza para todo: elige tu plan.</p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:url(img/promo/hub.webp);background-position:20% 70%"></div><div class="body"><h3>Plantas vs zombis</h3><p>Reune ingredientes, mezclalos en el laboratorio y siembra plantas que defienden tu camino.</p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:url(img/promo/boss.webp)"></div><div class="body"><h3>Jefes brutales</h3><p>El Alcaide y El Experimento te esperan al final de cada nivel. Preparate antes de abrir esa compuerta.</p></div></div>
+      </div>
+    </section>
+    <section class="hsec hrev">
+      <h2>Mira el juego</h2><p class="hlead">Capturas reales de la partida.</p>
+      <div class="hview">
+        <div class="hmon"><img class="on" src="img/promo/hub.webp" alt=""><img src="img/promo/green.webp" alt=""><img src="img/promo/boss.webp" alt=""></div>
+        <div class="hthumbs">
+          <button class="hthumb on" data-shot="0"><img src="img/promo/hub.webp" alt=""><span><b>Hub central</b><small>Torretas, plantas y laboratorio</small></span></button>
+          <button class="hthumb" data-shot="1"><img src="img/promo/green.webp" alt=""><span><b>Invernadero</b><small>La muestra se huele</small></span></button>
+          <button class="hthumb" data-shot="2"><img src="img/promo/boss.webp" alt=""><span><b>Nucleo ARGOS</b><small>Donde espera El Experimento</small></span></button>
+        </div>
+      </div>
+    </section>
+    <section class="hsec hrev" id="h-niv">
+      <h2>Niveles</h2><p class="hlead">Cada nivel es mas complejo, no solo por los zombis: por la estrategia.</p>
+      <div class="hgrid">
+        <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(18,184,160,.3),rgba(125,255,106,.2)),url(img/promo/hub.webp)"><span class="tag">NUEVO</span></div><div class="body"><h3>Nivel 2 · Biolab ARGOS</h3><p>Hub con tres modulos, energia limitada, gas, torretas, guardias y plantas mutantes. Escapa con la muestra.</p><p style="margin-top:14px"><button class="hbtn alt sm" data-play="startL2">Jugar nivel 2</button></p></div></div>
+        <div class="hcard lock"><div class="pic" style="background-image:url(img/promo/hero.webp)"><span class="tag">PROXIMAMENTE</span></div><div class="body"><h3>Nivel 3 · ???</h3><p>Algo crece bajo la ciudad. Tus plantas seran la unica defensa. Estrategia total.</p><p style="margin-top:14px"><button class="hbtn ghost sm" disabled>En desarrollo</button></p></div></div>
+      </div>
+    </section>
+    <section class="hsec hrev" id="h-ene">
+      <h2>Conoce al enemigo</h2><p class="hlead">Cada tipo se comporta distinto. Aprende sus puntos debiles.</p>
+      <div class="hen">
+        <div class="e"><img src="img/cartoon/t_walker.webp" alt=""><b>Caminante</b><small>Lento y numeroso. Ataca en grupo.</small></div>
+        <div class="e"><img src="img/cartoon/t_runner.webp" alt=""><b>Corredor</b><small>Rapido y fragil. Te alcanza si fallas.</small></div>
+        <div class="e"><img src="img/cartoon/t_tank.webp" alt=""><b>Tanque</b><small>Aguanta todo. Usa trampas y explosivos.</small></div>
+        <div class="e"><img src="img/cartoon/t_spitter.webp" alt=""><b>Escupidor</b><small>Ataca desde lejos con acido.</small></div>
+        <div class="e boss"><img src="img/cartoon/t_boss.webp" alt=""><b>Jefe</b><small>El Alcaide y El Experimento.</small></div>
+      </div>
+    </section>
+    <section class="hsec hrev" id="h-pla">
+      <div class="hplants">
+        <div><h2>Cultiva tu arsenal</h2><p class="hlead">Recoge esporas, savia y nucleos por el mapa. Mezclalos en la mesa de experimento y crea semillas que pasan contigo a los siguientes niveles.</p>
+          <div class="ings"><img src="img/lab/i_spore.webp" alt=""><span>+</span><img src="img/lab/i_sap.webp" alt=""><span>+</span><img src="img/lab/i_core.webp" alt=""><span>=</span><span style="font-size:15px;color:#7dff6a">PLANTAS</span></div>
+        </div>
+        <div class="row">
+          <div class="pl"><img src="img/lab/pl_shoot.webp" alt=""><b>Disparaplanta</b><small>Dispara a los zombis cercanos</small></div>
+          <div class="pl"><img src="img/lab/pl_trap.webp" alt=""><b>Planta trampa</b><small>Muerde al que se acerca</small></div>
+          <div class="pl"><img src="img/lab/pl_bomb.webp" alt=""><b>Hongo bomba</b><small>Explota en area</small></div>
+        </div>
+      </div>
+    </section>
+    <section class="hsec hrev">
+      <h2>Arsenal</h2><p class="hlead">Seis armas, desde la pistola hasta el lanzacohetes. Consiguelas explorando.</p>
+      <div class="hwpn"><div><img src="img/cartoon/w_pistol.webp" alt=""><small>PISTOLA</small></div><div><img src="img/cartoon/w_shotgun.webp" alt=""><small>ESCOPETA</small></div><div><img src="img/cartoon/w_ak.webp" alt=""><small>AK</small></div><div><img src="img/cartoon/w_lmg.webp" alt=""><small>AMETRALLADORA</small></div><div><img src="img/cartoon/w_rpg.webp" alt=""><small>LANZACOHETES</small></div><div><img src="img/cartoon/w_sniper.webp" alt=""><small>FRANCOTIRADOR</small></div></div>
+    </section>
+    <section class="hsec hrev">
+      <h2>Elige como jugar</h2><p class="hlead">Tambien hay supervivencia infinita y modo primera persona.</p>
+      <div class="hmodes"><button class="hbtn main" data-play="start">Misiones · Nivel 1</button><button class="hbtn alt" data-play="startL2">Nivel 2 · Biolab</button><button class="hbtn ghost" data-play="startS">Supervivencia</button><button class="hbtn ghost" data-play="startF">Primera persona</button></div>
+    </section>
+    <section class="hsec hrev" id="h-ctl">
+      <h2>Controles</h2><p class="hlead">Se juega con teclado y mouse.</p>
+      <div class="hkeys"><div><kbd>WASD</kbd> Moverte</div><div><kbd>MOUSE</kbd> Apuntar y disparar</div><div><kbd>R</kbd> Recargar</div><div><kbd>1-6</kbd> Cambiar arma</div><div><kbd>ESPACIO</kbd> Esquivar</div><div><kbd>SHIFT</kbd> Correr</div><div><kbd>E</kbd> Interactuar</div><div><kbd>G</kbd> Granada</div><div><kbd>T</kbd> Senuelo</div><div><kbd>F</kbd> Cuchillo</div><div><kbd>C</kbd> Sembrar planta</div><div><kbd>V</kbd> Cambiar semilla</div><div><kbd>P</kbd> Pausa</div></div>
+    </section>
+    <section class="hcta2 hrev"><h2>Listo para sobrevivir?</h2><button class="hbtn main" data-play="start" style="font-size:20px;padding:22px 46px">Jugar ahora</button></section>
+    <footer class="hfoot">LOS CONDENADOS · Juego de navegador · Los datos se guardan solo en tu dispositivo</footer>
+  </div>
+  <div id="msg" style="display:none">
     <h1>LOS CONDENADOS</h1>
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido | H: efectos de brillo</p>
@@ -149,7 +306,7 @@
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
-    <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button>
+    <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button>
   </div>
 </div>
 <script>
@@ -4257,6 +4414,18 @@ setDiffLabel();
 el.startD.addEventListener('click', () => { diff = (diff + 1) % 3; try { localStorage.setItem('condenados_diff', diff); } catch (e) {} setDiffLabel(); });
 el.startS.addEventListener('click', () => { Sfx.init(); newGame('survival'); });
 el.startL2.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 2); });
+/* ---- pagina principal ---- */
+const hero = $('hero');
+const showHero = () => { Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
+hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => { state = 'menu'; hero.style.display = 'none'; el[b.dataset.play].click(); }));
+hero.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => { const t = document.getElementById(a.dataset.go); if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); }));
+$('toHero').addEventListener('click', showHero);
+{ const hd = hero.querySelector('.hdots'); for (let i = 0; i < 26; i++) { const d = document.createElement('i'); d.style.left = (i * 3.9 + Math.random() * 3) + '%'; d.style.animationDelay = (-Math.random() * 9) + 's'; d.style.animationDuration = (7 + Math.random() * 7) + 's'; d.style.width = d.style.height = (3 + Math.random() * 6) + 'px'; hd.appendChild(d); } }
+{ const imgs = hero.querySelectorAll('.hmon img'), th = hero.querySelectorAll('.hthumb'); let cur = 0, tm;
+  const go = i => { cur = i; imgs.forEach((m, k) => m.classList.toggle('on', k === i)); th.forEach((m, k) => m.classList.toggle('on', k === i)); clearInterval(tm); tm = setInterval(() => go((cur + 1) % imgs.length), 3800); };
+  th.forEach(t => t.addEventListener('click', () => go(+t.dataset.shot))); go(0); }
+if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { root:hero, threshold:0.12 }); hero.querySelectorAll('.hrev').forEach(n => io.observe(n)); } else hero.querySelectorAll('.hrev').forEach(n => n.classList.add('in'));
+{ const b = $('hBest'); if (b) b.textContent = best; }
 el.startF.addEventListener('click', () => { Sfx.init(); newGame('mission', true); if (cv.requestPointerLock) cv.requestPointerLock(); });
 
 loadCartoon();
