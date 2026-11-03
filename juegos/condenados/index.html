@@ -267,6 +267,7 @@
   body.touch #prompt:active { transform:translateX(-50%) scale(.96); }
   body.touch.ingame #seedhud { display:none !important; }
   body.touch #mini { opacity:.55; pointer-events:none; } body.touch.mini1 #mini { width:96px !important; opacity:.45; } body.touch.mini2 #mini { display:none !important; }
+  #expp { max-height:calc(100vh - 160px); overflow-y:auto; }
 </style>
 </head>
 <body>
@@ -327,7 +328,7 @@
         <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
         <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
         <p class="hwarn" role="note">En el celular se juega en horizontal: arrastra a la izquierda para moverte. Tu personaje dispara solo a los zombis que te persiguen; toca un zombi para atacarlo y toca un objeto para usarlo.</p>
-        <ul class="hstats"><li><b>3</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
+        <ul class="hstats"><li><b>3</b>niveles</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
     </section>
@@ -378,7 +379,7 @@
         <div class="row">
           <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_shoot.webp" alt=""><b>Disparaplanta</b><small>Dispara a los zombis cercanos</small></div>
           <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_trap.webp" alt=""><b>Planta trampa</b><small>Muerde al que se acerca</small></div>
-          <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_bomb.webp" alt=""><b>Hongo bomba</b><small>Explota en area</small></div>
+          <div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_bomb.webp" alt=""><b>Hongo bomba</b><small>Explota en area</small></div><div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_wall.webp" alt=""><b>Muro de raices</b><small>Distrae y desvia zombis</small></div><div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_sun.webp" alt=""><b>Girasol</b><small>Produce sol</small></div><div class="pl"><img loading="lazy" decoding="async" src="img/lab/pl_mine.webp" alt=""><b>Mina de esporas</b><small>Explosion al pisarla</small></div>
         </div>
       </div>
     </section>
@@ -626,7 +627,7 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
-const EXTRA_IMGS = [['car_policia', 'car_policia.webp'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp'], ['pl_shoot', 'lab/pl_shoot.webp'], ['pl_trap', 'lab/pl_trap.webp'], ['pl_bomb', 'lab/pl_bomb.webp'], ['i_spore', 'lab/i_spore.webp'], ['i_sap', 'lab/i_sap.webp'], ['i_core', 'lab/i_core.webp'], ['j_tree', 'jungle/j_tree.webp'], ['j_container', 'jungle/j_container.webp'], ['j_ambulance', 'jungle/j_ambulance.webp'], ['j_bush', 'jungle/j_bush.webp'], ['j_fountain', 'jungle/j_fountain.webp'], ['j_mushroom', 'jungle/j_mushroom.webp'], ['j_bus', 'jungle/j_bus.webp'], ['j_bench', 'jungle/j_bench.webp'], ['j_lamp', 'jungle/j_lamp.webp'], ['j_tree2', 'jungle/j_tree2.webp'], ['j_tent', 'jungle/j_tent.webp'], ['j_fire', 'jungle/j_fire.webp'], ['j_stall', 'jungle/j_stall.webp'], ['j_taxi', 'jungle/j_taxi.webp'], ['j_barricade', 'jungle/j_barricade.webp'], ['j_solar', 'jungle/j_solar.webp'], ['j_wtower', 'jungle/j_wtower.webp'], ['j_crane', 'jungle/j_crane.webp'], ['j_billboard', 'jungle/j_billboard.webp'], ['j_rocks', 'jungle/j_rocks.webp'], ['r_hospital', 'jungle/r_hospital.webp'], ['r_warehouse', 'jungle/r_warehouse.webp'], ['r_shop', 'jungle/r_shop.webp'], ['r_apartment', 'jungle/r_apartment.webp']]
+const EXTRA_IMGS = [['car_policia', 'car_policia.webp'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp'], ['pl_shoot', 'lab/pl_shoot.webp'], ['pl_trap', 'lab/pl_trap.webp'], ['pl_bomb', 'lab/pl_bomb.webp'], ['pl_wall', 'lab/pl_wall.webp'], ['pl_sun', 'lab/pl_sun.webp'], ['pl_mine', 'lab/pl_mine.webp'], ['i_spore', 'lab/i_spore.webp'], ['i_sap', 'lab/i_sap.webp'], ['i_core', 'lab/i_core.webp'], ['j_tree', 'jungle/j_tree.webp'], ['j_container', 'jungle/j_container.webp'], ['j_ambulance', 'jungle/j_ambulance.webp'], ['j_bush', 'jungle/j_bush.webp'], ['j_fountain', 'jungle/j_fountain.webp'], ['j_mushroom', 'jungle/j_mushroom.webp'], ['j_bus', 'jungle/j_bus.webp'], ['j_bench', 'jungle/j_bench.webp'], ['j_lamp', 'jungle/j_lamp.webp'], ['j_tree2', 'jungle/j_tree2.webp'], ['j_tent', 'jungle/j_tent.webp'], ['j_fire', 'jungle/j_fire.webp'], ['j_stall', 'jungle/j_stall.webp'], ['j_taxi', 'jungle/j_taxi.webp'], ['j_barricade', 'jungle/j_barricade.webp'], ['j_solar', 'jungle/j_solar.webp'], ['j_wtower', 'jungle/j_wtower.webp'], ['j_crane', 'jungle/j_crane.webp'], ['j_billboard', 'jungle/j_billboard.webp'], ['j_rocks', 'jungle/j_rocks.webp'], ['r_hospital', 'jungle/r_hospital.webp'], ['r_warehouse', 'jungle/r_warehouse.webp'], ['r_shop', 'jungle/r_shop.webp'], ['r_apartment', 'jungle/r_apartment.webp']]
   .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.webp']))
   .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.webp']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
@@ -1143,24 +1144,27 @@ function steer(z, tx, ty, dt) {
 
 /* ============================== PLANTAS ============================== */
 const PLANTS = {
-  shoot:{ n:'DISPARAPLANTA', spr:'pl_shoot', hp:70, col:'#7dff6a', d:'dispara esporas a los zombis cercanos' },
-  trap: { n:'PLANTA TRAMPA', spr:'pl_trap',  hp:110, col:'#ff3fb4', d:'muerde al zombi que se le acerca' },
-  bomb: { n:'HONGO BOMBA',   spr:'pl_bomb',  hp:40, col:'#ffb020', d:'explota cuando pasan zombis cerca' } };
+  shoot:{ n:'DISPARAPLANTA', spr:'pl_shoot', hp:70,  col:'#7dff6a', cost:30, grow:6, rng:440, d:'dispara esporas a los zombis cercanos' },
+  trap: { n:'PLANTA TRAMPA', spr:'pl_trap',  hp:110, col:'#ff3fb4', cost:40, grow:8, rng:80,  d:'muerde al zombi que se le acerca' },
+  bomb: { n:'HONGO BOMBA',   spr:'pl_bomb',  hp:40,  col:'#ffb020', cost:50, grow:6, rng:105, d:'explota cuando pasan zombis cerca' },
+  wall: { n:'MURO DE RAICES', spr:'pl_wall', hp:260, col:'#7dff6a', cost:20, grow:4, rng:85,  d:'los distrae, los empuja y aguanta golpes' },
+  sun:  { n:'GIRASOL',       spr:'pl_sun',   hp:60,  col:'#ffe14a', cost:25, grow:8, rng:0,   d:'produce sol para sembrar mas plantas' },
+  mine: { n:'MINA DE ESPORAS', spr:'pl_mine', hp:50, col:'#2be8f0', cost:35, grow:5, rng:62,  d:'explota con fuerza al pisarla un zombi' } };
 const INGN = { spore:'Espora', sap:'Savia', core:'Nucleo' };
-const RECIPES = [['shoot','spore','sap'], ['trap','sap','core'], ['bomb','spore','core']];
-let seeds = { shoot:0, trap:0, bomb:0 }, seedsStart = null, seedSel = 'shoot', seedHudS = '';
+const RECIPES = [['shoot','spore','sap'], ['trap','sap','core'], ['bomb','spore','core'], ['wall','sap','sap'], ['sun','spore','spore'], ['mine','core','core']];
+let seeds = { shoot:0, trap:0, bomb:0, wall:0, sun:0, mine:0 }, seedsStart = null, seedSel = 'shoot', seedHudS = '';
 try { const v = JSON.parse(localStorage.getItem('condenados_seeds')); if (v) for (const k in seeds) seeds[k] = Math.max(0, +v[k] || 0); } catch (e) {}
 const saveSeeds = () => { try { localStorage.setItem('condenados_seeds', JSON.stringify(seeds)); } catch (e) {} };
 
 function renderExp() {
   const I = mission.ing;
   el.expp.innerHTML = '<h3><span>MESA DE EXPERIMENTO</span><button data-close="exp">X</button></h3><div>Tus ingredientes: Esporas <b>' + I.spore + '</b> | Savia <b>' + I.sap + '</b> | Nucleos <b>' + I.core + '</b></div>'
-    + '<div style="opacity:.8;margin:4px 0 6px">Mezcla 2 ingredientes distintos y creas 1 semilla. Las plantas defienden el lugar donde las siembres, y las semillas pasan a los siguientes niveles.</div>'
-    + RECIPES.map(([k, a, b]) => { const ok = I[a] > 0 && I[b] > 0; return '<div class="sysr"><div><b>' + PLANTS[k].n + '</b><small>' + INGN[a] + ' + ' + INGN[b] + ': ' + PLANTS[k].d + '</small></div><button data-craft="' + k + '"' + (ok ? '' : ' disabled') + ' class="' + (ok ? 'on' : 'off') + '">CREAR</button></div>'; }).join('')
+    + '<div style="opacity:.8;margin:4px 0 6px">Mezcla 2 ingredientes (pueden ser iguales) y creas 1 semilla. Las plantas tardan en crecer y defienden donde las siembres. En el Nivel 3 sembrar cuesta sol.</div>'
+    + RECIPES.map(([k, a, b]) => { const ok = a === b ? I[a] > 1 : I[a] > 0 && I[b] > 0; return '<div class="sysr"><div><b>' + PLANTS[k].n + '</b><small>' + INGN[a] + ' + ' + INGN[b] + ': ' + PLANTS[k].d + '</small></div><button data-craft="' + k + '"' + (ok ? '' : ' disabled') + ' class="' + (ok ? 'on' : 'off') + '">CREAR</button></div>'; }).join('')
     + '<div style="margin-top:6px">Semillas: ' + Object.keys(PLANTS).map(k => PLANTS[k].n + ' <b>' + seeds[k] + '</b>').join(' | ') + '</div><small style="opacity:.7;display:block;margin-top:4px">Siembra con C y cambia de planta con V.</small>';
 }
 function craft(k) {
-  const r = RECIPES.find(q => q[0] === k), I = mission.ing; if (!r || I[r[1]] < 1 || I[r[2]] < 1) { Sfx.deny(); return; }
+  const r = RECIPES.find(q => q[0] === k), I = mission.ing; if (!r || (r[1] === r[2] ? I[r[1]] < 2 : I[r[1]] < 1 || I[r[2]] < 1)) { Sfx.deny(); return; }
   if (mission.jungle) mission.s.crafted = true;
   I[r[1]]--; I[r[2]]--; seeds[k]++; seedSel = k; saveSeeds(); Sfx.clear(); burst(player.x, player.y, 14, PLANTS[k].col, 200, 0.6, 3);
   toast('SEMILLA CREADA: ' + PLANTS[k].n + '  |  SIEMBRA CON C'); renderExp();
@@ -1182,8 +1186,10 @@ function plantSeed() {
   if (plants.length >= 14) { toast('YA HAY DEMASIADAS PLANTAS'); return; }
   const sp = plantSpot(); if (!sp.ok) { Sfx.deny(); toast('NO SE PUEDE SEMBRAR AHI'); return; }
   if (mission && mission.jungle) mission.s.planted = true;
-  const d = PLANTS[seedSel]; seeds[seedSel]--; saveSeeds();
-  plants.push({ type:seedSel, x:sp.x, y:sp.y, hp:d.hp, max:d.hp, t:0, cd:0.6, arm:1.6, bite:0, hurt:0, ang:0, face:1, seed:Math.random() });
+  const d = PLANTS[seedSel];
+  if (mission && mission.jungle) { if (mission.sol < d.cost) { Sfx.deny(); toast('SIN SOL: ' + d.n + ' CUESTA ' + d.cost + ' (TIENES ' + Math.floor(mission.sol) + '). PLANTA UN GIRASOL'); return; } mission.sol -= d.cost; }
+  seeds[seedSel]--; saveSeeds();
+  plants.push({ type:seedSel, x:sp.x, y:sp.y, hp:d.hp, max:d.hp, t:0, cd:0.6, arm:1.6, sunT:0, bite:0, hurt:0, ang:0, face:1, seed:Math.random() });
   burst(sp.x, sp.y, 12, d.col, 160, 0.5, 3); Sfx.pickup(); seedHudS = '';
 }
 function plantsUpdate(dt) {
@@ -1191,12 +1197,16 @@ function plantsUpdate(dt) {
   for (const p of plants) {
     p.t += dt; p.cd = Math.max(0, p.cd - dt); p.arm = Math.max(0, p.arm - dt); p.bite = Math.max(0, p.bite - dt); p.hurt = Math.max(0, p.hurt - dt);
     const lure = z => { if (z.st === 'idle' || z.st === 'search') { z.st = 'alert'; z.tx = p.x; z.ty = p.y; z.alertT = 6; } };
-    let tz = null, td = p.type === 'shoot' ? 440 : p.type === 'trap' ? 80 : 105;
+    const pd = PLANTS[p.type], mature = p.t >= pd.grow;
+    let tz = null, td = pd.rng;
     for (const z of zombies) {
       if (z.hp <= 0) continue; const d = Math.hypot(z.x - p.x, z.y - p.y);
-      if (d < 44 && z.st !== 'idle') { p.hp -= 14 * dt; p.hurt = 0.25; }   // los zombis se la comen
-      if (d < td && (p.type !== 'shoot' || losClear(p.x, p.y, z.x, z.y))) { td = d; tz = z; }
+      if (d < (p.type === 'wall' ? 95 : 44) && z.st !== 'idle') { p.hp -= (p.type === 'wall' ? 9 : 14) * dt; p.hurt = 0.25; }   // los zombis se la comen
+      if (mature && p.type === 'wall' && d < 90 && d > 1 && z.st !== 'idle' && !z.root) { const k = 5200 * dt / (z.kres || 1); z.kx += (z.x - p.x) / d * k; z.ky += (z.y - p.y) / d * k; }   // el muro los frena y los empuja
+      if (mature && td > 0 && d < td && (p.type !== 'shoot' || losClear(p.x, p.y, z.x, z.y))) { td = d; tz = z; }
     }
+    if (!mature) continue;
+    if (p.type === 'sun') { p.sunT += dt; if (p.sunT >= 5 && mission && mission.jungle) { p.sunT = 0; mission.sol = Math.min(200, mission.sol + 10); if (floaters.length < 40) floaters.push({ x:p.x, y:p.y - 90, vy:-50, text:'+10 SOL', life:1, max:1, color:'#ffe14a', big:false }); burst(p.x, p.y - 40, 6, '#ffe14a', 120, 0.5, 3); } else if (p.sunT >= 5) p.sunT = 0; continue; }
     if (!tz) continue;
     if (p.type === 'shoot') {
       const a = Math.atan2(tz.y - p.y, tz.x - p.x); p.ang = a; p.face = Math.cos(a) < 0 ? -1 : 1;
@@ -1205,7 +1215,7 @@ function plantsUpdate(dt) {
       if (p.cd <= 0) { p.cd = 3.5; p.bite = 0.55; tz.hp -= 170; tz.flash = 0.15; tz.aggro = true; lure(tz); burst(tz.x, tz.y, 12, '#ff3fb4', 220, 0.5, 3); Sfx.explosion && 0; Sfx.stab && Sfx.stab(); if (floaters.length < 40) floaters.push({ x:tz.x, y:tz.y - tz.r, vy:-80, text:170, life:0.9, max:0.9, color:'#ff3fb4', big:true }); }
     } else if (p.type === 'bomb') {
       if (p.arm <= 0) { p.dead = true; explodeAt(p.x, p.y, 165, 70, 210, 0, 0); }
-    }
+    } else if (p.type === 'mine') { p.dead = true; explodeAt(p.x, p.y, 150, 110, 200, 0, 0); }
   }
   for (const p of plants) if (p.hp <= 0) { p.dead = true; burst(p.x, p.y, 14, PLANTS[p.type].col, 200, 0.6, 3); }
   plants = plants.filter(p => !p.dead);
@@ -1214,13 +1224,15 @@ function drawPlants(t) {
   for (const p of plants) {
     if (!vis(p.x - 70, p.y - 100, 140, 130)) continue;
     const d = PLANTS[p.type], img = IMG[d.spr]; if (!img) continue;
-    const H = 88, W = H * img.width / img.height, grow = Math.min(1, p.t / 0.45), bob = Math.sin(t * 3 + p.seed * 9) * 2;
+    const H = 88, W = H * img.width / img.height, mat = p.t >= d.grow, gm = mat ? 1 : 0.5 + 0.5 * (p.t / d.grow), grow = Math.min(1, p.t / 0.45) * gm, bob = Math.sin(t * 3 + p.seed * 9) * 2;
     const sc = grow * (1 + (p.bite > 0 ? 0.16 : 0) + (p.type === 'bomb' && p.arm <= 0 ? Math.sin(t * 16) * 0.05 : 0));
     shadowBlob(p.x + 3, p.y + 6, 30, 13, 0.57);
     { const gl = getGlow(d.spr); if (gl) { const k = H / img.height, gw = gl.w * k, gh = gl.h * k; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.5 * grow; ctx.drawImage(gl.c, p.x - gw / 2, p.y + 8 - H - (gh - H) / 2 + bob, gw, gh); ctx.restore(); } }
     ctx.save(); ctx.translate(p.x, p.y + 8); ctx.scale(sc * (p.type === 'shoot' ? p.face : 1), sc); if (p.hurt > 0) ctx.globalAlpha = 0.6 + Math.sin(t * 40) * 0.3; ctx.drawImage(img, -W / 2, -H + bob, W, H); ctx.restore();
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(p.x, p.y - 30, 52, d.col, 0.16 + (p.bite > 0 ? 0.3 : 0)); ctx.restore();
-    if (p.t < 2.2) { ctx.save(); ctx.strokeStyle = d.col; ctx.globalAlpha = 0.5 * (1 - p.t / 2.2); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, p.type === 'shoot' ? 440 : p.type === 'trap' ? 80 : 105, 0, 7); ctx.stroke(); ctx.restore(); }
+    if (p.t < d.grow + 2 && d.rng) { ctx.save(); ctx.strokeStyle = d.col; ctx.globalAlpha = mat ? 0.5 * (1 - (p.t - d.grow) / 2) : 0.28; ctx.lineWidth = 2; ctx.setLineDash(mat ? [] : [8, 8]); ctx.beginPath(); ctx.arc(p.x, p.y, d.rng, 0, 7); ctx.stroke(); ctx.restore(); }
+    if (!mat) { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(p.x - 22, p.y + 14, 44, 6); ctx.fillStyle = d.col; ctx.fillRect(p.x - 21, p.y + 15, 42 * (p.t / d.grow), 4); ctx.fillStyle = '#fff'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('CRECIENDO', p.x, p.y + 30); }
+    else if (p.type === 'sun') { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(p.x, p.y - 40, 70 + Math.sin(t * 3) * 6, '#ffe14a', 0.3); ctx.restore(); }
     if (p.hp < p.max) { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(p.x - 22, p.y - H - 8, 44, 6); ctx.fillStyle = '#7dff6a'; ctx.fillRect(p.x - 21, p.y - H - 7, 42 * clamp(p.hp / p.max, 0, 1), 4); }
   }
   if (state === 'playing' && player && seeds[seedSel] > 0 && !player.tower && !player.driving) {
@@ -1237,8 +1249,9 @@ function drawIng(p, t) {
 }
 function updSeedHud() {
   if (!el.seedhud) return;
-  const tot = seeds.shoot + seeds.trap + seeds.bomb, M = mission && (mission.lab || mission.jungle) ? mission : null; let h = '';
-  if (tot > 0 || plants.length) h += '<b>PLANTAS</b> (C siembra, V cambia): ' + Object.keys(PLANTS).map(k => '<span style="' + (k === seedSel ? 'color:#7dff6a;font-weight:bold' : 'opacity:.7') + '">' + PLANTS[k].n + ' x' + seeds[k] + '</span>').join(' | ');
+  const tot = Object.keys(PLANTS).reduce((a, k) => a + seeds[k], 0), M = mission && (mission.lab || mission.jungle) ? mission : null; let h = '';
+  if (tot > 0 || plants.length) h += '<b>PLANTAS</b> (C siembra, V cambia): ' + Object.keys(PLANTS).map(k => '<span style="' + (k === seedSel ? 'color:#7dff6a;font-weight:bold' : 'opacity:.7') + '">' + PLANTS[k].n + ' x' + seeds[k] + (mission && mission.jungle ? ' (' + PLANTS[k].cost + ')' : '') + '</span>').join(' | ');
+  if (mission && mission.jungle) h += (h ? '<br>' : '') + '<b style="color:#ffe14a">SOL ' + Math.floor(mission.sol) + '</b>';
   if (M && M.ing) h += (h ? '<br>' : '') + 'Ingredientes: Esporas ' + M.ing.spore + ' | Savia ' + M.ing.sap + ' | Nucleos ' + M.ing.core;
   if (h !== seedHudS) { seedHudS = h; el.seedhud.innerHTML = h; el.seedhud.style.display = h ? 'block' : 'none'; }
 }
@@ -1371,7 +1384,7 @@ function startJungle(retry = false) {
   WORLD.w = GC * TS; WORLD.h = GR * TS; setMini(180, 150);
   const T0 = v => v * TS;
   mission = { idx:2, facility:true, jungle:true, def:{ name:'LA CIUDAD SELVA', cap:0, patrols:0, mix:ZINFO[1].mix }, map:{ start:{ x:T0(35), y:T0(52) }, exit:{ x:T0(36), y:T0(6) }, lamps:[], decals:[], blocks:[], spots:[] },
-    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, s:{ got:0, crafted:false, planted:false, radio:0, radioOn:false, radioDone:false, waves:0, med:0, hospGen:false, portPow:false, portCal:false, bossSpawned:false, bossDead:false }, roots:[], dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
+    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, sol:60, s:{ got:0, crafted:false, planted:false, radio:0, radioOn:false, radioDone:false, waves:0, med:0, hospGen:false, portPow:false, portCal:false, bossSpawned:false, bossDead:false }, roots:[], dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
   const st = mission.map.start;
   player.x = st.x; player.y = st.y; player.cur = keepCur; player.vx = 0; player.vy = 0; player.reloading = 0; player.dashT = 0; player.sample = false;
   player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
@@ -1379,7 +1392,7 @@ function startJungle(retry = false) {
   snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
   el.facHud.style.display = 'block'; closeLabPanels(); mission.ing = { spore:0, sap:0, core:0 };
   if (!retry || !seedsStart) seedsStart = { ...seeds }; else { seeds = { ...seedsStart }; saveSeeds(); }
-  for (const [ik, tx, ty] of [['spore',30.5,49.6],['sap',40.6,48.4],['spore',11.5,40.5],['spore',22,21.5],['sap',49.5,20.5],['sap',67,40.5],['core',24,13],['core',53,12.5]]) pickups.push({ x:tx * TS, y:ty * TS, kind:'ing', ing:ik, life:Infinity });
+  for (const [ik, tx, ty] of [['spore',30.5,49.6],['sap',40.6,48.4],['spore',11.5,40.5],['spore',22,21.5],['sap',49.5,20.5],['sap',67,40.5],['core',24,13],['core',53,12.5],['spore',44.2,52.2],['core',29.7,55.5],['sap',35.6,31.5],['core',3.5,38.6],['sap',21.6,37.4],['spore',58.6,37.6],['core',67.4,28.1],['sap',36.2,44.4]]) pickups.push({ x:tx * TS, y:ty * TS, kind:'ing', ing:ik, life:Infinity });
   const PK = [['ammo',35.5,30],['hp',35.5,20],['bomb',37,42.8],['hp',12,20],['ammo',20,40],['bomb',6.4,29.4],['ammo',58,30],['hp',66,22],['bomb',49.2,37],['ammo',27,8.4],['hp',46,8],['bomb',35,13],['ammo',40,48],['hp',30,50],['scrap',35,26],['scrap',14,26],['scrap',60,28.5],['wpn',20.5,41.5,3],['wpn',68,42,4]];
   PK.forEach(([k, tx, ty, slot], idx) => { if (diff > 0 && (k === 'ammo' || k === 'hp') && idx % (diff === 1 ? 3 : 2) === 1) return; pickups.push({ x:tx * TS, y:ty * TS, kind:k, slot, life:Infinity }); });
   const NEST = [[35.5,22,2],[35.5,36,3,'blind'],[12,30,3],[8,20,2,'deaf'],[18,40,3],[20,24,2],[55,31,3],[64,28,3,'blind'],[52,40,2],[66,38,2],[22,12,3],[48,12,3],[30,6,3,'deaf'],[44,6,3],[36,12,2]];
@@ -1437,7 +1450,7 @@ function jungleObjHtml() {
   const rows = groups.map(g => g.items.every(q => q.ok) ? '<span class="mod ok">[x] ' + g.name + '</span>' : g.items.some(q => q.req) ? '<span class="mod no"><b style="color:#ffe14a">' + g.name + '</b></span>' + g.items.filter(q => q.req || q.ok).map(q => '<span class="mod ' + (q.ok ? 'ok' : 'no') + '">' + (q.ok ? '[x] ' : '[ ] ') + q.t + '</span>').join('') : '').join('');
   return 'NIVEL 3 - ' + z + '<br>' + rows + '<b>' + (c.length ? 'AHORA: ' + c.map(o => o.q.t).join('  |  ') : 'Nivel completado') + '</b><br><span style="opacity:.85">'
     + (M.hordeOn ? '<b style="color:#ff6a7a">OLEADA EN CAMINO: ESCONDETE EN UN ARBUSTO (quieto) HASTA QUE PASE</b> | ' : '') + (M.dayT >= DAY_LEN ? '<b style="color:#ff6a7a">NOCHE</b>' : (M.dayT >= DAY_LEN * 0.75 ? '<b style="color:#ffb347">ANOCHECE</b> ' : 'Dia ') + jungleClock()) + ' | Alertas ' + M.alerts
-    + '</span><br><span style="opacity:.8">Ingredientes: ' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos</span>';
+    + '</span><br><span style="opacity:.9"><b style="color:#ffe14a">SOL ' + Math.floor(M.sol) + '/200</b> (siembra cuesta sol; el girasol da mas)</span><br><span style="opacity:.8">Ingredientes: ' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos</span>';
 }
 function jungleTargets() {
   const M = mission, s = M.s, out = [], add = (x, y, col) => out.push({ x, y, col }), atR = (r, col) => { if (r) { const c = centerOf(r); add(c.x, c.y, col); } };
@@ -1492,7 +1505,7 @@ function spawnAmbush(w) {
 }
 function jungleUpdate(dt) {
   const M = mission, s = M.s;
-  M.dayT += dt;
+  M.dayT += dt; M.sol = Math.min(200, M.sol + 1.2 * dt);
   if (zombies.some(z => z.gone)) zombies = zombies.filter(z => !z.gone);
   M.hordeT = (M.hordeT === undefined ? 70 : M.hordeT) - dt; if (M.hordeT <= 0 && s.radioDone) startHorde(); else if (M.hordeT <= 0) M.hordeT = 20;
   M.hordeOn = zombies.some(z => z.horde && z.hp > 0);
@@ -2714,6 +2727,7 @@ function hitZombie(z, b) {
 }
 
 function killZombie(z) {
+  if (mission && mission.jungle && !z.root && Math.random() < 0.12) pickups.push({ x:z.x, y:z.y, kind:'ing', ing:['spore', 'sap', 'core'][Math.floor(Math.random() * 3)], life:Infinity });
   if (z.root) { burst(z.x, z.y, 30, '#ff3fb4', 360, 0.8, 4); addShake(0.7); Sfx.explosion(); toast('RAIZ DESTRUIDA ' + (mission.roots.filter(q => q.hp <= 0).length) + '/3'); player.pts += 300; return; }
   dying.push({ x:z.x, y:z.y, type:z.type, r:z.r, t:0, dir:Math.random() < 0.5 ? -1 : 1, ph:z.ph });
   killsTotal++;
@@ -3798,7 +3812,7 @@ function drawRoof(r) {
 }
 /* ---- direccion de arte: neon moderno (luz propia, brillo y etalonaje) ---- */
 const GLOWCOL = { j_tree:'#b6ff3a', j_tree2:'#7dff6a', j_lamp:'#ffe14a', j_bush:'#7dff6a', j_mushroom:'#2be8f0', j_fountain:'#2be8f0', j_container:'#ff8a3d', j_ambulance:'#ff3fb4', j_bus:'#ffe14a', j_taxi:'#ffe14a', j_bench:'#7dff6a', j_tent:'#ff8a3d', j_fire:'#ffa12b', j_stall:'#ff3fb4', j_crane:'#ff8a3d', j_solar:'#2b9bff', j_billboard:'#ff3fb4', j_rocks:'#2be8f0', j_wtower:'#2be8f0', j_barricade:'#7dff6a',
-  l_drum:'#7dff6a', l_case:'#2be8f0', l_barrier:'#ffe14a', l_boxes:'#2be8f0', l_locker:'#ff3fb4', l_tube:'#7dff6a', l_labtable:'#2be8f0', l_planter:'#7dff6a', l_cryo:'#2be8f0', l_turret:'#ff3fb4', l_console:'#2be8f0', pl_shoot:'#7dff6a', pl_trap:'#ff3fb4', pl_bomb:'#ffa12b', i_spore:'#7dff6a', i_sap:'#ff3fb4', i_core:'#2be8f0' };
+  l_drum:'#7dff6a', l_case:'#2be8f0', l_barrier:'#ffe14a', l_boxes:'#2be8f0', l_locker:'#ff3fb4', l_tube:'#7dff6a', l_labtable:'#2be8f0', l_planter:'#7dff6a', l_cryo:'#2be8f0', l_turret:'#ff3fb4', l_console:'#2be8f0', pl_shoot:'#7dff6a', pl_trap:'#ff3fb4', pl_bomb:'#ffa12b', pl_wall:'#7dff6a', pl_sun:'#ffe14a', pl_mine:'#2be8f0', i_spore:'#7dff6a', i_sap:'#ff3fb4', i_core:'#2be8f0' };
 const GLOWIMG = {};
 function getGlow(key) {
   if (GLOWIMG[key] !== undefined) return GLOWIMG[key];
