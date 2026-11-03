@@ -218,7 +218,7 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
-const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp']]
+const EXTRA_IMGS = [['car_policia', 'car_policia.png'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp']]
   .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.png']))
   .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.png']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
@@ -382,8 +382,8 @@ function genMap() {
   }
   const carCols = ['#6a2a2a', '#2a3f6a', '#4a4a4a', '#6a5a2a', '#2f5a3a'];
   // posicion aleatoria sobre una calle (horizontal o vertical)
-  const onRoad = (w, h) => {
-    if (Math.random() < 0.5) { const hw = Math.max(w, h), hh = Math.min(w, h); return { x:rand(60, WORLD.w - 60 - hw), y:road / 2 + Math.floor(rand(0, rows + 1)) * (bh + road) - hh / 2 + rand(-55, 55), w:hw, h:hh }; }
+  const onRoad = (w, h, horizOnly = false) => {
+    if (horizOnly || Math.random() < 0.5) { const hw = Math.max(w, h), hh = Math.min(w, h); return { x:rand(60, WORLD.w - 60 - hw), y:road / 2 + Math.floor(rand(0, rows + 1)) * (bh + road) - hh / 2 + rand(-55, 55), w:hw, h:hh }; }
     const hw = Math.min(w, h), hh = Math.max(w, h); return { x:road / 2 + Math.floor(rand(0, cols + 1)) * (bw + road) - hw / 2 + rand(-55, 55), y:rand(60, WORLD.h - 60 - hh), w:hw, h:hh };
   };
   let cars = 0;
@@ -404,6 +404,13 @@ function genMap() {
     r.kind = 'prop'; r.spr = d.spr; r.sc = d.sc; r.seed = Math.random(); r.flip = Math.random() < 0.5; r.dir = Math.random() < 0.5 ? 1 : -1;
     if (clear(r, 70)) { out.push(r); props++; }
   }
+  // tramos de valla con alambre de puas (se atraviesan a tiros pero no a pie)
+  let fences = 0;
+  for (let n = 0; n < 120 && fences < 9; n++) {
+    const q = onRoad(rand(280, 520), 24, true);
+    q.kind = 'fence'; q.pass = true; q.seed = Math.random();
+    if (clear(q, 70)) { out.push(q); fences++; }
+  }
   // refugio: campamento con vallas y dos portones (norte y sur)
   const S = 560, x0 = start.x - S / 2, y0 = start.y - S / 2, ins = 29, t = 30, gap = 150, seg = (S - 2 * ins - gap) / 2;
   const camp = { x:start.x, y:start.y, S, key:Math.random() < 0.5 ? 'camp1' : 'camp2' };
@@ -423,7 +430,19 @@ function genMap() {
   }
   for (let n = 0; n < 8; n++) { const q = roadPt(); if (!inside(q.x, q.y, 20)) decals.push({ k:3, x:q.x, y:q.y, w:92, rot:rand(0, 6.283), a:1 }); }
   for (let n = 0; n < 10; n++) { const q = roadPt(); if (!inside(q.x, q.y, 20)) decals.push({ k:10, x:q.x, y:q.y, w:DSZ[10] * rand(0.9, 1.3), rot:q.horiz ? Math.PI / 2 + rand(-0.12, 0.12) : rand(-0.12, 0.12), a:rand(0.6, 0.85) }); }
-  return { blocks, rects:out, spots, start, exit, road, bw, bh, rows, cols, camp, decals };
+  // farolas en cruces de calles
+  const lamps = [];
+  for (let n = 0; n < 40 && lamps.length < 14; n++) {
+    const lx = road / 2 + Math.floor(rand(0, cols + 1)) * (bw + road), ly = road / 2 + Math.floor(rand(0, rows + 1)) * (bh + road);
+    if (Math.hypot(lx - start.x, ly - start.y) < S * 0.8 || lamps.some(l => Math.hypot(l.x - lx, l.y - ly) < 500)) continue;
+    lamps.push({ x:lx, y:ly, seed:Math.random() });
+  }
+  return { blocks, rects:out, spots, start, exit, road, bw, bh, rows, cols, camp, decals, lamps };
+}
+
+function inSolid(x, y) {
+  for (const r of rects) if (!r.pass && x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h) return true;
+  return false;
 }
 
 function inRect(x, y, pad = 0) {
@@ -887,7 +906,7 @@ function update(dt, now) {
     const steps = Math.ceil(Math.hypot(b.vx, b.vy) * dt / 8);
     for (let s = 0; s < steps && b.life > 0; s++) {
       b.x += b.vx * dt / steps; b.y += b.vy * dt / steps;
-      if (rects.length && inRect(b.x, b.y)) { b.life = 0; burst(b.x, b.y, 4, '#bbbbbb', 160, 0.25, 1.5); break; }
+      if (rects.length && inSolid(b.x, b.y)) { b.life = 0; burst(b.x, b.y, 4, '#bbbbbb', 160, 0.25, 1.5); break; }
       for (const z of zombies) {
         if (z.hp > 0 && Math.hypot(b.x - z.x, b.y - z.y) < z.r) { hitZombie(z, b); b.life = 0; break; }
       }
@@ -966,7 +985,7 @@ function update(dt, now) {
   for (const s of spits) {
     s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
     if (Math.random() < 0.5) burst(s.x, s.y, 1, '#9acd32', 40, 0.3, 2);
-    if (rects.length && inRect(s.x, s.y)) s.life = 0;
+    if (rects.length && inSolid(s.x, s.y)) s.life = 0;
     if (Math.hypot(s.x - player.x, s.y - player.y) < player.r + 5) { s.life = 0; damagePlayer(10); }
   }
   spits = spits.filter(s => s.life > 0);
@@ -976,7 +995,7 @@ function update(dt, now) {
     g.t += dt;
     if (g.t < g.fly) {
       const nx = g.x + g.vx * dt, ny = g.y + g.vy * dt;
-      if (rects.length && inRect(nx, ny)) { g.vx = 0; g.vy = 0; g.t = Math.max(g.t, g.fly); } else { g.x = nx; g.y = ny; }
+      if (rects.length && inSolid(nx, ny)) { g.vx = 0; g.vy = 0; g.t = Math.max(g.t, g.fly); } else { g.x = nx; g.y = ny; }
     } else { g.vx *= Math.max(0, 1 - 6 * dt); g.vy *= Math.max(0, 1 - 6 * dt); g.x += g.vx * dt; g.y += g.vy * dt; }
     g.beep -= dt;
     if (g.beep <= 0 && g.t > g.fly) { g.beep = Math.max(0.12, (g.fuse - g.t) * 0.35); Sfx.beep(); }
@@ -1141,8 +1160,17 @@ function drawFit(r) {
   return true;
 }
 
+function drawFence(r) {
+  const img = IMG.valla;
+  if (!img) { ctx.fillStyle = '#4a4036'; ctx.fillRect(r.x, r.y, r.w, r.h); return; }
+  const k = 0.27, srcW = Math.min(img.width, r.w / k), srcX = frac(r.seed * 7.3) * (img.width - srcW), dw = srcW * k, dh = img.height * k;
+  ctx.fillStyle = 'rgba(0,0,0,.32)'; ctx.fillRect(r.x + 3, r.y + r.h - 7, r.w, 12);
+  ctx.drawImage(img, srcX, 0, srcW, img.height, r.x, r.y + r.h - dh + 4, dw, dh);
+}
+
 function drawRectObj(r) {
   if (r.kind === 'wall') return;
+  if (r.kind === 'fence') { drawFence(r); return; }
   if (r.spr && drawFit(r)) return;
   if (r.kind === 'b') {
     drawBuilding(r);
@@ -1394,6 +1422,18 @@ function draw() {
   const g = ctx.createRadialGradient(player.x - cam.x, player.y - cam.y, 120, player.x - cam.x, player.y - cam.y, Math.max(W, H) * 0.7);
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.72)');
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+  // farolas
+  if (mode === 'mission' && mission && IMG.farola) {
+    const li = IMG.farola, Dw = 600, Dh = Dw * li.height / li.width;
+    ctx.save(); ctx.translate(-cam.x, -cam.y); ctx.globalCompositeOperation = 'lighter';
+    for (const l of mission.map.lamps) {
+      if (!vis(l.x - Dw / 2, l.y - Dh * 0.24, Dw, Dh)) continue;
+      ctx.globalAlpha = 0.8 + Math.sin(tNow * (l.seed < 0.3 ? 9 : 2) + l.seed * 20) * (l.seed < 0.3 ? 0.18 : 0.06);
+      ctx.drawImage(li, l.x - Dw * 0.5, l.y - Dh * 0.24, Dw, Dh);
+    }
+    ctx.restore();
+  }
 
   // dano y vida baja
   if (player.hurtT > 0) { ctx.fillStyle = 'rgba(170,0,0,' + (player.hurtT * 0.9) + ')'; ctx.fillRect(0, 0, W, H); }
