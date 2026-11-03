@@ -68,7 +68,7 @@
     <p>Los criminales ejecutados de la ciudad volvieron de la tumba. Eres el ultimo justiciero en pie. Cumple las misiones y escapa de la ciudad.</p>
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas. Busca las cajas verdes de armas: ametralladora, lanzacohetes y francotirador.</p>
-    <p>PRIMERA PERSONA: clic en la pantalla para capturar el mouse y mirar; W/S avanzar, A/D desplazarte, el arma apunta al centro. ESC suelta el mouse.</p>
+    <p>PRIMERA PERSONA: clic en la pantalla para capturar el mouse y mirar; W/S avanzar, A/D desplazarte, el arma apunta al centro. [ y ] ajustan el campo de vision. Flechas rojas en el borde avisan de zombis fuera de pantalla. ESC suelta el mouse.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
     <button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button>
   </div>
@@ -266,15 +266,15 @@ const BASE = location.pathname.replace(/[^/]*\.html$/, '').replace(/\/?$/, '/');
   im.src = src;
 });
 // personaje con caminata procedural: torso con balanceo y rebote, piernas que se alternan (una sola imagen)
-function drawAnim(img, x, y, w, flip, lean, ph, amp) {
+function drawAnim(img, x, y, w, flip, lean, ph, amp, ps = 1) {
   const k = w / img.width, h = img.height * k, hip = Math.floor(img.height * 0.56), hh = hip * k;
   const idle = Math.sin(performance.now() / 450 + x) * 0.9 * (1 - Math.min(1, amp));
-  const bob = -Math.abs(Math.sin(ph)) * 3.6 * amp + idle;
+  const bob = (-Math.abs(Math.sin(ph)) * 3.6 * amp + idle) * ps;
   ctx.save(); ctx.translate(x, y); ctx.rotate(lean);
   if (flip) ctx.scale(-1, 1);
   const ox = -w / 2, oy = -h * 0.55, iw2 = img.width / 2;
   for (let s = 0; s < 2; s++) {
-    const sw = Math.sin(ph + s * Math.PI), lift = Math.max(0, sw) * 6 * amp;
+    const sw = Math.sin(ph + s * Math.PI), lift = Math.max(0, sw) * 6 * amp * ps;
     ctx.save(); ctx.translate(ox + s * w / 2 + w / 4, oy + hh + bob);
     ctx.transform(1, 0, sw * 0.32 * amp, 1, 0, 0);
     ctx.drawImage(img, s * iw2, hip - 3, iw2, img.height - hip + 3, -w / 4 - 0.5, -lift - 3 * k, w / 2 + 1, h - hh + 3 * k);
@@ -308,7 +308,7 @@ const AMP = { walker:1, runner:1.35, tank:0.7, spitter:0.85, boss:0.6 };
 let state = 'menu', prePause = 'playing';
 let player, zombies, bullets, spits, particles, blood, pickups, floaters, keys, mouse, cam, wave, toastT, lastT;
 let spawnQueue, spawnTimer, hordeDone, trauma, freeze, groanT, heartT, combo, comboT, comboPulse, killsTotal;
-let grenades = [], blasts = [], scorch = [], rockets = [];
+let grenades = [], blasts = [], scorch = [], rockets = [], dying = [];
 let fp = false, fpYaw = -0.9, hitMark = 0, fpLockFail = false;
 let mode = 'survival', rects = [], mission = null, missionIdx = 0, snap = null, aggroCount = 0;
 
@@ -321,7 +321,7 @@ function makePlayer() {
 }
 
 function resetState() {
-  zombies = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = [];
+  zombies = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = [];
   keys = {}; mouse = { x:W/2, y:H/2, down:false };
   cam = { x:0, y:0, kx:0, ky:0, lx:0, ly:0 };
   wave = 0; toastT = 0; lastT = performance.now();
@@ -869,6 +869,7 @@ function hitZombie(z, b) {
 }
 
 function killZombie(z) {
+  dying.push({ x:z.x, y:z.y, type:z.type, r:z.r, t:0, dir:Math.random() < 0.5 ? -1 : 1, ph:z.ph });
   killsTotal++;
   combo++; comboT = 2.5; comboPulse = 1;
   const mult = Math.min(3, 1 + Math.floor(combo / 5) * 0.5);
@@ -1160,6 +1161,8 @@ function update(dt, now) {
     if (p.rect) p.rot += dt * 12;
   }
   particles = particles.filter(p => p.life > 0);
+  for (const d of dying) d.t += dt;
+  dying = dying.filter(d => d.t < 1.1);
   for (const f of floaters) { f.y += f.vy * dt; f.vy *= Math.max(0, 1 - 3 * dt); f.life -= dt; }
   floaters = floaters.filter(f => f.life > 0);
 
@@ -1233,7 +1236,8 @@ function drawZombie(z) {
 }
 
 /* ============================== PRIMERA PERSONA ============================== */
-const FOV = 1.22, STEP = 2, EYE = 90;
+let FOV = 1.8;
+const STEP = 2, EYE = 90;
 const floorCanvas = document.createElement('canvas'), fctx = floorCanvas.getContext('2d');
 let floorImg = null, floorTex = null;
 const hexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
@@ -1375,6 +1379,7 @@ function drawFP() {
     const sc = f / d; return { d, sc, x:W / 2 + (-dx * syw + dy * cyw) * sc };
   };
   for (const z of zombies) { const p = proj(z.x, z.y); if (p) items.push({ d:p.d, w:0, t:'z', z, p }); }
+  for (const dd of dying) { const p = proj(dd.x, dd.y); if (p) items.push({ d:p.d, w:0, t:'d', d2:dd, p }); }
   for (const r of rects) if (r.spr && (r.kind === 'prop' || r.kind === 'crate')) { const p = proj(r.x + r.w / 2, r.y + r.h / 2); if (p) items.push({ d:p.d, w:0, t:'p', r, p }); }
   for (const k of pickups) { const p = proj(k.x, k.y, 1500); if (p) items.push({ d:p.d, w:0, t:'k', k, p }); }
   for (const g of grenades) { const p = proj(g.x, g.y); if (p) items.push({ d:p.d, w:0, t:'g', g, p }); }
@@ -1397,13 +1402,30 @@ function drawFP() {
     switch (it.t) {
       case 'z': {
         const z = it.z, img = VAR[z.type]; if (!img || p.x < -300 || p.x > W + 300) break;
-        const w = z.r * UPRIGHT_W[z.type] * sc, h = w * img.height / img.width, lift = Math.abs(Math.sin(z.ph)) * 5 * (z.aggro ? 1 : 0.4) * sc;
-        const x = p.x + Math.sin(z.ph) * 2.5 * sc, yb = horizon + EYE * sc - lift;
+        // velocidad lateral en pantalla -> inclinacion, giro del cuerpo y paso mas marcado
+        const vxw = z.x - (z.lx === undefined ? z.x : z.lx), vyw = z.y - (z.ly === undefined ? z.y : z.ly); z.lx = z.x; z.ly = z.y;
+        const lat = clamp((-vxw * syw + vyw * cyw) * 1.4, -2.5, 2.5), fwd = clamp(-(vxw * cyw + vyw * syw), -3, 3);
+        z.lat = (z.lat || 0) + (lat - (z.lat || 0)) * 0.18;
+        if (Math.abs(z.lat) > 0.5) z.fl = z.lat > 0;
+        const lunge = !z.ranged && z.cd > 0.55 ? (z.cd - 0.55) / 0.25 : 0;
+        const ws = z.r * UPRIGHT_W[z.type] * sc * (1 + lunge * 0.2 + (z.flash > 0 ? 0.04 : 0));
+        const hg = ws * img.height / img.width, moving = z.aggro ? 1 : 0.5;
+        const amp = AMP[z.type] * moving * (z.mode === 'charge' ? 1.7 : 1.35);
+        const lean = clamp(z.lat * 0.16, -0.3, 0.3) + Math.sin(z.ph) * 0.07 * moving + lunge * 0.1 * (z.fl ? 1 : -1);
+        const x = p.x + Math.sin(z.ph) * 3 * sc * moving + (z.flash > 0 ? rand(-3, 3) : 0), yb = horizon + EYE * sc;
         ctx.globalAlpha = clamp(1.35 - it.d / 1700, 0.25, 1);
-        ctx.drawImage(img, x - w / 2, yb - h, w, h);
-        if (z.flash > 0) { ctx.globalAlpha = 0.8; ctx.drawImage(VAR['w_' + z.type], x - w / 2, yb - h, w, h); }
-        if (z.hp < z.maxHp && !z.boss) { ctx.globalAlpha = 0.9; ctx.fillStyle = '#300'; ctx.fillRect(x - w * 0.3, yb - h - 10 * sc - 4, w * 0.6, 4); ctx.fillStyle = '#c33'; ctx.fillRect(x - w * 0.3, yb - h - 10 * sc - 4, w * 0.6 * (z.hp / z.maxHp), 4); }
+        ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(x, yb, ws * 0.3, Math.max(2, ws * 0.07), 0, 0, 7); ctx.fill();
+        drawAnim(img, x, yb - hg * 0.45, ws, z.fl, lean, z.ph, amp, sc);
+        if (z.flash > 0) { ctx.globalAlpha = 0.8; drawAnim(VAR['w_' + z.type], x, yb - hg * 0.45, ws, z.fl, lean, z.ph, amp, sc); }
+        if (z.hp < z.maxHp && !z.boss) { ctx.globalAlpha = 0.9; ctx.fillStyle = '#300'; ctx.fillRect(x - ws * 0.3, yb - hg - 10 * sc - 4, ws * 0.6, 4); ctx.fillStyle = '#c33'; ctx.fillRect(x - ws * 0.3, yb - hg - 10 * sc - 4, ws * 0.6 * (z.hp / z.maxHp), 4); }
         ctx.globalAlpha = 1; break;
+      }
+      case 'd': { // zombi cayendo
+        const d = it.d2, img = VAR[d.type]; if (!img || p.x < -300 || p.x > W + 300) break;
+        const w = d.r * UPRIGHT_W[d.type] * sc, hg = w * img.height / img.width, k = Math.min(1, d.t / 0.5), yb = horizon + EYE * sc;
+        ctx.save(); ctx.globalAlpha = clamp(1 - Math.max(0, d.t - 0.6) / 0.5, 0, 1) * clamp(1.35 - it.d / 1700, 0.25, 1);
+        ctx.translate(p.x, yb); ctx.rotate(k * k * 1.45 * d.dir); ctx.translate(0, k * hg * 0.08);
+        ctx.drawImage(img, -w / 2, -hg, w, hg); ctx.restore(); break;
       }
       case 'p': {
         const r = it.r, img = IMG[r.spr]; if (!img || p.x < -400 || p.x > W + 400) break;
@@ -1428,6 +1450,22 @@ function drawFP() {
       case 'l': { const y = horizon - (260 - EYE) * sc; ctx.globalCompositeOperation = 'lighter'; glow(p.x, y, 170 * sc, '#ffb040', 0.55 + Math.sin(tNow * (it.l.seed < 0.3 ? 9 : 2) + it.l.seed * 20) * 0.08); ctx.globalCompositeOperation = 'source-over'; break; }
       case 'q': { const q = it.q, y = horizon + (EYE - (5 + ((q.x * 7.1 + q.y * 3.3) % 55))) * sc; ctx.globalAlpha = clamp(q.life / q.max, 0, 1); ctx.fillStyle = q.color; const s2 = Math.max(1.5, (q.size || 2) * sc * 1.3); ctx.fillRect(p.x - s2 / 2, y - s2 / 2, s2, s2); ctx.globalAlpha = 1; break; }
     }
+  }
+
+  // avisos de zombis fuera de la vista (laterales y espalda)
+  {
+    const cxr = W / 2, cyr = H / 2, R = Math.min(W, H) * 0.42, half = FOV / 2;
+    for (const z of zombies) {
+      if (!z.aggro) continue;
+      const dd = Math.hypot(z.x - px, z.y - py); if (dd > 1000) continue;
+      let rel = Math.atan2(z.y - py, z.x - px) - yaw; rel = Math.atan2(Math.sin(rel), Math.cos(rel));
+      if (Math.abs(rel) < half * 0.92) continue;
+      const al = clamp(1.15 - dd / 1000, 0.25, 1) * (0.75 + Math.sin(tNow * 8 + z.ph) * 0.25);
+      ctx.save(); ctx.translate(cxr + Math.sin(rel) * R * 1.25, cyr - Math.cos(rel) * R * 0.85); ctx.rotate(rel);
+      ctx.globalAlpha = al; ctx.fillStyle = z.boss ? '#ff4030' : '#d03030'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, -13); ctx.lineTo(-9, 8); ctx.lineTo(0, 3); ctx.lineTo(9, 8); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+    }
+    ctx.globalAlpha = 1;
   }
 
   // numeros de dano
@@ -1962,6 +2000,7 @@ window.addEventListener('keydown', e => {
   if (k === 'p' && (state === 'playing' || state === 'between')) { prePause = state; state = 'paused'; Sfx.music(false); return; }
   if (state !== 'playing' && state !== 'between') return;
   if (k === ' ') dash();
+  if (fp && (k === '[' || k === ']')) { FOV = clamp(FOV + (k === ']' ? 0.1 : -0.1), 1.2, 2.4); toast('CAMPO DE VISION ' + Math.round(FOV * 57.3) + '°'); }
   if (k === 'q') { let i = player.cur; for (let n = 0; n < WEAPONS.length; n++) { i = (i + 1) % WEAPONS.length; if (player.has[i]) break; } selectWeapon(i); }
   if (k === 'r') reload();
   if (k === 'g') throwGrenade();
