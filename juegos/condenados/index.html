@@ -345,7 +345,7 @@
       <div class="hgrid">
         <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img loading="lazy" decoding="async" src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
         <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(18,184,160,.3),rgba(125,255,106,.2)),url(img/promo/hub.webp)"><span class="tag">NUEVO</span></div><div class="body"><h3>Nivel 2 · Biolab ARGOS</h3><p>Hub con tres modulos, energia limitada, gas, torretas, guardias y plantas mutantes. Escapa con la muestra.</p><p style="margin-top:14px"><button class="hbtn alt sm" data-play="startL2">Jugar nivel 2</button></p></div></div>
-        <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(138,31,255,.3),rgba(255,63,180,.2)),url(img/promo/bg.webp)"><span class="tag">NUEVO · PARTE 1</span><img src="img/jungle/j_tree.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 3 · La Ciudad Selva</h3><p>La ciudad cayo ante el Arbol Madre. Cruza el puerto y el hospital hasta la plaza. Sube a las torres, escondete en los arbustos cuando pase una oleada y siembra tus plantas. Proximamente: el cerco de la noche y El Titan Raiz.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL3">Jugar nivel 3</button></p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(138,31,255,.3),rgba(255,63,180,.2)),url(img/promo/bg.webp)"><span class="tag">NUEVO · PARTE 1</span><img src="img/jungle/j_tree.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 3 · La Ciudad Selva</h3><p>5 actos: prepara tus plantas, resiste la emboscada de la radio, enciende el hospital y el puerto, destruye las raices y derrota al Titan Raiz. Escondete en los arbustos cuando pase una oleada.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL3">Jugar nivel 3</button></p></div></div>
       </div>
     </section>
     <section class="hsec hrev" id="h-ene">
@@ -1148,6 +1148,7 @@ function renderExp() {
 }
 function craft(k) {
   const r = RECIPES.find(q => q[0] === k), I = mission.ing; if (!r || I[r[1]] < 1 || I[r[2]] < 1) { Sfx.deny(); return; }
+  if (mission.jungle) mission.s.crafted = true;
   I[r[1]]--; I[r[2]]--; seeds[k]++; seedSel = k; saveSeeds(); Sfx.clear(); burst(player.x, player.y, 14, PLANTS[k].col, 200, 0.6, 3);
   toast('SEMILLA CREADA: ' + PLANTS[k].n + '  |  SIEMBRA CON C'); renderExp();
 }
@@ -1167,6 +1168,7 @@ function plantSeed() {
   if (!seeds[seedSel]) { const o = Object.keys(seeds).find(k => seeds[k] > 0); if (!o) { toast(mission && (mission.lab || mission.jungle) ? 'NO TIENES SEMILLAS: JUNTA INGREDIENTES Y CREA PLANTAS EN LA MESA DE EXPERIMENTO' : 'NO TIENES SEMILLAS'); return; } seedSel = o; }
   if (plants.length >= 14) { toast('YA HAY DEMASIADAS PLANTAS'); return; }
   const sp = plantSpot(); if (!sp.ok) { Sfx.deny(); toast('NO SE PUEDE SEMBRAR AHI'); return; }
+  if (mission && mission.jungle) mission.s.planted = true;
   const d = PLANTS[seedSel]; seeds[seedSel]--; saveSeeds();
   plants.push({ type:seedSel, x:sp.x, y:sp.y, hp:d.hp, max:d.hp, t:0, cd:0.6, arm:1.6, bite:0, hurt:0, ang:0, face:1, seed:Math.random() });
   burst(sp.x, sp.y, 12, d.col, 160, 0.5, 3); Sfx.pickup(); seedHudS = '';
@@ -1238,7 +1240,7 @@ const ZINFO_JUNGLE = [null,
 const JROOMS = [[26,44,20,12,1],[33,16,6,28,5],[2,18,22,26,3],[48,18,22,26,2],[14,2,44,13,4]];
 const JLINKS = [[24,28,9,4,5],[39,28,9,4,5],[34,15,4,1,5]];
 const JBLOCKS = [[6,22,7,5,'hospital'],[15,32,6,6,'apartment'],[4,36,6,5,'shop'],[54,22,8,5,'warehouse'],[62,30,6,6,'apartment'],[51,36,7,5,'warehouse'],[18,5,5,4,'shop'],[49,5,5,4,'shop'],[28,10,3,3,'apartment'],[41,10,3,3,'hospital']];
-const DAY_LEN = 420;
+const DAY_LEN = 720;
 const jRect = k => rects.find(r => r.jtask === k);
 
 function buildJungle() {
@@ -1248,7 +1250,7 @@ function buildJungle() {
   for (const r of JROOMS) carve(...r);
   for (const l of JLINKS) carve(...l);
   for (const [x, y, w, h] of JBLOCKS) for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) { grid[j * GC + i] = 1; zone[j * GC + i] = 0; }
-  const doors = [{ x:34, y:15, w:4, h:1, lock:'gate', name:'RAICES' }].map(d => ({ ...d, px:d.x * TS, py:d.y * TS, pw:d.w * TS, ph:d.h * TS, open:false, t:0 }));
+  const doors = [{ x:34, y:15, w:4, h:1, lock:'gate', name:'RAICES' }, { x:24, y:28, w:1, h:4, lock:'gate', name:'HOSPITAL' }, { x:47, y:28, w:1, h:4, lock:'gate', name:'PUERTO' }].map(d => ({ ...d, px:d.x * TS, py:d.y * TS, pw:d.w * TS, ph:d.h * TS, open:false, t:0 }));
   for (const d of doors) for (let j = d.y; j < d.y + d.h; j++) for (let i = d.x; i < d.x + d.w; i++) grid[j * GC + i] = 2;
   const wallZ = new Uint8Array(GC * GR);
   for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) {
@@ -1271,18 +1273,18 @@ function buildJungle() {
   O('tower', 27.2, 50.6, 1.9, 1.9);
   // avenida
   P('j_bus', 34.2, 34, 3.6, 1.5, 1.0); P('j_bus', 35, 40.6, 3.6, 1.4, 1.0); P('j_taxi', 34.5, 22.4, 3.2, 1.4, 1.0); P('j_barricade', 34.2, 18.6, 3.6, 1.1, 1.0, { flip:false });
-  P('j_mushroom', 36.5, 25.5, 1.5, 1.5, 1.0); P('j_bush', 33.6, 21, 1.6, 1.6, 1.0, { hide:true }); P('j_bush', 36.8, 38, 1.6, 1.6, 1.0, { hide:true });
+  P('j_wtower', 34.2, 26.2, 1.8, 2.7, 1.0, { jtask:'radio', flip:false }); P('j_mushroom', 36.9, 25.5, 1.5, 1.5, 1.0); P('j_bush', 33.6, 21, 1.6, 1.6, 1.0, { hide:true }); P('j_bush', 36.8, 38, 1.6, 1.6, 1.0, { hide:true });
   for (const [x, y] of [[33.1, 25], [33.1, 36], [38.1, 22], [38.1, 37], [33.1, 31.5], [38.1, 29.5]]) P('j_lamp', x, y, 0.8, 1.8, 1.0, { flip:false });
   // hospital
   P('j_ambulance', 9, 31.5, 3.6, 2.1, 1.0, { jtask:'hosp' }); P('j_ambulance', 17, 22, 3.6, 2.1, 1.0); P('j_bush', 20.5, 27, 1.6, 1.6, 1.0, { hide:true }); P('j_bush', 3.4, 30, 1.6, 1.6, 1.0, { hide:true });
   P('j_mushroom', 3.2, 19.5, 1.6, 1.6, 1.0); P('j_mushroom', 12, 40, 1.6, 1.6, 1.0); P('j_wtower', 2.6, 23.4, 1.8, 2.7, 1.0, { flip:false }); P('j_tree2', 20.2, 18.6, 2.6, 2.6, 1.0, { flip:false });
-  P('j_billboard', 8, 18.6, 3.2, 1.5, 1.0, { flip:false }); P('j_rocks', 14.2, 40, 1.5, 1.4, 1.0); P('j_barricade', 25.4, 28.3, 2.6, 1.0, 1.0, { flip:false }); P('j_solar', 3, 41.4, 3, 1.5, 1.0, { flip:false });
+  P('j_billboard', 8, 18.6, 3.2, 1.5, 1.0, { flip:false }); P('j_rocks', 14.2, 40, 1.5, 1.4, 1.0); P('j_solar', 3, 41.4, 3, 1.5, 1.0, { flip:false });
   for (const [x, y] of [[13.5, 30.2], [7.2, 28.4], [21.5, 35], [14, 24]]) P('j_lamp', x, y, 0.8, 1.8, 1.0, { flip:false });
-  O('tower', 5, 19.6, 1.9, 1.9);
+  O('tower', 5, 19.6, 1.9, 1.9); for (const [x, y] of [[12.4, 26.9], [21.5, 38.8], [3.4, 27.6]]) P('l_case', x, y, 1, 1, 1.1, { jtask:'med' });
   // puerto
   P('j_crane', 63.2, 19, 3.4, 3.4, 1.0, { jtask:'port', flip:false }); for (const [x, y] of [[50, 24], [50, 33], [60, 39.5], [65, 25], [56, 18.6]]) P('j_container', x, y, 4.2, 2.6, 1.0);
   P('j_bush', 49.5, 41.5, 1.6, 1.6, 1.0, { hide:true }); P('j_bush', 67.5, 35, 1.6, 1.6, 1.0, { hide:true }); P('j_mushroom', 66, 30.5, 1.6, 1.6, 1.0); P('j_bus', 52, 27.4, 3.6, 1.5, 1.0); P('j_billboard', 53, 41.3, 3.2, 1.5, 1.0, { flip:false });
-  P('j_barricade', 45.6, 28.3, 2.6, 1.0, 1.0, { flip:false }); P('j_rocks', 68, 22, 1.5, 1.4, 1.0); P('j_taxi', 57, 33.8, 3.2, 1.4, 1.0);
+  P('j_rocks', 68, 22, 1.5, 1.4, 1.0); P('j_taxi', 57, 33.8, 3.2, 1.4, 1.0);
   for (const [x, y] of [[48.6, 26], [68.2, 28], [55.5, 34.4], [60.5, 36.2], [57, 20.4]]) P('j_lamp', x, y, 0.8, 1.8, 1.0, { flip:false });
   O('tower', 56, 31.6, 1.9, 1.9);
   // plaza
@@ -1318,29 +1320,33 @@ function makeJungleTile(kind = 'concrete') {
   const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d');
   let sd = 11 + kind.length * 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
   const speck = (n, cols, rmax) => { for (let i = 0; i < n; i++) { g.fillStyle = cols[(rnd() * cols.length) | 0]; const r = 1 + rnd() * rmax; g.fillRect(rnd() * 160, rnd() * 160, r, r); } };
-  const glowDots = (n, col) => { for (let i = 0; i < n; i++) { const x = 26 + rnd() * 108, y = 26 + rnd() * 108, r = 2 + rnd() * 3; const gr = g.createRadialGradient(x, y, 0, x, y, r * 4); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x - r * 4, y - r * 4, r * 8, r * 8); } };
-  const lines = (col, w, a) => { g.save(); g.strokeStyle = col; g.lineWidth = w; g.globalAlpha = a; g.shadowColor = col; g.shadowBlur = 8; };
+  const moss = (n, a) => { for (let i = 0; i < n; i++) { const x = rnd() * 160, y = rnd() * 160, r = 4 + rnd() * 13; g.fillStyle = 'rgba(' + (40 + rnd() * 50 | 0) + ',' + (150 + rnd() * 90 | 0) + ',' + (40 + rnd() * 40 | 0) + ',' + (a + rnd() * 0.3) + ')'; g.beginPath(); g.ellipse(x, y, r, r * 0.7, rnd() * 3, 0, 7); g.fill(); } };
   if (kind === 'asphalt') {
-    g.fillStyle = '#141623'; g.fillRect(0, 0, 160, 160); speck(260, ['#0d0f1a', '#1c1f30', '#101222', '#262a40'], 2.4);
-    lines('#2be8f0', 1.5, 0.35); for (let i = 0; i < 2; i++) { let x = rnd() * 160, y = rnd() * 160; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - 0.5) * 36; y += (rnd() - 0.5) * 36; g.lineTo(x, y); } g.stroke(); } g.restore();
-    glowDots(3, 'rgba(125,255,106,.55)');
+    g.fillStyle = '#3a3e46'; g.fillRect(0, 0, 160, 160); speck(260, ['#2c2f36', '#4a4e57', '#33363d', '#575b64'], 2.4);
+    g.strokeStyle = 'rgba(15,16,20,.55)'; g.lineWidth = 2; for (let i = 0; i < 3; i++) { let x = rnd() * 160, y = rnd() * 160; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - 0.5) * 36; y += (rnd() - 0.5) * 36; g.lineTo(x, y); } g.stroke(); }
+    moss(5, 0.25);
   } else if (kind === 'dirt') {
-    g.fillStyle = '#1d1830'; g.fillRect(0, 0, 160, 160); speck(300, ['#15112a', '#2a2244', '#120e22', '#33295a'], 3);
-    glowDots(4, 'rgba(125,255,106,.45)'); glowDots(2, 'rgba(255,63,180,.4)'); glowDots(2, 'rgba(43,232,240,.4)');
+    g.fillStyle = '#6b5a3c'; g.fillRect(0, 0, 160, 160); speck(300, ['#5a4a30', '#7a6844', '#4d3f28', '#86744e'], 3);
+    for (let i = 0; i < 6; i++) { g.strokeStyle = 'rgba(70,50,30,.4)'; g.lineWidth = 3; g.beginPath(); const x = rnd() * 160, y = rnd() * 160; g.moveTo(x, y); g.lineTo(x + 30 + rnd() * 30, y + (rnd() - 0.5) * 12); g.stroke(); }
+    moss(16, 0.4);
+    for (let i = 0; i < 14; i++) { const x = rnd() * 160, y = rnd() * 160; g.strokeStyle = '#3fb84a'; g.lineWidth = 2; for (let k = -1; k <= 1; k++) { g.beginPath(); g.moveTo(x, y); g.lineTo(x + k * 4, y - 8 - rnd() * 4); g.stroke(); } }
   } else if (kind === 'tile') {
-    g.fillStyle = '#0e1426'; g.fillRect(0, 0, 160, 160);
-    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const x = i * 40, y = j * 40, ch = (i + j) % 2; g.fillStyle = ch ? '#1e2744' : '#18203a'; g.fillRect(x + 2, y + 2, 36, 36); g.fillStyle = 'rgba(180,230,255,.07)'; g.fillRect(x + 4, y + 4, 14, 4); }
-    lines('#ff3fb4', 1.5, 0.5); for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * 40, 0); g.lineTo(i * 40, 160); g.stroke(); g.beginPath(); g.moveTo(0, i * 40); g.lineTo(160, i * 40); g.stroke(); } g.restore();
-    glowDots(6, 'rgba(43,232,240,.5)');
+    g.fillStyle = '#9aa0a8'; g.fillRect(0, 0, 160, 160);
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const x = i * 40, y = j * 40, ch = (i + j) % 2; g.fillStyle = ch ? '#d9dee6' : '#c4cad4'; g.fillRect(x + 1, y + 1, 38, 38); g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(x + 3, y + 3, 14, 4); }
+    g.strokeStyle = 'rgba(70,60,90,.5)'; g.lineWidth = 2; for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * 40, 0); g.lineTo(i * 40, 160); g.stroke(); g.beginPath(); g.moveTo(0, i * 40); g.lineTo(160, i * 40); g.stroke(); }
+    for (let i = 0; i < 4; i++) { let x = rnd() * 160, y = rnd() * 160; g.strokeStyle = 'rgba(40,30,50,.5)'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 4; k++) { x += (rnd() - 0.5) * 28; y += (rnd() - 0.5) * 28; g.lineTo(x, y); } g.stroke(); }
+    moss(22, 0.4);
   } else if (kind === 'cobble') {
-    g.fillStyle = '#120f22'; g.fillRect(0, 0, 160, 160);
-    for (let j = 0; j < 8; j++) for (let i = 0; i < 7; i++) { const x = i * 23 + (j % 2) * 11 - 6, y = j * 20 + 1, sh = 38 + (rnd() * 26 | 0); g.fillStyle = 'rgb(' + sh + ',' + (sh - 4) + ',' + (sh + 30) + ')'; g.beginPath(); g.roundRect ? g.roundRect(x, y, 21, 18, 5) : g.rect(x, y, 21, 18); g.fill(); g.fillStyle = 'rgba(190,170,255,.12)'; g.fillRect(x + 3, y + 2, 9, 3); }
-    glowDots(4, 'rgba(176,106,255,.4)'); glowDots(3, 'rgba(125,255,106,.35)');
+    g.fillStyle = '#4c4f52'; g.fillRect(0, 0, 160, 160);
+    for (let j = 0; j < 8; j++) for (let i = 0; i < 7; i++) { const x = i * 23 + (j % 2) * 11 - 6, y = j * 20 + 1, sh = 120 + (rnd() * 40 | 0); g.fillStyle = 'rgb(' + sh + ',' + (sh + 4) + ',' + (sh + 8) + ')'; g.beginPath(); g.roundRect ? g.roundRect(x, y, 21, 18, 5) : g.rect(x, y, 21, 18); g.fill(); g.fillStyle = 'rgba(255,255,255,.18)'; g.fillRect(x + 3, y + 2, 9, 3); }
+    moss(26, 0.45);
   } else {
-    g.fillStyle = '#171b27'; g.fillRect(0, 0, 160, 160);
-    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) { const x = i * 80, y = j * 80; g.fillStyle = (i + j) % 2 ? '#1f2535' : '#191e2c'; g.fillRect(x + 2, y + 2, 76, 76); }
-    lines('#ff8a3d', 1.5, 0.4); for (let i = 0; i < 2; i++) { g.beginPath(); g.moveTo(i * 80, 0); g.lineTo(i * 80, 160); g.stroke(); g.beginPath(); g.moveTo(0, i * 80); g.lineTo(160, i * 80); g.stroke(); } g.restore();
-    speck(180, ['#10131d', '#2a3144', '#0c0f18'], 2.5); glowDots(4, 'rgba(255,138,61,.5)');
+    g.fillStyle = '#8c9298'; g.fillRect(0, 0, 160, 160);
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) { const x = i * 80, y = j * 80; g.fillStyle = (i + j) % 2 ? '#9aa0a6' : '#868c92'; g.fillRect(x + 2, y + 2, 76, 76); g.strokeStyle = 'rgba(30,36,40,.6)'; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, 78, 78); }
+    speck(180, ['#7a8086', '#a8aeb4', '#6c7278'], 2.5);
+    for (let i = 0; i < 3; i++) { let x = rnd() * 160, y = rnd() * 160; g.strokeStyle = 'rgba(30,36,40,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 4; k++) { x += (rnd() - 0.5) * 34; y += (rnd() - 0.5) * 34; g.lineTo(x, y); } g.stroke(); }
+    g.fillStyle = 'rgba(242,194,48,.55)'; g.fillRect(0, 150, 160, 5);
+    moss(18, 0.4);
   }
   return c;
 }
@@ -1352,7 +1358,7 @@ function startJungle(retry = false) {
   WORLD.w = GC * TS; WORLD.h = GR * TS; setMini(180, 150);
   const T0 = v => v * TS;
   mission = { idx:2, facility:true, jungle:true, def:{ name:'LA CIUDAD SELVA', cap:0, patrols:0, mix:ZINFO[1].mix }, map:{ start:{ x:T0(35), y:T0(52) }, exit:{ x:T0(36), y:T0(6) }, lamps:[], decals:[], blocks:[], spots:[] },
-    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, done:{ port:false, hosp:false, tree:false }, dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
+    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, s:{ got:0, crafted:false, planted:false, radio:0, radioOn:false, radioDone:false, waves:0, med:0, hospGen:false, portPow:false, portCal:false, bossSpawned:false, bossDead:false }, roots:[], dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
   const st = mission.map.start;
   player.x = st.x; player.y = st.y; player.cur = keepCur; player.vx = 0; player.vy = 0; player.reloading = 0; player.dashT = 0; player.sample = false;
   player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
@@ -1360,7 +1366,7 @@ function startJungle(retry = false) {
   snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
   el.facHud.style.display = 'block'; closeLabPanels(); mission.ing = { spore:0, sap:0, core:0 };
   if (!retry || !seedsStart) seedsStart = { ...seeds }; else { seeds = { ...seedsStart }; saveSeeds(); }
-  for (const [ik, tx, ty] of [['spore',11.5,40.5],['spore',22,21.5],['sap',49.5,20.5],['sap',67,40.5],['core',24,13],['core',53,12.5]]) pickups.push({ x:tx * TS, y:ty * TS, kind:'ing', ing:ik, life:Infinity });
+  for (const [ik, tx, ty] of [['spore',30.5,49.6],['sap',40.6,48.4],['spore',11.5,40.5],['spore',22,21.5],['sap',49.5,20.5],['sap',67,40.5],['core',24,13],['core',53,12.5]]) pickups.push({ x:tx * TS, y:ty * TS, kind:'ing', ing:ik, life:Infinity });
   const PK = [['ammo',35.5,30],['hp',35.5,20],['bomb',37,42.8],['hp',12,20],['ammo',20,40],['bomb',6.4,29.4],['ammo',58,30],['hp',66,22],['bomb',49.2,37],['ammo',27,8.4],['hp',46,8],['bomb',35,13],['ammo',40,48],['hp',30,50],['scrap',35,26],['scrap',14,26],['scrap',60,28.5],['wpn',20.5,41.5,3],['wpn',68,42,4]];
   PK.forEach(([k, tx, ty, slot], idx) => { if (diff > 0 && (k === 'ammo' || k === 'hp') && idx % (diff === 1 ? 3 : 2) === 1) return; pickups.push({ x:tx * TS, y:ty * TS, kind:k, slot, life:Infinity }); });
   const NEST = [[35.5,22,2],[35.5,36,3,'blind'],[12,30,3],[8,20,2,'deaf'],[18,40,3],[20,24,2],[55,31,3],[64,28,3,'blind'],[52,40,2],[66,38,2],[22,12,3],[48,12,3],[30,6,3,'deaf'],[44,6,3],[36,12,2]];
@@ -1372,11 +1378,13 @@ function startJungle(retry = false) {
       spawnZombie(pickType({ mix:ZINFO[z].mix }), { x:px, y:py }, false, undefined, undefined, undefined, sense);
     }
   }
+  mission.roots = [];
+  for (const [tx, ty] of [[27.6, 9.0], [44.4, 9.0], [36, 13.4]]) { spawnZombie('tank', { x:tx * TS, y:ty * TS }, false); const z = zombies[zombies.length - 1]; if (!z) continue; z.root = true; z.speed = 0; z.maxHp = z.hp = Math.round(460 * DIFFS[diff].hp); z.r = 44; z.kres = 0; z.pts = 300; mission.roots.push(z); }
   const ROUTES = [[[7,30],[21,30],[21,42],[7,42]], [[50,21],[67,21],[67,33],[50,33]], [[17,12],[54,12],[54,4],[17,4]], [[35,20],[35,40]]];
   for (const rt of ROUTES) { spawnZombie('walker', { x:rt[0][0] * TS, y:rt[0][1] * TS }, false); const z = zombies[zombies.length - 1]; z.patrol = rt.map(q => ({ x:q[0] * TS, y:q[1] * TS })); z.pp = 1; z.speed *= 1.15; }
   state = 'playing'; el.shop.style.display = 'none'; el.wave.textContent = 3;
   toast('NIVEL 3: LA CIUDAD SELVA'); Sfx.wave();
-  setTimeout(() => { if (mission && mission.jungle) toast('ELIGE UN DISTRITO: PUERTO (ESTE) U HOSPITAL (OESTE)'); }, 2400);
+  setTimeout(() => { if (mission && mission.jungle) toast('ACTO 1: RECOGE 2 INGREDIENTES CERCA DEL REFUGIO'); }, 2400);
 }
 
 const HORDES = [
@@ -1392,71 +1400,116 @@ function startHorde() {
   }
   M.hordeOn = true; M.hordeT = rand(95, 125); toast('UNA OLEADA VIENE DE ' + h.from.toUpperCase() + ': ESCONDETE EN UN ARBUSTO'); Sfx.siren(); addShake(0.3);
 }
-function jungleClock() { const left = Math.max(0, DAY_LEN - mission.dayT); return Math.floor(left / 60) + ':' + String(Math.floor(left % 60)).padStart(2, '0'); }
-function jungleHint() {
-  const M = mission, d = M.done;
-  if (d.tree) return 'Lo lograste: el Arbol Madre despierta...';
-  if (d.port && d.hosp) return 'AHORA: sube por la avenida hasta la plaza central y acercate al Arbol Madre';
-  if (d.port || d.hosp) return 'AHORA: falta el otro distrito (' + (d.port ? 'Hospital, al oeste' : 'Puerto, al este') + ')';
-  return 'AHORA: elige un distrito: Puerto (este) u Hospital (oeste). Junta ingredientes por el camino';
+const RADIO_T = 40;
+const radioR = () => rects.find(r => r.jtask === 'radio');
+function jungleItems() {
+  const M = mission, s = M.s, alive = M.roots.filter(z => z.hp > 0).length, R = s.radioDone, H = s.hospGen, P = s.portCal;
+  return [
+    { a:'1. REFUGIO', t:'Recoge 2 ingredientes (esporas, savia o nucleos)', ok:s.got >= 2 || s.crafted, req:true },
+    { a:'', t:'Crea una semilla en el banco de cultivo', ok:s.crafted, req:true },
+    { a:'', t:'Siembra la planta con C (boton SEMBRAR)', ok:s.planted, req:true },
+    { a:'2. AVENIDA', t:'Activa la radio y resiste la emboscada (' + Math.floor(s.radio) + '/' + RADIO_T + ' s)', ok:R, req:true },
+    { a:'3. HOSPITAL', t:'Junta 3 cajas medicas (' + s.med + '/3)', ok:s.med >= 3, req:R },
+    { a:'', t:'Enciende el generador del hospital', ok:H, req:R && s.med >= 3 },
+    { a:'4. PUERTO', t:'Conecta la energia de la grua (cables)', ok:s.portPow, req:R },
+    { a:'', t:'Calibra la grua (secuencia de colores)', ok:P, req:R && s.portPow },
+    { a:'5. PLAZA', t:'Destruye las 3 raices (' + (3 - alive) + '/3)', ok:alive === 0 && H && P, req:H && P },
+    { a:'', t:'Derrota al Titan Raiz', ok:!!s.bossDead, req:H && P && alive === 0 }];
 }
+function jungleCands() { const it = jungleItems(); const c = it.map((q, i) => ({ q, i })).filter(o => !o.q.ok && o.q.req); return c.filter((o, k) => o.i >= 4 || k === 0); }
+function jungleClock() { const left = Math.max(0, DAY_LEN - mission.dayT); return Math.floor(left / 60) + ':' + String(Math.floor(left % 60)).padStart(2, '0'); }
 function jungleObjHtml() {
-  const M = mission, d = M.done, m = (ok, t) => '<span class="mod ' + (ok ? 'ok' : 'no') + '">' + (ok ? '[x] ' : '[ ] ') + t + '</span>';
-  const night = M.dayT >= DAY_LEN * 0.75, z = ZINFO[M.curZone] ? ZINFO[M.curZone].name : '';
-  return 'NIVEL 3 - ' + z + '<br>' + m(d.port, 'A. Puerto: reactiva la grua (este)') + m(d.hosp, 'B. Hospital: enciende el generador (oeste)') + m(d.tree, 'C. Plaza: llega al Arbol Madre (norte)')
-    + '<b>' + jungleHint() + '</b><br><span style="opacity:.85">' + (M.hordeOn ? '<b style="color:#ff6a7a">OLEADA EN CAMINO: ESCONDETE EN UN ARBUSTO (quieto) HASTA QUE PASE</b> | ' : '') + (M.dayT >= DAY_LEN ? '<b style="color:#ff6a7a">ES DE NOCHE: LA HORDA SE DESPIERTA</b>' : (night ? '<b style="color:#ffb347">ANOCHECE</b> ' : 'Dia ') + jungleClock()) + ' | Alertas ' + M.alerts
-    + '</span><br><span style="opacity:.8">Extra: junta ingredientes (' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos) y crea plantas en el banco del refugio</span>';
+  const M = mission, it = jungleItems(), c = jungleCands(), z = ZINFO[M.curZone] ? ZINFO[M.curZone].name : '';
+  const groups = []; let g = null; for (const q of it) { if (q.a) { g = { name:q.a, items:[] }; groups.push(g); } g.items.push(q); }
+  const rows = groups.map(g => g.items.every(q => q.ok) ? '<span class="mod ok">[x] ' + g.name + '</span>' : g.items.some(q => q.req) ? '<span class="mod no"><b style="color:#ffe14a">' + g.name + '</b></span>' + g.items.filter(q => q.req || q.ok).map(q => '<span class="mod ' + (q.ok ? 'ok' : 'no') + '">' + (q.ok ? '[x] ' : '[ ] ') + q.t + '</span>').join('') : '').join('');
+  return 'NIVEL 3 - ' + z + '<br>' + rows + '<b>' + (c.length ? 'AHORA: ' + c.map(o => o.q.t).join('  |  ') : 'Nivel completado') + '</b><br><span style="opacity:.85">'
+    + (M.hordeOn ? '<b style="color:#ff6a7a">OLEADA EN CAMINO: ESCONDETE EN UN ARBUSTO (quieto) HASTA QUE PASE</b> | ' : '') + (M.dayT >= DAY_LEN ? '<b style="color:#ff6a7a">NOCHE</b>' : (M.dayT >= DAY_LEN * 0.75 ? '<b style="color:#ffb347">ANOCHECE</b> ' : 'Dia ') + jungleClock()) + ' | Alertas ' + M.alerts
+    + '</span><br><span style="opacity:.8">Ingredientes: ' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos</span>';
 }
 function jungleTargets() {
-  const M = mission, d = M.done, out = [], at = (r, col) => { if (r) { const c = centerOf(r); out.push({ x:c.x, y:c.y, col }); } };
-  if (!d.port) at(jRect('port'), '#2be8f0'); if (!d.hosp) at(jRect('hosp'), '#ff7ad0');
-  if (d.port && d.hosp) at(rects.find(r => r.tree), '#b6ff3a');
+  const M = mission, s = M.s, out = [], add = (x, y, col) => out.push({ x, y, col }), atR = (r, col) => { if (r) { const c = centerOf(r); add(c.x, c.y, col); } };
+  for (const o of jungleCands()) {
+    const i = o.i;
+    if (i === 0) { for (const p of pickups) if (p.kind === 'ing' && zoneAt(p.x, p.y) === 1) add(p.x, p.y, '#7dff6a'); }
+    else if (i === 1 || i === 2) atR(rects.find(r => r.jtask === 'exp'), '#7dff6a');
+    else if (i === 3) atR(radioR(), '#ffe14a');
+    else if (i === 4) { for (const r of rects) if (r.jtask === 'med') atR(r, '#ff7ad0'); }
+    else if (i === 5) atR(rects.find(r => r.jtask === 'hosp'), '#ff7ad0');
+    else if (i === 6 || i === 7) atR(rects.find(r => r.jtask === 'port'), '#2be8f0');
+    else if (i === 8) { for (const z of M.roots) if (z.hp > 0) add(z.x, z.y, '#b6ff3a'); }
+    else if (i === 9 && M.boss) add(M.boss.x, M.boss.y, '#ff3a4a');
+  }
   return out;
 }
 function jungleNearest() {
-  const M = mission; if (player.driving) return null;
+  const M = mission, s = M.s; if (player.driving) return null;
+  if (player.tower) return { type:'tower', ref:player.tower, label:'E - Bajar de la torre' };
   let best = null, bd = 1e9; const nd = r => Math.hypot(clamp(player.x, r.x, r.x + r.w) - player.x, clamp(player.y, r.y, r.y + r.h) - player.y);
   const consider = (type, ref, d, lim, label) => { if (d < lim && d < bd) { bd = d; best = { type, ref, label }; } };
-  if (player.tower) return { type:'tower', ref:player.tower, label:'E - Bajar de la torre' };
   for (const r of rects) {
     if (r.jtask === 'exp') consider('exp', r, nd(r), 110, 'E - Banco de cultivo: crea plantas con tus ingredientes');
-    else if (r.jtask === 'port' && !M.done.port) consider('port', r, nd(r), 110, 'E - Reactivar la grua del puerto');
-    else if (r.jtask === 'hosp' && !M.done.hosp) consider('hosp', r, nd(r), 110, 'E - Encender el generador del hospital');
+    else if (r.jtask === 'radio' && !s.radioDone) consider('radio', r, nd(r), 130, s.radioOn ? 'La radio esta transmitiendo: no te alejes de la torre' : 'E - Activar la radio (atrae una emboscada, preparate)');
+    else if (r.jtask === 'med' && s.radioDone && !r.dead) consider('med', r, nd(r), 90, 'E - Tomar la caja medica');
+    else if (r.jtask === 'hosp' && s.radioDone && s.med >= 3 && !s.hospGen) consider('hosp', r, nd(r), 110, 'E - Encender el generador del hospital');
+    else if (r.jtask === 'port' && s.radioDone && !s.portCal) consider('port', r, nd(r), 120, s.portPow ? 'E - Calibrar la grua (secuencia de colores)' : 'E - Conectar la energia de la grua (cables)');
     else if (r.kind === 'tower') consider('tower', r, nd(r), 70, 'E - Subir a la torre (vision y disparo desde arriba)');
   }
   return best;
 }
 function junglePress() {
-  const ia = jungleNearest(); if (!ia) return; const M = mission;
+  const ia = jungleNearest(); if (!ia) return; const M = mission, s = M.s;
   if (ia.type === 'tower') { toggleTower(ia.ref); return; }
   if (ia.type === 'exp') { closeLabPanels(); expOpen = true; el.expp.style.display = 'block'; renderExp(); Sfx.task(); }
-  else if (ia.type === 'port') openTask({ kind:'wires', live:true, title:'REACTIVAR LA GRUA', hint:'Une cada cable con el del mismo color. El juego sigue: no te alejes mucho.', pos:centerOf(ia.ref), cb:() => { M.done.port = true; toast('GRUA REACTIVADA. PUERTO LISTO'); Sfx.clear(); } });
-  else if (ia.type === 'hosp') openTask({ kind:'breakers', live:true, title:'ENCENDER EL GENERADOR', hint:'Sube todos los interruptores', pos:centerOf(ia.ref), cb:() => { M.done.hosp = true; toast('GENERADOR ENCENDIDO. HOSPITAL LISTO'); Sfx.clear(); } });
+  else if (ia.type === 'radio') { if (!s.radioOn) { s.radioOn = true; s.radio = 0; s.waves = 0; const c = centerOf(ia.ref); toast('RADIO ACTIVA: RESISTE ' + RADIO_T + ' SEGUNDOS CERCA DE LA TORRE'); Sfx.siren(); makeNoise(c.x, c.y, 1300, '#ffe14a'); } }
+  else if (ia.type === 'med') { ia.ref.dead = true; rects = rects.filter(q => !q.dead); s.med++; toast('CAJA MEDICA ' + s.med + '/3'); Sfx.pickup(); makeNoise(ia.ref.x, ia.ref.y, 420, '#ff7ad0'); }
+  else if (ia.type === 'hosp') openTask({ kind:'breakers', live:true, title:'ENCENDER EL GENERADOR', hint:'Sube todos los interruptores', pos:centerOf(ia.ref), cb:() => { s.hospGen = true; toast('GENERADOR ENCENDIDO. HOSPITAL LISTO'); Sfx.clear(); } });
+  else if (ia.type === 'port') {
+    if (!s.portPow) openTask({ kind:'wires', live:true, title:'ENERGIA DE LA GRUA', hint:'Une cada cable con el del mismo color. El juego sigue: no te alejes mucho.', pos:centerOf(ia.ref), cb:() => { s.portPow = true; toast('GRUA CON ENERGIA: AHORA CALIBRALA'); Sfx.clear(); } });
+    else openTask({ kind:'seq', live:true, title:'CALIBRAR LA GRUA', hint:'Mira la secuencia de colores y repitela en el mismo orden', pos:centerOf(ia.ref), cb:() => { s.portCal = true; toast('GRUA CALIBRADA. PUERTO LISTO'); Sfx.clear(); } });
+  }
+}
+function spawnAmbush(w) {
+  const r = radioR(), c = centerOf(r), n = 4 + w * 2 + diff, ty = c.y / TS;
+  for (let i = 0; i < n; i++) {
+    const south = i % 2 === 0, y = clamp(south ? ty + 11 : ty - 11, 18, 41), x = 35.5 + rand(-1.4, 1.4);
+    const type = w === 0 ? 'walker' : w === 1 ? (Math.random() < 0.5 ? 'runner' : 'walker') : w === 2 ? (Math.random() < 0.35 ? 'spitter' : 'runner') : (i === 0 ? 'tank' : Math.random() < 0.5 ? 'runner' : 'walker');
+    spawnZombie(type, { x:x * TS, y:(y + rand(-1, 1)) * TS }, true);
+  }
+  toast('EMBOSCADA ' + (w + 1) + '/4: VIENEN POR LOS DOS LADOS'); Sfx.siren(); addShake(0.35);
 }
 function jungleUpdate(dt) {
-  const M = mission;
+  const M = mission, s = M.s;
   M.dayT += dt;
   if (zombies.some(z => z.gone)) zombies = zombies.filter(z => !z.gone);
-  M.hordeT = (M.hordeT === undefined ? 55 : M.hordeT) - dt; if (M.hordeT <= 0) startHorde();
+  M.hordeT = (M.hordeT === undefined ? 70 : M.hordeT) - dt; if (M.hordeT <= 0 && s.radioDone) startHorde(); else if (M.hordeT <= 0) M.hordeT = 20;
   M.hordeOn = zombies.some(z => z.horde && z.hp > 0);
   const zn = zoneAt(player.x, player.y);
   if (zn && zn !== M.curZone) {
     M.curZone = zn;
-    if (!M.zoneSeen[zn]) { M.zoneSeen[zn] = true; toast(ZINFO[zn].name + ({ 1:'  |  AQUI CULTIVAS Y TE PREPARAS', 2:'  |  TRABAJO A: REACTIVA LA GRUA', 3:'  |  TRABAJO B: ENCIENDE EL GENERADOR', 4:'  |  TRABAJO C: EL ARBOL MADRE', 5:'  |  AVENIDA TOMADA POR LA SELVA' })[zn]); }
+    if (!M.zoneSeen[zn]) { M.zoneSeen[zn] = true; toast(ZINFO[zn].name + ({ 1:'  |  ACTO 1: PREPARATE', 2:'  |  ACTO 4: LA GRUA', 3:'  |  ACTO 3: EL HOSPITAL', 4:'  |  ACTO 5: LAS RAICES', 5:'  |  ACTO 2: LA RADIO' })[zn]); }
   }
-  if (M.done.port && M.done.hosp && !M.gateOpen) { M.gateOpen = true; const g = G.doors[0]; g.open = true; setDoorGrid(g, 0); Sfx.door(); toast('LAS RAICES SE ABREN: LA PLAZA CENTRAL ESTA LIBRE'); }
+  // acto 2: radio y emboscadas
+  if (s.radioOn && !s.radioDone) {
+    const c = centerOf(radioR()), near = Math.hypot(c.x - player.x, c.y - player.y) < 460;
+    if (near) s.radio += dt; else { M.farT = (M.farT || 0) - dt; if (M.farT <= 0) { M.farT = 6; toast('VUELVE A LA TORRE DE LA RADIO'); } }
+    const th = [1, 11, 22, 32]; if (s.waves < th.length && s.radio >= th[s.waves]) { spawnAmbush(s.waves); s.waves++; }
+    if (s.radio >= RADIO_T) { s.radioDone = true; for (const d of G.doors) if (d.name !== 'RAICES') { d.open = true; setDoorGrid(d, 0); } Sfx.door(); Sfx.clear(); toast('SENAL ENVIADA: SE ABREN LAS COMPUERTAS DEL HOSPITAL Y DEL PUERTO'); }
+  }
+  // compuerta de raices
+  if (s.hospGen && s.portCal && !M.gateOpen) { M.gateOpen = true; const g = G.doors.find(d => d.name === 'RAICES'); g.open = true; setDoorGrid(g, 0); Sfx.door(); toast('LAS RAICES SE ABREN: SUBE A LA PLAZA CENTRAL'); }
   for (const d of G.doors) d.t += ((d.open ? 1 : 0) - d.t) * Math.min(1, 8 * dt);
   const ia = jungleNearest(); player.ia = ia;
   if (taskObj && taskObj.live && taskObj.pos && Math.hypot(taskObj.pos.x - player.x, taskObj.pos.y - player.y) > 220) { closeTask(false); toast('TE ALEJASTE DE LA TAREA'); }
-  if (expOpen) { const r = jRect('exp'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) closeExp(); }
-  // llegada al arbol
-  const tr = rects.find(r => r.tree);
-  if (M.gateOpen && !M.done.tree && Math.hypot(centerOf(tr).x - player.x, centerOf(tr).y - player.y) < 430) { M.done.tree = true; M.endT = 3.2; toast('EL ARBOL MADRE DESPIERTA...'); Sfx.stinger(); addShake(0.6); }
-  if (M.done.tree) { M.endT -= dt; if (M.endT <= 0) completeMission(); }
-  // anochecer: la horda crece
-  if (M.dayT >= DAY_LEN && !M.nightToast) { M.nightToast = true; toast('ES DE NOCHE: LA HORDA SE DESPIERTA'); Sfx.siren(); }
-  else if (M.dayT >= DAY_LEN * 0.75 && !M.duskToast) { M.duskToast = true; toast('ANOCHECE: LA SELVA SE DESPIERTA'); }
-  if (M.dayT >= DAY_LEN) { M.nightSpawnT -= dt; if (M.nightSpawnT <= 0 && zombies.length < 60) { M.nightSpawnT = 5; const q = ringPos(750, 1100); if (q) spawnZombie(Math.random() < 0.4 ? 'runner' : 'walker', q, true); } }
+  if (expOpen) { const r = rects.find(q => q.jtask === 'exp'); if (Math.hypot(centerOf(r).x - player.x, centerOf(r).y - player.y) > 280) closeExp(); }
+  // acto 5: raices que llaman zombis y jefe final
+  for (const z of M.roots) if (z.hp > 0) { z.spawnT = (z.spawnT === undefined ? 3 : z.spawnT) - dt; if (z.spawnT <= 0 && Math.hypot(z.x - player.x, z.y - player.y) < 950 && zombies.length < 70) { z.spawnT = 7; for (let k = 0; k < 2; k++) spawnZombie(Math.random() < 0.25 ? 'runner' : 'walker', { x:z.x + rand(-130, 130), y:z.y + rand(70, 150) }, true); burst(z.x, z.y, 12, '#ff3fb4', 200, 0.6, 3); } }
+  const alive = M.roots.filter(z => z.hp > 0).length;
+  if (s.hospGen && s.portCal && alive === 0 && !s.bossSpawned) { s.bossSpawned = true; spawnZombie('boss', { x:40 * TS, y:12.2 * TS }, true); M.boss = zombies[zombies.length - 1]; for (let i = 0; i < 3; i++) spawnZombie('runner', { x:(30 + i * 5) * TS, y:12.6 * TS }, true); }
+  if (M.boss && M.boss.hp <= 0 && !s.bossDead) { s.bossDead = true; M.endT = 3.2; toast('EL TITAN RAIZ CAE: LA CIUDAD ES LIBRE'); Sfx.stinger(); addShake(0.8); }
+  if (s.bossDead) { M.endT -= dt; if (M.endT <= 0) completeMission(); }
+  if (M.dayT >= DAY_LEN && !M.nightToast) { M.nightToast = true; toast('ES DE NOCHE: LA SELVA SE DESPIERTA'); Sfx.siren(); }
+  else if (M.dayT >= DAY_LEN * 0.75 && !M.duskToast) { M.duskToast = true; toast('ANOCHECE'); }
+  if (M.dayT >= DAY_LEN) { M.nightSpawnT -= dt; if (M.nightSpawnT <= 0 && zombies.length < 60) { M.nightSpawnT = 7; const q = ringPos(750, 1100); if (q) spawnZombie(Math.random() < 0.4 ? 'runner' : 'walker', q, true); } }
   M.ambT -= dt;
   if (M.ambT <= 0) { M.ambT = rand(7, 12); Sfx.bubble(); if (Math.random() < 0.25 && zombies.length < 50) { const q = ringPos(750, 1100); if (q) spawnZombie('walker', q, false); } }
 }
@@ -1464,8 +1517,17 @@ function drawJungleMarkers(tNow) {
   const pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   const hz = zombies.filter(z => z.horde && z.hp > 0); if (hz.length) { let cx = 0, cy = 0; for (const z of hz) { cx += z.x; cy += z.y; } cx /= hz.length; cy /= hz.length; ctx.strokeStyle = '#ff3a4a'; ctx.globalAlpha = 0.35 + pulse * 0.35; ctx.lineWidth = 4; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.arc(cx, cy, 220 + hz.length * 5, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; glow(cx, cy, 260, '#ff3a4a', 0.12 * pulse); }
+  const s = mission.s; if (s.radioOn && !s.radioDone) { const c = centerOf(radioR()); ctx.strokeStyle = '#ffe14a'; ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.arc(c.x, c.y, 460, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
   for (const t of jungleTargets()) { ctx.strokeStyle = t.col; ctx.lineWidth = 3; ctx.globalAlpha = 0.4 + pulse * 0.4; ctx.beginPath(); ctx.arc(t.x, t.y, 90 + pulse * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(t.x, t.y, 110, t.col, 0.18 * pulse); }
   ctx.restore();
+}
+function drawRoot(z, t) {
+  const img = IMG.j_tree2, S = z.r * 3.2, pulse = 0.5 + Math.sin(t * 4 + z.x) * 0.5;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(z.x, z.y, S * 0.9, '#ff3fb4', 0.28 + pulse * 0.2); ctx.restore();
+  ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.ellipse(z.x + 4, z.y + 24, S * 0.38, S * 0.14, 0, 0, 7); ctx.fill();
+  if (img) { if (z.flash > 0) ctx.globalAlpha = 0.6; ctx.drawImage(img, z.x - S / 2, z.y - S * 0.78, S, S); ctx.globalAlpha = 1; }
+  ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(z.x - 44, z.y - S * 0.86, 88, 8); ctx.fillStyle = '#ff3fb4'; ctx.fillRect(z.x - 43, z.y - S * 0.86 + 1, 86 * clamp(z.hp / z.maxHp, 0, 1), 6);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('RAIZ', z.x, z.y - S * 0.86 - 4);
 }
 
 /* ============================== LOGICA DEL BIOLAB ============================== */
@@ -2130,8 +2192,8 @@ function victory() {
     el.best.textContent = best;
   }
   const ps = el.msg.querySelectorAll('p');
-  el.msg.querySelector('h1').textContent = mission && mission.jungle ? 'NIVEL 3: PARTE 1' : mission && mission.lab ? 'NIVEL 2 COMPLETADO' : mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
-  ps[0].textContent = mission && mission.jungle ? 'Llegaste al Arbol Madre con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El cerco de la noche llegara en la proxima entrega.' : mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
+  el.msg.querySelector('h1').textContent = mission && mission.jungle ? 'NIVEL 3 COMPLETADO' : mission && mission.lab ? 'NIVEL 2 COMPLETADO' : mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
+  ps[0].textContent = mission && mission.jungle ? 'Destruiste las raices y derrotaste al Titan Raiz: la ciudad es libre. ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
   el.start.textContent = 'JUGAR DE NUEVO'; el.startS.textContent = 'SUPERVIVENCIA';
   setTimeout(() => { if (state === 'won') { closeLabPanels(); el.msg.style.display = 'flex'; } }, 1200);
@@ -2637,6 +2699,7 @@ function hitZombie(z, b) {
 }
 
 function killZombie(z) {
+  if (z.root) { burst(z.x, z.y, 30, '#ff3fb4', 360, 0.8, 4); addShake(0.7); Sfx.explosion(); toast('RAIZ DESTRUIDA ' + (mission.roots.filter(q => q.hp <= 0).length) + '/3'); player.pts += 300; return; }
   dying.push({ x:z.x, y:z.y, type:z.type, r:z.r, t:0, dir:Math.random() < 0.5 ? -1 : 1, ph:z.ph });
   killsTotal++;
   combo++; comboT = 2.5; comboPulse = 1;
@@ -2828,6 +2891,7 @@ function update(dt, now) {
   const mis = mode === 'mission', NF = nightF();
   for (const z of zombies) {
     z.wob += dt * 6; z.flash = Math.max(0, z.flash - dt);
+    if (z.root) { z.kx = z.ky = 0; continue; }
     z.x += z.kx * dt; z.y += z.ky * dt;
     const kdz = Math.max(0, 1 - 9 * dt); z.kx *= kdz; z.ky *= kdz;
     const d = dist(z, player), ap = Math.atan2(player.y - z.y, player.x - z.x);
@@ -2988,7 +3052,7 @@ function update(dt, now) {
       if (p.kind === 'hp') player.hp = Math.min(player.maxHp, player.hp + 25);
       else if (p.kind === 'bomb') player.gren = Math.min(player.grenMax, player.gren + 2);
       else if (p.kind === 'wpn') unlockWeapon(p.slot);
-      else if (p.kind === 'ing') { mission.ing[p.ing]++; toast('+1 ' + INGN[p.ing].toUpperCase() + (mission.ingTip ? '' : '  |  LLEVA LOS INGREDIENTES A LA MESA DE EXPERIMENTO (CENTRO)')); mission.ingTip = true; if (expOpen) renderExp(); }
+      else if (p.kind === 'ing') { mission.ing[p.ing]++; if (mission.jungle) mission.s.got++; toast('+1 ' + INGN[p.ing].toUpperCase() + (mission.ingTip ? '' : '  |  LLEVA LOS INGREDIENTES A LA MESA DE EXPERIMENTO (CENTRO)')); mission.ingTip = true; if (expOpen) renderExp(); }
       else if (p.kind === 'scrap') { player.scrap += 2; toast('+2 CHATARRA'); }
       else addAmmo();
     }
@@ -3083,7 +3147,7 @@ const PUPPET = {
   boss:   { t:'t_boss',    sh:[-0.04, 0.3],  hip:0.19, fat:1.6,  pal:{ sleeve:'#5f6773', cuff:'#9aa1ab', hand:'#86a07e', pants:'#3c424d', shoe:'#17181c', sole:'#0a0a0c' }, arms:'reach', chain:true }
 };
 const PW = { walker:4.0, runner:4.0, tank:3.8, spitter:4.2, boss:2.6 };
-const bossName = () => mission && mission.lab ? 'EL EXPERIMENTO' : 'EL ALCAIDE';
+const bossName = () => mission && mission.jungle ? 'TITAN RAIZ' : mission && mission.lab ? 'EL EXPERIMENTO' : 'EL ALCAIDE';
 const WGRIP = [[0.26, 0.58], [0.2, 0.6], [0.2, 0.6], [0.18, 0.55], [0.34, 0.62], [0.2, 0.62]];  // manos: fraccion del arma (agarre trasero, delantero)
 let charSel = 'f';
 try { const c = localStorage.getItem('condenados_char'); if (c === 'f' || c === 'm') charSel = c; } catch (e) {}
@@ -3863,7 +3927,7 @@ function drawFloorDeco(tNow, kind, inView) {
     }
     if (d.t === 'walk' || d.t === 'path' || d.t === 'curb' || d.t === 'line' || d.t === 'dash' || d.t === 'zebra' || d.t === 'manhole' || d.t === 'crack') {
       if (!inView(d.x - 20, d.y - 20, d.w + 40, d.h + 40)) continue;
-      if (d.t === 'walk') { ctx.fillStyle = '#2a2f4a'; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.strokeStyle = 'rgba(43,232,240,.28)'; ctx.lineWidth = 2; const vert = d.h > d.w; for (let k = 0; k < (vert ? d.h : d.w); k += 80) { ctx.beginPath(); if (vert) { ctx.moveTo(d.x, d.y + k); ctx.lineTo(d.x + d.w, d.y + k); } else { ctx.moveTo(d.x + k, d.y); ctx.lineTo(d.x + k, d.y + d.h); } ctx.stroke(); } ctx.fillStyle = 'rgba(125,255,106,.28)'; for (let k = 0; k < 6; k++) { const q = hashT(Math.floor(d.x / 7) + k, Math.floor(d.y / 7) + k * 3); ctx.beginPath(); ctx.ellipse(d.x + (q % 100) / 100 * d.w, d.y + ((q >> 7) % 100) / 100 * d.h, 14, 9, 0.5, 0, 7); ctx.fill(); } }
+      if (d.t === 'walk') { ctx.fillStyle = d.col; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.strokeStyle = 'rgba(40,46,36,.55)'; ctx.lineWidth = 2; const vert = d.h > d.w; for (let k = 0; k < (vert ? d.h : d.w); k += 80) { ctx.beginPath(); if (vert) { ctx.moveTo(d.x, d.y + k); ctx.lineTo(d.x + d.w, d.y + k); } else { ctx.moveTo(d.x + k, d.y); ctx.lineTo(d.x + k, d.y + d.h); } ctx.stroke(); } ctx.fillStyle = 'rgba(80,200,70,.35)'; for (let k = 0; k < 6; k++) { const q = hashT(Math.floor(d.x / 7) + k, Math.floor(d.y / 7) + k * 3); ctx.beginPath(); ctx.ellipse(d.x + (q % 100) / 100 * d.w, d.y + ((q >> 7) % 100) / 100 * d.h, 14, 9, 0.5, 0, 7); ctx.fill(); } }
       else if (d.t === 'path') { ctx.fillStyle = d.col; ctx.globalAlpha = 0.55; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.globalAlpha = 1; }
       else if (d.t === 'curb') { ctx.save(); ctx.shadowColor = '#2be8f0'; ctx.shadowBlur = 12; ctx.fillStyle = '#2be8f0'; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.restore(); }
       else if (d.t === 'line') { ctx.save(); ctx.shadowColor = d.col; ctx.shadowBlur = 14; ctx.fillStyle = d.col; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.restore(); }
@@ -4475,6 +4539,7 @@ function draw() {
     ctx.restore(); }
   for (const z of zombies) {
     if (z.x < cam.x - 220 || z.x > cam.x + cam.vw + 220 || z.y < cam.y - 260 || z.y > cam.y + cam.vh + 260) continue;
+    if (z.root) { drawRoot(z, tNow); continue; }
     drawZombie(z);
   }
 
