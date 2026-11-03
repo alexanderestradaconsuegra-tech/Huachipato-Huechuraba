@@ -55,6 +55,24 @@
   #msg h1 { background:linear-gradient(90deg,#ff5a7a,#ffb347); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:none; }
   #msg button { border-radius:12px; background:linear-gradient(135deg,#ff4d6d,#ff8a3d); box-shadow:0 6px 18px rgba(255,90,70,.35); }
   #msg button + button { background:linear-gradient(135deg,#4a5cff,#2ab0ff); box-shadow:0 6px 18px rgba(60,120,255,.35); }
+  #task { position:absolute; inset:0; display:none; align-items:center; justify-content:center; background:rgba(4,6,16,.72); pointer-events:auto; z-index:5; }
+  #taskBox { width:min(560px,94vw); background:linear-gradient(180deg,#1b2238,#10162a); border:2px solid #3a4a7a; border-radius:18px; padding:18px 20px; box-shadow:0 20px 60px rgba(0,0,0,.6); color:#e8eefc; text-align:center; }
+  #taskBox h2 { font-size:18px; margin-bottom:4px; letter-spacing:1px; } #taskBox p { font-size:12.5px; opacity:.8; margin-bottom:12px; }
+  #taskBox button { font:inherit; cursor:pointer; border:0; border-radius:10px; padding:9px 18px; margin:4px; background:#3a4a7a; color:#fff; font-size:14px; }
+  #taskBox button:hover { filter:brightness(1.2); }
+  .wireRow { display:flex; align-items:center; justify-content:space-between; margin:10px 22px; }
+  .wnode { width:44px; height:26px; border-radius:7px; border:3px solid #0b0e18; cursor:pointer; box-shadow:0 0 0 2px rgba(255,255,255,.15); }
+  .wnode.sel { box-shadow:0 0 0 3px #fff, 0 0 14px #fff; } .wnode.done { opacity:.55; cursor:default; }
+  .wline { flex:1; height:6px; margin:0 6px; border-radius:3px; background:repeating-linear-gradient(90deg,#222 0 8px,#333 8px 16px); }
+  .wline.on { background:currentColor; box-shadow:0 0 10px currentColor; }
+  .brk { display:inline-block; width:54px; margin:6px; }
+  .brk .sw { width:54px; height:96px; border-radius:10px; background:#0b0e18; border:3px solid #3a4a7a; position:relative; cursor:pointer; }
+  .brk .sw i { position:absolute; left:6px; right:6px; height:40px; border-radius:6px; background:#8a96b4; transition:top .12s; top:50px; }
+  .brk.on .sw i { top:6px; background:#3bff7a; box-shadow:0 0 14px #3bff7a; }
+  .brk .lamp { width:14px; height:14px; border-radius:50%; margin:6px auto 0; background:#5a1a1a; } .brk.on .lamp { background:#3bff7a; box-shadow:0 0 10px #3bff7a; }
+  #keyDisp { font:bold 34px monospace; letter-spacing:12px; background:#071018; border:2px solid #2a3a5a; border-radius:10px; padding:8px; margin:6px 40px 12px; min-height:60px; color:#7be0ff; }
+  #keyDisp.bad { color:#ff4d4d; }
+  .kp { display:grid; grid-template-columns:repeat(3,72px); gap:8px; justify-content:center; } .kp button { margin:0; font-size:22px; padding:12px 0; font-weight:bold; }
   #prompt { position:absolute; bottom:70px; left:50%; transform:translateX(-50%); display:none; text-align:center; font-size:14px; padding:8px 16px;
     background:rgba(14,16,34,.7); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.2); border-radius:12px; }
   #prompt i { display:block; height:5px; margin-top:6px; border-radius:4px; background:linear-gradient(90deg,#33e08a,#9bff6a); width:0; }
@@ -89,6 +107,7 @@
   <div id="obj"></div>
   <canvas id="mini" width="200" height="127"></canvas>
   <div id="prompt"></div>
+  <div id="task"><div id="taskBox"></div></div>
   <div id="toast"></div>
   <div id="shop"></div>
   <div id="msg">
@@ -97,7 +116,7 @@
     <p>WASD / flechas: mover | Mouse: apuntar y disparar | R: recargar | 1-6 o rueda: arma | Espacio: esquivar | Shift: correr (gasta energia) | G o clic derecho: granada | P: pausa | X: sonido | H: efectos de brillo</p>
     <p>MISIONES: sigue la flecha amarilla y el minimapa, cumple los objetivos y llega a la zona de extraccion. Los zombis duermen hasta que te acercas o disparas. Busca las cajas verdes de armas: ametralladora, lanzacohetes y francotirador.</p>
     <p>PRIMERA PERSONA (estilo CS): clic para capturar el mouse; mira arriba y abajo. Disparo a la CABEZA = muerte instantanea. ESPACIO saltar | C agacharse (mas precision) | E esquivar | Shift correr | [ y ] campo de vision. Salta sobre autos y cajas. Flechas rojas avisan de zombis fuera de pantalla.</p>
-    <p>NIVEL 1 (MISIONES): una instalacion por secciones. Activa el generador (E), consigue las tarjetas VERDE y AZUL para abrir las puertas, descarga los planos, derrota al jefe y sube al elevador. E: interactuar (cajas, luces, torres, barricadas, vehiculo).</p>
+    <p>NIVEL 1 (MISIONES): una instalacion por secciones. Activa el generador, repara el panel de cables, consigue las tarjetas VERDE y AZUL, enciende los disyuntores, descarga los planos, encuentra la NOTA con el codigo y abre el reactor. Derrota al jefe y sube al elevador. E: interactuar (tareas, cajas, luces, barricadas, vehiculo). TORRE: entra por la puerta y dispara por la ranura. Activa la REJILLA ELECTRICA del salon de control para freir a los zombis que la crucen.</p>
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
@@ -110,7 +129,7 @@
 
 /* ============================== AUDIO ============================== */
 const Sfx = (() => {
-  let ac = null, master = null, noiseBuf = null, muted = false;
+  let ac = null, master = null, noiseBuf = null, muted = false, mood = { chase:0, boss:false };
   let musicOn = false, intensity = 0, step = 0, musicTimer = null, lastHit = 0;
 
   function init() {
@@ -118,30 +137,39 @@ const Sfx = (() => {
     try {
       ac = new (window.AudioContext || window.webkitAudioContext)();
       master = ac.createGain(); master.gain.value = muted ? 0 : 0.55; master.connect(ac.destination);
+      // reverberacion de sala metalica: impulso de ruido que se apaga
+      const rl = Math.floor(ac.sampleRate * 1.5), ib = ac.createBuffer(2, rl, ac.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = ib.getChannelData(c); for (let i = 0; i < rl; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / rl, 2.6); }
+      const cv2 = ac.createConvolver(); cv2.buffer = ib; const wet = ac.createGain(); wet.gain.value = 0.2;
+      master.connect(cv2); cv2.connect(wet); wet.connect(ac.destination);
       noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
       const d = noiseBuf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     } catch (e) { ac = null; }
   }
 
-  function tone(f, dur, type = 'sine', vol = 0.3, slide = null, delay = 0) {
+  function out(node, pan) {
+    if (pan && ac.createStereoPanner) { const sp = ac.createStereoPanner(); sp.pan.value = Math.max(-1, Math.min(1, pan)); node.connect(sp); sp.connect(master); } else node.connect(master);
+  }
+
+  function tone(f, dur, type = 'sine', vol = 0.3, slide = null, delay = 0, pan = 0) {
     if (!ac || muted) return;
     const t = ac.currentTime + delay;
     const o = ac.createOscillator(), g = ac.createGain();
     o.type = type; o.frequency.setValueAtTime(f, t);
     if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, slide), t + dur);
     g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.03);
+    o.connect(g); out(g, pan); o.start(t); o.stop(t + dur + 0.03);
   }
 
-  function noise(dur, vol = 0.3, freq = 1000, type = 'lowpass', slide = null, delay = 0) {
+  function noise(dur, vol = 0.3, freq = 1000, type = 'lowpass', slide = null, delay = 0, pan = 0) {
     if (!ac || muted) return;
     const t = ac.currentTime + delay;
     const s = ac.createBufferSource(); s.buffer = noiseBuf;
     const f = ac.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, t);
     if (slide) f.frequency.exponentialRampToValueAtTime(Math.max(40, slide), t + dur);
     const g = ac.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    s.connect(f); f.connect(g); g.connect(master); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.03);
+    s.connect(f); f.connect(g); out(g, pan); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.03);
   }
 
   function toggle() {
@@ -150,18 +178,28 @@ const Sfx = (() => {
     return !muted;
   }
 
-  // musica procedural: bajo en La menor + percusion que escala con la intensidad
+  // musica procedural en La menor: capas segun la tension (calma, patrulla, persecucion, jefe)
   const BASS = [55, 0, 55, 0, 65.41, 0, 49, 0, 55, 0, 55, 73.42, 65.41, 0, 49, 0];
+  const PENTA = [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33];
+  const CHORDS = [[110, 130.81, 164.81], [87.31, 110, 130.81], [98, 123.47, 146.83], [82.41, 98, 123.47]];
+  let bar = 0;
   function musicStep() {
     if (!musicOn) { musicTimer = null; return; }
-    const i = step++ % BASS.length;
+    const i = step++ % 16, ch = mood.chase, bs = mood.boss, tens = Math.max(intensity, ch * 0.9);
     const n = BASS[i];
-    if (n) tone(n, 0.28, 'sawtooth', 0.07 + intensity * 0.05, n * 0.97);
-    if (i % 4 === 0) tone(62, 0.18, 'sine', 0.25 + intensity * 0.15, 30);
-    if (intensity > 0.35 && i % 2 === 1) noise(0.04, 0.06, 7000, 'highpass');
-    if (intensity > 0.6 && i % 8 === 4) noise(0.12, 0.12, 1800, 'bandpass');
-    if (i === 0) tone(220 * (intensity > 0.5 ? 1.5 : 1), 1.4, 'sine', 0.025, 218);
-    musicTimer = setTimeout(musicStep, 330 - intensity * 130);
+    if (n) tone(bs ? n * 0.5 : n, 0.3, 'sawtooth', 0.06 + tens * 0.05, n * 0.96);
+    if (i === 0) { // pad que respira, cambia de acorde cada compas
+      const c = CHORDS[bar++ % CHORDS.length];
+      c.forEach((f, k) => { tone(f * 2, 3.2, 'triangle', 0.028, f * 2.01, 0, k - 1 > 0 ? 0.4 : -0.4); tone(f * 4.02, 3.2, 'sine', 0.012 + tens * 0.01, null, 0.02); });
+      if (!tens && Math.random() < 0.5) tone(PENTA[Math.floor(Math.random() * 5)] * 2, 1.8, 'sine', 0.02, null, 0.5, Math.random() - 0.5);   // notas lejanas
+    }
+    if (i % 4 === 0) tone(62, 0.2, 'sine', 0.2 + tens * 0.2, 30);                    // bombo
+    if (tens > 0.3 && i % 2 === 1) noise(0.04, 0.05 + tens * 0.04, 7000, 'highpass');   // hi-hat
+    if (tens > 0.55 && i % 8 === 4) noise(0.14, 0.12, 1800, 'bandpass');               // caja
+    if (tens > 0.45 && (i === 3 || i === 7 || i === 11 || i === 14)) tone(PENTA[Math.floor(Math.random() * PENTA.length)], 0.16, 'square', 0.035, null, 0, Math.random() - 0.5);  // arpegio
+    if (ch > 0.2 && i % 2 === 0) tone(55 * (1 + 0.5 * (i % 8 === 0)), 0.09, 'sine', 0.22, 38);   // pulso de persecucion
+    if (bs && i % 4 === 2) { tone(98, 0.25, 'sawtooth', 0.09, 69); tone(138.6, 0.25, 'sawtooth', 0.05, 98); }   // tritono del jefe
+    musicTimer = setTimeout(musicStep, 340 - tens * 140 - (bs ? 30 : 0));
   }
   function music(on) {
     musicOn = on;
@@ -183,6 +221,27 @@ const Sfx = (() => {
     door() { noise(0.3, 0.16, 700, 'lowpass', 200); tone(170, 0.35, 'sawtooth', 0.1, 80); },
     card() { tone(900, 0.08, 'square', 0.14); tone(1350, 0.12, 'square', 0.14, null, 0.09); },
     climb() { tone(240, 0.12, 'triangle', 0.14, 480); tone(480, 0.1, 'triangle', 0.12, 700, 0.1); },
+    setMood(c, boss) { mood.chase = c; mood.boss = !!boss; },
+    step(run, pan, sur) {
+      const v = run ? 0.2 : 0.11, f = (sur === 3 ? 700 : 520) + Math.random() * 160;
+      noise(0.07, v, f, 'bandpass', f * 0.55, 0, pan); tone(110 + Math.random() * 25, 0.08, 'triangle', v * 0.8, 70, 0, pan);
+      if (sur !== 4) tone(1900 + Math.random() * 500, 0.03, 'square', v * 0.18, null, 0.01, pan);   // chasquido metalico
+    },
+    zstep(dist, pan, heavy) {
+      const v = Math.max(0, 0.15 * (1 - dist / 650)) * (heavy ? 1.7 : 1); if (v < 0.012) return;
+      noise(0.13, v, heavy ? 320 : 460, 'lowpass', 120, 0, pan); tone(heavy ? 55 : 75 + Math.random() * 20, 0.13, 'sine', v * 1.3, 40, 0, pan);
+    },
+    stinger() { [622, 659, 740].forEach((f, i) => tone(f, 0.5, 'sawtooth', 0.06, f * 0.7, i * 0.03)); tone(55, 0.7, 'sine', 0.3, 35); noise(0.3, 0.15, 3000, 'highpass', 600); },
+    ambient() {
+      const k = Math.random();
+      if (k < 0.35) { const pan = Math.random() * 2 - 1; tone(1500 + Math.random() * 600, 0.05, 'sine', 0.05, 700, 0, pan); }                        // gota
+      else if (k < 0.7) { const pan = Math.random() * 2 - 1, f = 180 + Math.random() * 120; tone(f, 0.9, 'sine', 0.06, f * 0.9, 0, pan); noise(0.25, 0.05, 2400, 'bandpass', null, 0, pan); }  // golpe metalico lejano
+      else { const pan = Math.random() * 2 - 1; noise(1.2, 0.06, 500, 'lowpass', 140, 0, pan); tone(70, 1.1, 'sawtooth', 0.04, 48, 0, pan); }     // quejido de tuberia
+    },
+    task() { tone(660, 0.07, 'square', 0.1); },
+    taskOk() { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', 0.16, null, i * 0.07)); },
+    taskBad() { tone(160, 0.22, 'sawtooth', 0.2, 90); },
+    zap() { noise(0.12, 0.2, 5000, 'highpass', 2000); tone(90 + Math.random() * 60, 0.1, 'sawtooth', 0.12, 45); },
     alarm() { tone(900, 0.16, 'square', 0.13); tone(680, 0.16, 'square', 0.13, null, 0.18); },
     stab() { noise(0.1, 0.25, 2500, 'highpass'); tone(300, 0.08, 'sawtooth', 0.15, 120); },
     decoy() { tone(1300, 0.07, 'square', 0.1); tone(1700, 0.07, 'square', 0.1, null, 0.1); },
@@ -233,7 +292,7 @@ let ctx = cv.getContext('2d', { alpha:false });
 let DPR = 1, renderScale = 1;
 const $ = id => document.getElementById(id);
 const el = { hp:$('hp'), wpn:$('wpn'), ammo:$('ammo'), wave:$('wave'), pts:$('pts'), best:$('best'),
-  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
+  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
   obj:$('obj'), mini:$('mini'), waveLbl:$('waveLbl') };
 const mctx = el.mini.getContext('2d');
 
@@ -368,6 +427,7 @@ const mwx = () => cam.x + mouse.x / camZoom, mwy = () => cam.y + mouse.y / camZo
 const NOISE = [420, 720, 680, 820, 900, 650]; // radio de ruido de cada arma
 const PAL = ['#ff4d9a', '#2ad4ff', '#ffb347', '#7dff6a', '#a66bff', '#ff6a4d'];
 let fp = false, fpYaw = -0.9, hitMark = 0, fpLockFail = false;
+let ambT = 6;
 let mode = 'survival', rects = [], mission = null, missionIdx = 0, snap = null, aggroCount = 0;
 
 function makePlayer() {
@@ -444,7 +504,7 @@ function buildFacility() {
       if (a >= 0 && b >= 0 && a < GC && b < GR && grid[b * GC + a] !== 1) { wallZ[j * GC + i] = zone[b * GC + a] || 1; break; }
     }
   }
-  G = { grid, zone, wallZ, doors, lit:[0, true, true, true, true], items:[], decos:[], mini:null, chunks:{}, chs:Math.min(1.5, Math.max(1, window.devicePixelRatio || 1)) };
+  G = { zap:{ x:10 * TS, y:23.1 * TS, w:19 * TS, h:2.1 * TS, on:false, t:0, cd:0, zt:0 }, grid, zone, wallZ, doors, lit:[0, true, true, true, true], items:[], decos:[], mini:null, chunks:{}, chs:Math.min(1.5, Math.max(1, window.devicePixelRatio || 1)) };
   const out = [];
   const O = (kind, x, y, w, h, extra) => { const r = { kind, x:x * TS, y:y * TS, w:w * TS, h:h * TS, seed:Math.random(), ...extra }; out.push(r); return r; };
   const P = (spr, x, y, w, h, extra) => O('prop', x, y, w, h, { spr, sc:spr === 'p_barrier' || spr === 'p_barricade' ? 1.12 : 1.25, flip:Math.random() < 0.5, dir:1, ...extra });
@@ -454,6 +514,7 @@ function buildFacility() {
   O('gen', 6.3, 57.3, 2.2, 1.8); O('tank', 3.4, 55.4, 2.8, 0.9); O('tank', 3.4, 60.3, 2.8, 0.9); O('console', 9.4, 55.4, 1.7, 0.8); P('p_barrels', 10.0, 59.9, 1, 1, { explosive:true });
   O('supply', 27, 55.4, 1.5, 1); O('supply', 32.4, 59.9, 1.5, 1); P('p_crates', 30.5, 57.6, 1, 1); P('p_crates', 33.4, 56, 1, 1);
   O('buildpt', 18, 52, 2, 1);
+  O('taskpt', 7.4, 55.4, 1.5, 0.9, { tk:'wires' });
   // ---- ZONA 2: sala de maquinas ----
   O('conv', 19.2, 38.4, 1.8, 8.9, { walk:true, belt:true });
   O('rack', 16.8, 39, 0.9, 2.2); O('rack', 16.8, 43, 0.9, 2.2); O('rack', 21.3, 39, 0.9, 2.2); O('rack', 21.3, 43, 0.9, 2.2);
@@ -469,18 +530,20 @@ function buildFacility() {
   O('pillar', 14, 25.5, 1, 1); O('pillar', 25, 25.5, 1, 1); O('pillar', 14, 29, 1, 1); O('pillar', 25, 29, 1, 1);
   O('console', 18, 27, 1.8, 0.8); O('console', 20.4, 27, 1.8, 0.8); O('tower', 29.4, 29.6, 1.8, 1.8); O('switch', 8.5, 21.05, 0.9, 0.45, { zn:3 });
   P('p_barrier', 12, 23.5, 2.2, 0.7); P('p_barrels', 27, 22.8, 1, 1, { explosive:true }); P('p_crates', 22, 22.6, 1, 1); P('p_dumpster', 12, 30, 1.6, 1, { hide:true });
-  O('supply', 2.4, 22.6, 1.5, 1); O('console', 3.2, 30.2, 2.2, 0.8); P('p_crates', 5, 27, 1, 1);
+  O('supply', 2.4, 22.6, 1.5, 1); P('p_crates', 5, 27, 1, 1);
   P('p_barrels', 34.4, 29, 1, 1, { explosive:true }); P('p_barrels', 36, 23.2, 1, 1, { explosive:true }); O('tank', 33.6, 25, 0.9, 2.4);
   O('buildpt', 19, 22, 2, 1);
+  O('zapsw', 18.6, 31.05, 0.9, 0.5);
+  O('taskpt', 3.4, 30.6, 2.0, 0.8, { tk:'breakers' });
   O('console', 14, 14, 2.4, 0.9); O('console', 22.6, 14, 2.4, 0.9); O('terminal', 18.4, 14.6, 2.4, 2.4); O('pillar', 13.6, 17.6, 1, 1); O('pillar', 24.6, 17.6, 1, 1);
-  O('buildpt', 19, 18.2, 2, 1); O('buildpt', 19, 13.2, 2, 1);
+  O('buildpt', 19, 18.2, 2, 1); O('taskpt', 19.2, 12.0, 1.6, 0.6, { tk:'code' });
   // ---- ZONA 4: nucleo del reactor ----
   O('reactor', 17.9, 5.2, 3.2, 3.2); O('pillar', 11.4, 4.6, 1, 1); O('pillar', 27.6, 4.6, 1, 1); O('pillar', 11.4, 8.6, 1, 1); O('pillar', 27.6, 8.6, 1, 1);
   O('console', 8, 3.6, 1.8, 0.8); O('console', 30.2, 9.4, 1.8, 0.8); O('tower', 7.6, 8.4, 1.8, 1.8);
   P('p_barrels', 14.5, 6.4, 1, 1, { explosive:true }); P('p_barrels', 24.8, 6.4, 1, 1, { explosive:true }); P('p_barrier', 22, 9.2, 2.2, 0.7); P('p_sandbags', 15, 9.2, 1.6, 1);
   O('supply', 34.6, 4.6, 1.5, 1); O('supply', 1.6, 8.6, 1.5, 1); P('p_crates', 36, 7.4, 1, 1); P('p_crates', 3.6, 4.6, 1, 1);
   O('elev', 17.4, 1.05, 5.2, 1.9);
-  for (const r of out) if (r.kind === 'buildpt' || r.kind === 'switch' || r.kind === 'elev' || r.kind === 'conv') r.walk = true;
+  for (const r of out) if (r.kind === 'zapsw' || r.kind === 'taskpt' || r.kind === 'buildpt' || r.kind === 'switch' || r.kind === 'elev' || r.kind === 'conv') r.walk = true;
   rects = out;
   // decoracion de suelo
   const D = (t, x, y, w, h, col) => G.decos.push({ t, x:x * TS, y:y * TS, w:w * TS, h:h * TS, col });
@@ -500,6 +563,53 @@ function buildFacility() {
   mg.globalAlpha = 1;
   G.mini = mc;
   return out;
+}
+
+/* ============================== TAREAS (estilo Among Us) ============================== */
+let taskObj = null, taskHook = null;
+const WCOL = ['#ff3b3b', '#3b8bff', '#ffd42a', '#3bff7a'];
+function closeTask(ok) {
+  el.task.style.display = 'none'; el.taskBox.innerHTML = '';
+  if (state === 'task') { state = 'playing'; lastT = performance.now(); }
+  if (ok && taskObj) { Sfx.taskOk(); const o = taskObj, M = mission; taskObj = null; if (o.onDone === 'power') { M.power = true; toast('ENERGIA RESTAURADA: SE ABRIO LA PUERTA'); } else if (o.onDone === 'lights') toast('TERMINAL ENCENDIDO'); else if (o.onDone === 'power2') { M.power2 = true; toast('CODIGO ACEPTADO: PUERTA DEL REACTOR'); } advance(); } else taskObj = null;
+}
+function openTask(o) {
+  taskObj = o; state = 'task'; Sfx.task(); el.task.style.display = 'flex';
+  const box = el.taskBox, title = '<h2>' + o.title + '</h2><p>' + o.hint + '</p>';
+  if (o.kind === 'wires') {
+    const order = [0, 1, 2, 3], right = [0, 1, 2, 3].sort(() => Math.random() - 0.5), done = [false, false, false, false]; let sel = -1;
+    box.innerHTML = title + '<div id="wr"></div><button id="tcancel">Cancelar</button>';
+    const wr = box.querySelector('#wr');
+    const render = () => {
+      wr.innerHTML = order.map((c, i) => '<div class="wireRow"><div class="wnode ' + (sel === i ? 'sel ' : '') + (done[i] ? 'done' : '') + '" data-l="' + i + '" style="background:' + WCOL[c] + '"></div><div class="wline ' + (done[i] ? 'on' : '') + '" style="color:' + WCOL[c] + '"></div><div class="wnode ' + (done[c] ? 'done' : '') + '" data-r="' + i + '" style="background:' + WCOL[right[i]] + '"></div></div>').join('');
+      wr.querySelectorAll('[data-l]').forEach(n => n.onclick = () => { const i = +n.dataset.l; if (!done[i]) { sel = i; Sfx.task(); render(); } });
+      wr.querySelectorAll('[data-r]').forEach(n => n.onclick = () => { const j = +n.dataset.r; if (sel < 0 || done[right[j]]) return; if (right[j] === order[sel]) { done[sel] = true; sel = -1; Sfx.task(); render(); if (done.every(Boolean)) setTimeout(() => closeTask(true), 450); } else { Sfx.taskBad(); sel = -1; render(); } });
+    };
+    render();
+  } else if (o.kind === 'breakers') {
+    const on = [false, false, false, false, false, false].map(() => Math.random() < 0.3);
+    if (on.every(Boolean)) on[0] = false;
+    box.innerHTML = title + '<div id="bk"></div><button id="tcancel">Cancelar</button>';
+    const bk = box.querySelector('#bk');
+    const render = () => {
+      bk.innerHTML = on.map((v, i) => '<div class="brk ' + (v ? 'on' : '') + '" data-i="' + i + '"><div class="sw"><i></i></div><div class="lamp"></div></div>').join('');
+      bk.querySelectorAll('[data-i]').forEach(n => n.onclick = () => { const i = +n.dataset.i; on[i] = !on[i]; if (i > 0 && Math.random() < 0.35) on[i - 1] = !on[i - 1]; Sfx.task(); render(); if (on.every(Boolean)) setTimeout(() => closeTask(true), 450); });  // a veces un disyuntor arrastra al vecino: hay que insistir
+    };
+    render();
+  } else if (o.kind === 'code') {
+    let val = ''; box.innerHTML = title + '<div id="keyDisp"></div><div class="kp"></div><button id="tcancel">Cancelar</button>';
+    const disp = box.querySelector('#keyDisp'), kp = box.querySelector('.kp');
+    const keys9 = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'OK'];
+    disp.textContent = '____';
+    kp.innerHTML = keys9.map(k => '<button data-k="' + k + '">' + k + '</button>').join('');
+    kp.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
+      const k = b.dataset.k; Sfx.task();
+      if (k === 'C') val = ''; else if (k === 'OK') { if (val === o.code) { disp.textContent = 'OK'; setTimeout(() => closeTask(true), 400); return; } Sfx.taskBad(); disp.classList.add('bad'); val = ''; setTimeout(() => { disp.classList.remove('bad'); disp.textContent = '____'; }, 450); return; }
+      else if (val.length < 4) val += k;
+      disp.textContent = (val + '____').slice(0, 4);
+    });
+  }
+  const c = box.querySelector('#tcancel'); if (c) c.onclick = () => closeTask(false);
 }
 
 /* ============================== MISIONES Y MAPA ============================== */
@@ -746,7 +856,7 @@ function aiStep(z, dt, d, ap) {
   if (d < hear && z.st === 'idle') { z.st = 'alert'; z.tx = player.x; z.ty = player.y; z.alertT = 6; }
   if (sees) {
     if (z.st !== 'chase') {
-      z.st = 'chase'; if (mission) mission.alerts++; Sfx.shriek();
+      z.st = 'chase'; if (mission) mission.alerts++; Sfx.shriek(); if (!mission || performance.now() - (mission.lastSting || 0) > 4000) { Sfx.stinger(); if (mission) mission.lastSting = performance.now(); }
       for (const o of zombies) if (o !== z && o.st !== 'chase' && !o.boss && Math.hypot(o.x - z.x, o.y - z.y) < 230) { o.st = 'alert'; o.tx = player.x; o.ty = player.y; o.alertT = 6; o.aggro = true; }
     }
     z.lost = 0; z.lx2 = player.x; z.ly2 = player.y;
@@ -839,17 +949,23 @@ const FPICKS = [['ammo',15.5,56.2],['hp',22,61.2],['ammo',33,60.6],['bomb',9.5,5
 
 function setupFacilityMission(retry) {
   const T0 = v => v * TS, Hc = (x, y) => ({ x:T0(x), y:T0(y) });
+  const CODE = String(1000 + Math.floor(Math.random() * 9000));
   const objs = [
     { t:'gen', text:'Activa el generador del muelle (mantener E)', pos:Hc(7.4, 58.3), sec:8 },
+    { t:'task', kind:'wires', title:'PANEL ELECTRICO', hint:'Conecta cada cable con su color para restaurar la energia', text:'Repara el panel electrico (junto al generador) para abrir la puerta', pos:Hc(8.15, 56.7), onDone:'power' },
     { t:'collect', text:'Recupera la tarjeta VERDE: laboratorio al OESTE de la Sala de Maquinas', n:1, items:[{ x:T0(2.6), y:T0(44.8), got:false, card:'green' }] },
     { t:'collect', text:'Consigue la tarjeta AZUL: ala ESTE del Centro de Control (cuidado con los barriles)', n:1, items:[{ x:T0(36.2), y:T0(28.2), got:false, card:'blue' }] },
-    { t:'hold', text:'Descarga los planos en el terminal (permanece en la zona)', pos:Hc(19.6, 15.8), sec:22, onDone:'power2' },
+    { t:'task', kind:'breakers', title:'CAJA DE DISYUNTORES', hint:'Sube todos los interruptores. Ojo: a veces uno arrastra al vecino', text:'Enciende los disyuntores del Centro de Control (muro oeste)', pos:Hc(4.4, 31.5), onDone:'lights' },
+    { t:'hold', text:'Descarga los planos en el terminal (permanece en la zona)', pos:Hc(19.6, 15.8), sec:22 },
+    { t:'collect', text:'Encuentra la NOTA con el codigo del reactor (ala oeste del Centro de Control)', n:1, items:[{ x:T0(3.4), y:T0(24.6), got:false, note:true }] },
+    { t:'task', kind:'code', title:'CERRADURA DEL REACTOR', hint:'Escribe el codigo de 4 digitos de la nota', text:'Escribe el codigo en la puerta del reactor', pos:Hc(20, 12.4), code:CODE, onDone:'power2' },
     { t:'reach', text:'Entra al nucleo del reactor', pos:Hc(20, 9), boss:true, bossPos:Hc(19.5, 4.4) },
     { t:'kill', text:'Elimina a El Alcaide' },
     { t:'escape', text:'Sube al elevador de salida', pos:Hc(20, 2.2) }];
+  objs.code = CODE;
   mission = { idx:0, facility:true, def:{ name:'INSTALACION KRONOS', cap:0, patrols:60, mix:ZINFO[2].mix },
     map:{ start:Hc(19.5, 59.4), exit:Hc(20, 2.2), lamps:[], decals:[], blocks:[], spots:[] },
-    objs:objs.map(o => ({ got:0, prog:0, lastAmb:0, started:false, items:[], n:0, ...o })), cur:0, ambT:9, boss:null, alerts:0, power:false, power2:false, cycleT:0, curZone:0, zoneSeen:{} };
+    objs:objs.map(o => ({ got:0, prog:0, lastAmb:0, started:false, items:[], n:0, ...o })), code:CODE, cur:0, ambT:9, boss:null, alerts:0, power:false, power2:false, cycleT:0, curZone:0, zoneSeen:{} };
 }
 
 function startFacility(retry = false) {
@@ -955,6 +1071,8 @@ function objText() {
   let t = o.text;
   if (o.t === 'collect') t += ' (' + o.got + '/' + o.n + ')';
   if (o.t === 'hold' || o.t === 'gen') t += ' (' + Math.floor(o.prog) + '/' + o.sec + 's)';
+  if (o.t === 'collect' && o.items[0] && o.items[0].note === undefined) {}
+  if (mission.noteSeen && o.t === 'task' && o.kind === 'code') t += ' [codigo: ' + mission.code + ']';
   return t;
 }
 
@@ -970,7 +1088,7 @@ function targets() {
 function advance() {
   mission.cur++;
   if (mission.cur >= mission.objs.length) { completeMission(); return; }
-  Sfx.clear(); toast('NUEVO OBJETIVO');
+  Sfx.clear(); toast(mission.noteToast ? 'CODIGO DEL REACTOR: ' + mission.code : 'NUEVO OBJETIVO'); mission.noteToast = false;
 }
 
 function completeMission() {
@@ -1034,7 +1152,7 @@ function destroyBarricade(r) {
 
 function nearestInteract() {
   if (!G || state !== 'playing') return null;
-  if (player.tower) return { type:'tower', ref:player.tower, label:'E - Bajar de la torre' };
+  if (player.tower) return { type:'tower', ref:player.tower, label:'E - Salir de la torre' };
   if (player.driving) return { type:'vehicle', ref:vehicle, label:'E - Bajar del carro' };
   let best = null, bd = 1e9;
   const consider = (type, ref, d, lim, label, hold) => { if (d < lim && d < bd) { bd = d; best = { type, ref, label, hold }; } };
@@ -1042,7 +1160,8 @@ function nearestInteract() {
   for (const r of rects) {
     if (r.kind === 'supply' && !r.open) consider('supply', r, nd(r), 70, 'E (mantener) - Abrir caja de suministros (hace RUIDO)', true);
     else if (r.kind === 'switch') consider('switch', r, nd(r), 95, 'E - Luces de la zona: ' + (G.lit[r.zn] ? 'APAGAR (mas sigilo, menos vision)' : 'ENCENDER'), false);
-    else if (r.kind === 'tower') consider('tower', r, nd(r), 70, 'E - Subir a la torre (mas vision)', false);
+    else if (r.kind === 'tower') consider('tower', r, nd(r), 70, 'E - Entrar a la torre (vision y francotirador)', false);
+    else if (r.kind === 'zapsw') consider('zap', r, nd(r), 100, G.zap.on ? 'REJILLA ELECTRICA ACTIVA' : G.zap.cd > 0 ? 'Rejilla recargando (' + Math.ceil(G.zap.cd) + 's)' : 'E - ACTIVAR REJILLA ELECTRICA (12 s, mata zombis que la crucen)', false);
     else if (r.kind === 'buildpt') consider('build', r, nd(r), 55, 'E - Construir barricada (3 chatarra)', false);
   }
   for (const d of G.doors) if (d.lock !== 'none' && !d.open) {
@@ -1050,6 +1169,7 @@ function nearestInteract() {
     consider('door', d, dd, 150, ok ? 'E - Abrir puerta' : 'Puerta bloqueada: ' + LOCKTXT[d.lock], false);
   }
   const o = mission.objs[mission.cur];
+  if (o && o.t === 'task') consider('task', o, Math.hypot(o.pos.x - player.x, o.pos.y - player.y), 110, 'E - ' + o.title, false);
   if (o && o.t === 'gen') consider('gen', o, Math.hypot(o.pos.x - player.x, o.pos.y - player.y), 140, 'E (mantener) - Activar el generador', true);
   if (vehicle) consider('vehicle', vehicle, Math.hypot(vehicle.x - player.x, vehicle.y - player.y), 95, 'E - Conducir el carro de carga', false);
   return best;
@@ -1060,15 +1180,17 @@ function interactPress() {
   const ia = nearestInteract(); if (!ia || ia.hold) return;
   if (ia.type === 'switch') { G.lit[ia.ref.zn] = !G.lit[ia.ref.zn]; Sfx.pin(); toast(G.lit[ia.ref.zn] ? 'LUCES ENCENDIDAS' : 'LUCES APAGADAS'); makeNoise(ia.ref.x, ia.ref.y, 140); }
   else if (ia.type === 'build') { if (player.scrap >= 3) { player.scrap -= 3; buildBarricade(ia.ref); } else { Sfx.deny(); toast('FALTA CHATARRA'); } }
+  else if (ia.type === 'zap') { const z = G.zap; if (z.on || z.cd > 0) { Sfx.deny(); } else { z.on = true; z.t = 12; Sfx.alarm(); toast('REJILLA ELECTRICA ACTIVADA'); makeNoise(z.x + z.w / 2, z.y + z.h / 2, 520, '#7be0ff'); } }
+  else if (ia.type === 'task') openTask(ia.ref);
   else if (ia.type === 'tower') toggleTower(ia.ref);
   else if (ia.type === 'door') { const d = ia.ref, M = mission, ok = d.lock === 'power' ? M.power : d.lock === 'power2' ? M.power2 : player.cards[d.lock]; if (ok) openDoor(d); else { Sfx.deny(); toast(LOCKTXT[d.lock] + ' - NECESITAS ' + (d.lock === 'power' || d.lock === 'power2' ? 'RESTAURAR LA ENERGIA' : 'LA TARJETA')); } }
   else if (ia.type === 'vehicle') toggleVehicle();
 }
 function toggleTower(r) {
-  if (player.tower) { player.tower = null; r.cl = 0; camZoomT = 1; player.x = r.x + r.w / 2; player.y = r.y + r.h + 30; Sfx.climb(); toast('BAJASTE DE LA TORRE'); return; }
-  player.tower = r; r.cl = 0; player.tfx = player.x; player.tfy = player.y; player.vx = player.vy = 0; camZoomT = 0.72; Sfx.climb();
+  if (player.tower) { player.tower = null; r.cl = 0; camZoomT = 1; player.x = r.x + r.w / 2; player.y = r.y + r.h + 56; Sfx.door(); toast('SALISTE DE LA TORRE'); return; }
+  player.tower = r; r.cl = 0; player.tfx = player.x; player.tfy = player.y; player.vx = player.vy = 0; camZoomT = 0.72; Sfx.door();
   if (!r.looted) { r.looted = true; if (!player.has[5]) { unlockWeapon(5); toast('RIFLE FRANCOTIRADOR'); } else { player.ws[5].reserve += 5; toast('+5 BALAS DE FRANCOTIRADOR'); } }
-  else toast('TORRE: MAS VISION, LOS ZOMBIS NO TE ALCANZAN');
+  else toast('DENTRO DE LA TORRE: DISPARAS POR LA RANURA, NADIE TE ALCANZA');
 }
 function toggleVehicle() {
   if (player.driving) {
@@ -1123,9 +1245,21 @@ function facilityUpdate(dt) {
       else if (d.open) { d.hold -= dt; if (d.hold <= 0) { d.open = false; setDoorGrid(d, 4); } }
       d.t += ((d.open ? 1 : 0) - d.t) * Math.min(1, 10 * dt);
     } else {
-      if (!d.open) { const ok = d.lock === 'power' ? M.power : d.lock === 'power2' ? M.power2 : player.cards[d.lock]; if (ok && dd < 120) openDoor(d); }
+      if (!d.open) { const ok = d.lock === 'power' ? M.power : d.lock === 'power2' ? M.power2 : player.cards[d.lock]; if (ok && dd < 150) openDoor(d); }
       if (d.open && d.t < 1) d.t = Math.min(1, d.t + dt * 2.5);
     }
+  }
+  // rejilla electrica
+  { const z = G.zap;
+    if (z.on) {
+      z.t -= dt; z.zt -= dt;
+      for (const q of zombies) if (q.x > z.x && q.x < z.x + z.w && q.y > z.y && q.y < z.y + z.h) {
+        q.hp -= 90 * dt; q.flash = 0.1; q.aggro = true; if (Math.random() < 0.5) burst(q.x, q.y, 1, '#9fe9ff', 160, 0.25, 2);
+        if (z.zt <= 0) { z.zt = 0.18; Sfx.zap(); }
+      }
+      if (player.x > z.x && player.x < z.x + z.w && player.y > z.y && player.y < z.y + z.h && !player.tower && !player.driving && player.iframes <= 0) { player.zapT = (player.zapT || 0) - dt; if (player.zapT <= 0) { player.zapT = 0.45; damagePlayer(7); } }
+      if (z.t <= 0) { z.on = false; z.cd = 22; toast('REJILLA APAGADA'); }
+    } else if (z.cd > 0) z.cd -= dt;
   }
   // barricadas atacadas por zombis en persecucion
   for (const r of rects) if (r.kind === 'barr' && r.hp <= 0) destroyBarricade(r);
@@ -1140,19 +1274,20 @@ function facilityUpdate(dt) {
       if (holding && ia.type === 'gen') {
         if (!o.started) { o.started = true; toast('EL GENERADOR HACE RUIDO'); ambush(3, 'walker', o.pos.x, o.pos.y); }
         o.prog += dt; o.nT = (o.nT || 0) - dt; if (o.nT <= 0) { o.nT = 0.8; makeNoise(o.pos.x, o.pos.y, 420, '#ffb020'); }
-        if (o.prog >= o.sec) { M.power = true; toast('ENERGIA RESTAURADA'); Sfx.clear(); advance(); }
+        if (o.prog >= o.sec) { toast('GENERADOR ENCENDIDO: REPARA EL PANEL'); Sfx.clear(); advance(); }
       } else o.prog = Math.max(0, o.prog - dt * 0.5);
     } else if (o.t === 'collect') {
       for (const it of o.items) if (!it.got && dist(it, player) < 48) {
         it.got = true; o.got++; Sfx.card(); addShake(0.2); burst(it.x, it.y, 14, LOCKCOL[it.card] || '#ffd24a', 220, 0.5, 2.5);
         if (it.card) { player.cards[it.card] = true; toast('TARJETA ' + (it.card === 'green' ? 'VERDE' : 'AZUL') + ' OBTENIDA'); }
+        if (it.note) { M.noteSeen = true; M.noteToast = true; toast('CODIGO DEL REACTOR: ' + M.code); }
       }
       if (o.got >= o.items.length) advance();
     } else if (o.t === 'hold') {
       if (dist(o.pos, player) < 130) {
         if (!o.started) { o.started = true; toast('NO TE ALEJES DE LA ZONA'); Sfx.siren(); addShake(0.4); ambush(5, 'runner', o.pos.x, o.pos.y); }
         o.prog += dt; if (o.prog - o.lastAmb > 6) { o.lastAmb = o.prog; ambush(3, undefined, o.pos.x, o.pos.y); }
-        if (o.prog >= o.sec) { if (o.onDone === 'power2') { M.power2 = true; toast('ENERGIA RESTAURADA: PUERTA DEL REACTOR'); } advance(); }
+        if (o.prog >= o.sec) { toast('PLANOS DESCARGADOS'); advance(); }
       } else o.prog = Math.max(0, o.prog - dt * 0.5);
     } else if (o.t === 'reach') {
       if (dist(o.pos, player) < 110) {
@@ -1592,7 +1727,7 @@ function update(dt, now) {
     player.x = clamp(player.x, player.r, WORLD.w - player.r); player.y = clamp(player.y, player.r, WORLD.h - player.r);
   }
   if (player.tower) { // sube por la escalera hasta la plataforma
-    const r = player.tower; r.cl = Math.min(1, (r.cl || 0) + dt * 2.2); const e = 1 - Math.pow(1 - r.cl, 2), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+    const r = player.tower; r.cl = Math.min(1, (r.cl || 0) + dt * 4); const e = 1 - Math.pow(1 - r.cl, 2), cx = r.x + r.w / 2, cy = r.y + r.h / 2;
     player.x = player.tfx + (cx - player.tfx) * e; player.y = player.tfy + (cy - player.tfy) * e; player.vx = player.vy = 0;
   }
   if (player.driving && vehicle) driveUpdate(dt);
@@ -1844,6 +1979,21 @@ function update(dt, now) {
   for (const f of floaters) { f.y += f.vy * dt; f.vy *= Math.max(0, 1 - 3 * dt); f.life -= dt; }
   floaters = floaters.filter(f => f.life > 0);
 
+  // pasos del jugador (uno por medio ciclo de la caminata) y de los zombis cercanos
+  if (G) {
+    const stp = Math.floor(player.ph / Math.PI), spdP = Math.hypot(player.vx, player.vy);
+    if (stp !== player.lastStep) { player.lastStep = stp; if (spdP > 40 && !player.driving && !player.tower) Sfx.step(player.sprinting, 0, zoneAt(player.x, player.y)); }
+    let n = 0;
+    for (const z of zombies) {
+      if (n >= 3) break;
+      const sp = Math.floor(z.ph / Math.PI); if (sp === z.lastStep) continue; z.lastStep = sp;
+      const dd = Math.hypot(z.x - player.x, z.y - player.y); if (dd > 650 || z.st === 'idle' && Math.random() < 0.6) continue;
+      Sfx.zstep(dd, clamp((z.x - player.x) / 500, -1, 1), z.type === 'tank' || z.boss); n++;
+    }
+    ambT -= dt; if (ambT <= 0) { ambT = rand(6, 13); Sfx.ambient(); }
+    let chase = 0; for (const z of zombies) if (z.st === 'chase') chase++;
+    Sfx.setMood(clamp(chase / 8, 0, 1), zombies.some(z => z.boss));
+  }
   // audio ambiente
   Sfx.setIntensity(clamp((aggroCount + spawnQueue.length) / 25, 0, 1));
   groanT -= dt;
@@ -1926,21 +2076,27 @@ function drawPuppet(o) {
   let lx = o.mx * ca + o.my * sa, ly = -o.mx * sa + o.my * ca; if (flip) ly = -ly;
   const ml = Math.hypot(lx, ly) || 1, dx = lx / ml, dy = ly / ml, sw = Math.sin(o.ph), sw2 = Math.sin(o.ph + Math.PI);
   ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.ang); if (flip) ctx.scale(1, -1);
-  // --- piernas: avanzan en la direccion en que caminas, mas largas y rapidas al correr
-  const stride = (5.5 + 11 * run) * ls * mov, hipY = P.hip * W;
-  const feet = [];
-  for (const sd of [-1, 1]) {
-    const k = sd < 0 ? sw : sw2, hx = -0.03 * W, hy = sd * hipY, fx = -0.02 * W + dx * stride * k + 2 * ls, fy = sd * (hipY + 0.34 * W) + dy * stride * k, lift = Math.max(0, -Math.cos(o.ph + (sd < 0 ? 0 : Math.PI))) * mov;
-    limb(hx, hy, fx, fy, 6.6 * ls * fat, pal.pants);
-    feet.push([fx, fy, lift]);
-  }
-  for (const [fx, fy, lift] of feet) {
-    const sz = (1.3 + 0.25 * lift) * ls, rot = mov > 0.1 ? Math.atan2(dy, dx) : 0;
-    ctx.save(); ctx.translate(fx, fy); ctx.rotate(rot);
-    ctx.fillStyle = '#1a1226'; ctx.beginPath(); ctx.ellipse(0, 0, 7.4 * sz * fat, 5 * sz * (0.8 + 0.2 * fat), 0, 0, 7); ctx.fill();
-    ctx.fillStyle = pal.sole; ctx.beginPath(); ctx.ellipse(0, 0.4 * sz, 6.2 * sz * fat, 4 * sz * (0.8 + 0.2 * fat), 0, 0, 7); ctx.fill();
-    ctx.fillStyle = pal.shoe; ctx.beginPath(); ctx.ellipse(1 * sz, -0.6 * sz, 5.4 * sz * fat, 3.5 * sz * (0.8 + 0.2 * fat), 0, 0, 7); ctx.fill();
-    ctx.restore();
+  // --- piernas: van detras del torso y los pies asoman por los costados, avanzando/retrocediendo con cada paso
+  {
+    const zs = P.arms === 'reach' || P.arms === 'hold' ? 1.25 : 1;                          // los zombis dan pasos mas largos y arrastrados
+    const stride = (0.13 + 0.1 * run) * W * mov * zs, side0 = (0.47 + 0.05 * (fat - 1)) * W;
+    const feet = [];
+    for (const sd of [-1, 1]) {
+      const ph = o.ph + (sd < 0 ? 0 : Math.PI), k = Math.sin(ph), air = Math.max(0, Math.cos(ph)) * mov;
+      const hx = -0.04 * W, hy = sd * side0 * 0.4, fx = 0.0 * W + dx * stride * k, fy = sd * side0 + dy * stride * k * 0.7;
+      feet.push({ hx, hy, fx, fy, air, sd });
+    }
+    for (const f of feet) limb(f.hx, f.hy, f.fx, f.fy, 0.12 * W * Math.min(1.3, fat), pal.pants);
+    for (const f of feet) {
+      const sz = (1 + 0.25 * f.air) * 0.135 * W, rot = mov > 0.1 ? Math.atan2(dy, dx) * 0.6 : 0.12 * f.sd;
+      ctx.save(); ctx.translate(f.fx, f.fy); ctx.rotate(rot);
+      if (f.air > 0.05) { ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(-0.1 * sz, 0.9 * sz, 1.35 * sz, 0.6 * sz, 0, 0, 7); ctx.fill(); }
+      ctx.fillStyle = '#1a1226'; rrect(-1.25 * sz * Math.min(1.2, fat), -0.9 * sz, 2.5 * sz * Math.min(1.2, fat), 1.8 * sz, 0.85 * sz); ctx.fill();
+      ctx.fillStyle = pal.sole; rrect(-1.1 * sz * Math.min(1.2, fat), -0.76 * sz, 2.2 * sz * Math.min(1.2, fat), 1.52 * sz, 0.7 * sz); ctx.fill();
+      ctx.fillStyle = pal.shoe; rrect(-0.95 * sz * Math.min(1.2, fat), -0.72 * sz, 1.9 * sz * Math.min(1.2, fat), 1.3 * sz, 0.62 * sz); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.3)'; rrect(-0.1 * sz, -0.5 * sz, 0.9 * sz, 0.36 * sz, 0.18 * sz); ctx.fill();
+      ctx.restore();
+    }
   }
   // --- brazos (detras del torso: solo asoma lo que va hacia las manos)
   const shx = P.sh[0] * W + 3.2 * ls * run, shy = P.sh[1] * W * (P.fat > 1.3 ? 1.12 : 1), aw = 5.4 * ls * (fat > 1.3 ? 1.5 : 1);
@@ -2687,9 +2843,40 @@ function drawFacilityGround(tNow) {
   const r0 = Math.max(0, Math.floor(cam.y / CHP)), r1 = Math.min(Math.ceil(GR / CHN) - 1, Math.floor((cam.y + cam.vh) / CHP));
   for (let cy = r0; cy <= r1; cy++) for (let cx = c0; cx <= c1; cx++) ctx.drawImage(getChunk(cx, cy), cx * CHP - CHM, cy * CHP - CHM, CHP + CHM * 2, CHP + CHM * 2);
   drawFloorDeco(tNow, 'dyn', vis);
+  drawZapGrid(tNow);
   for (const r of rects) if (r.belt && vis(r.x, r.y, r.w, r.h)) drawConv(r, tNow);
   for (const d of G.doors) if (vis(d.px - 30, d.py - 30, d.pw + 60, d.ph + 60)) drawFacilityDoor(d);
   for (const r of rects) if (!r.belt && vis(r.x, r.y, r.w, r.h)) drawRectObj(r);
+}
+
+// dentro de la torre solo se ve el canon asomando por la ranura del techo
+function drawTowerBarrel() {
+  const r = player.tower, cx = r.x + r.w / 2, cy = r.y + r.h / 2, a = player.angle, c = Math.cos(a), sn = Math.sin(a);
+  const wc = CART[['w_pistol', 'w_shotgun', 'w_ak', 'w_lmg', 'w_rpg', 'w_sniper'][player.cur]]; if (!wc) return;
+  const half = r.w / 2 + 6, tt = half / Math.max(Math.abs(c), Math.abs(sn), 0.01), ex = cx + c * Math.min(tt, half * 1.45), ey = cy + sn * Math.min(tt, half * 1.45);
+  ctx.save(); ctx.translate(ex, ey); ctx.rotate(a); ctx.fillStyle = '#05070a'; rrect(-14, -9, 28, 18, 5); ctx.fill(); ctx.strokeStyle = '#d6a21e'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();   // ranura
+  ctx.save(); ctx.beginPath(); ctx.rect(cx - 600, cy - 600, 1200, 1200); ctx.rect(r.x - 6, r.y - 6, r.w + 12, r.h + 12); ctx.clip('evenodd');                                              // solo lo que sobresale del techo
+  ctx.translate(cx, cy); ctx.rotate(a); if (c < 0) ctx.scale(1, -1);
+  const im = wc.img, Lw = WEAPONS[player.cur].len * PS * 1.15, h = Lw * im.height / im.width; ctx.drawImage(im, 56 - (player.recoil || 0), -h / 2, Lw, h);
+  ctx.restore();
+}
+
+function drawZapGrid(t) {
+  const z = G.zap; if (!vis(z.x, z.y, z.w, z.h)) return;
+  ctx.save(); ctx.beginPath(); ctx.rect(z.x, z.y, z.w, z.h); ctx.clip();
+  ctx.fillStyle = z.on ? 'rgba(20,60,110,.55)' : 'rgba(10,14,22,.45)'; ctx.fillRect(z.x, z.y, z.w, z.h);
+  ctx.strokeStyle = z.on ? '#7be0ff' : '#d6a21e'; ctx.lineWidth = 3; ctx.globalAlpha = z.on ? 0.9 : 0.55;
+  for (let x = z.x + 20; x < z.x + z.w; x += 40) { ctx.beginPath(); ctx.moveTo(x, z.y); ctx.lineTo(x, z.y + z.h); ctx.stroke(); }
+  for (let y = z.y + 20; y < z.y + z.h; y += 40) { ctx.beginPath(); ctx.moveTo(z.x, y); ctx.lineTo(z.x + z.w, y); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+  if (z.on) {
+    ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#e6fbff'; ctx.lineWidth = 2;
+    for (let i = 0; i < 26; i++) { let x = z.x + Math.random() * z.w, y = z.y + Math.random() * z.h; ctx.beginPath(); ctx.moveTo(x, y); for (let k = 0; k < 4; k++) { x += rand(-26, 26); y += rand(-18, 18); ctx.lineTo(x, y); } ctx.stroke(); }
+    glow(z.x + z.w / 2, z.y + z.h / 2, z.w * 0.55, '#5fc8ff', 0.2);
+  }
+  ctx.restore();
+  ctx.strokeStyle = z.on ? '#7be0ff' : '#d6a21e'; ctx.lineWidth = 5; ctx.setLineDash([22, 16]); ctx.strokeRect(z.x, z.y, z.w, z.h); ctx.setLineDash([]);
+  if (!z.on) { ctx.fillStyle = 'rgba(255,214,90,.8)'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(z.cd > 0 ? 'REJILLA RECARGANDO' : 'ZONA DE TRAMPA: REJILLA ELECTRICA', z.x + z.w / 2, z.y - 8); }
 }
 
 function drawConv(r, t) {
@@ -2768,23 +2955,28 @@ function drawFacilityObj(r, tNow) {
     glow(cx, cy, r.w * 1.4, '#ff3a6a', 0.5 * pu); ctx.restore();
     ctx.fillStyle = '#ffd0dc'; ctx.beginPath(); ctx.arc(cx, cy, r.w * 0.14, 0, 7); ctx.fill();
   } else if (k === 'tower') {
-    const cl = r.cl || 0, occ = player && player.tower === r, lift = 22, py = r.y - lift, pulse = 0.6 + Math.sin(tNow * 3 + r.seed * 9) * 0.3;
-    ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.moveTo(r.x + 10, r.y + r.h); ctx.lineTo(r.x + r.w + 10, r.y + r.h); ctx.lineTo(r.x + r.w + 46, r.y + r.h + 40); ctx.lineTo(r.x + 46, r.y + r.h + 40); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(r.x + 10, r.y + 10, r.w + 18, r.h + 14);
-    // patas y travesanos
-    ctx.strokeStyle = '#d6a21e'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(r.x + 6, r.y + 6); ctx.lineTo(r.x + r.w - 6, r.y + r.h - 6); ctx.moveTo(r.x + r.w - 6, r.y + 6); ctx.lineTo(r.x + 6, r.y + r.h - 6); ctx.stroke();
-    for (const [qx, qy] of [[0, 0], [r.w - 12, 0], [0, r.h - 12], [r.w - 12, r.h - 12]]) { ctx.fillStyle = '#2a2f36'; ctx.fillRect(r.x + qx, r.y + qy, 12, 12); ctx.fillStyle = '#5b636e'; ctx.fillRect(r.x + qx, r.y + qy, 12, 4); }
-    // escalera hacia el suelo (cara sur)
-    ctx.strokeStyle = '#8a929c'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx - 13, r.y + r.h + 24); ctx.lineTo(cx - 13, py + r.h); ctx.moveTo(cx + 13, r.y + r.h + 24); ctx.lineTo(cx + 13, py + r.h); ctx.stroke();
-    ctx.lineWidth = 3; for (let yy = r.y + r.h + 20; yy > py + r.h + 4; yy -= 11) { ctx.beginPath(); ctx.moveTo(cx - 13, yy); ctx.lineTo(cx + 13, yy); ctx.stroke(); }
-    // plataforma elevada con barandas
-    ctx.fillStyle = '#50575f'; ctx.fillRect(r.x - 5, py - 5, r.w + 10, r.h + 10); ctx.fillStyle = '#6b6350'; ctx.fillRect(r.x, py, r.w, r.h);
-    ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 2; for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(r.x, py + i * r.h / 5); ctx.lineTo(r.x + r.w, py + i * r.h / 5); ctx.stroke(); }
-    ctx.strokeStyle = '#e0b42a'; ctx.lineWidth = 6; ctx.strokeRect(r.x - 3, py - 3, r.w + 6, r.h + 6); ctx.strokeStyle = '#1b1f24'; ctx.lineWidth = 2; ctx.strokeRect(r.x - 6, py - 6, r.w + 12, r.h + 12);
-    ctx.fillStyle = '#8a7348'; for (let i = 0; i < 4; i++) { rrect(r.x + 4 + i * (r.w - 8) / 4, py + 3, (r.w - 8) / 4 - 3, 12, 4); ctx.fill(); }
-    ctx.fillStyle = '#1b2026'; rrect(cx - 26, py + r.h - 16, 52, 15, 4); ctx.fill(); ctx.fillStyle = occ ? '#3bff7a' : '#9fe9ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('TORRE', cx, py + r.h - 5);
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, py + r.h / 2, r.w * 1.3, occ ? '#3bff7a' : '#2ad4ff', (occ ? 0.3 : 0.2) * pulse + 0.08); ctx.restore();
-    if (!occ) { ctx.fillStyle = '#9fe9ff'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('E: SUBIR', cx, r.y + r.h + 40); }
+    const occ = player && player.tower === r, pulse = 0.6 + Math.sin(tNow * 3 + r.seed * 9) * 0.3, wh = 34;
+    ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.fillRect(r.x + 12, r.y + 14, r.w + 8, r.h + wh);
+    // muro sur con puerta (se ve desde arriba por la perspectiva)
+    ctx.fillStyle = '#3a414b'; ctx.fillRect(r.x, r.y + r.h - 8, r.w, wh + 8);
+    ctx.fillStyle = '#4a525e'; for (let i = 0; i < 4; i++) ctx.fillRect(r.x + 6 + i * (r.w - 12) / 4, r.y + r.h, (r.w - 12) / 4 - 4, wh - 4);
+    ctx.fillStyle = '#161a20'; rrect(cx - 15, r.y + r.h + 3, 30, wh - 2, 4); ctx.fill(); ctx.strokeStyle = occ ? '#3bff7a' : '#ffd24a'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.fillStyle = occ ? '#3bff7a' : '#ffd24a'; ctx.fillRect(cx - 4, r.y + r.h + 12, 8, 4);
+    ctx.strokeStyle = '#0b0d10'; ctx.lineWidth = 3; ctx.strokeRect(r.x, r.y + r.h - 8, r.w, wh + 8);
+    // techo
+    const g = ctx.createLinearGradient(r.x, r.y, r.x + r.w, r.y + r.h); g.addColorStop(0, '#6a7482'); g.addColorStop(1, '#434b57');
+    ctx.fillStyle = g; rrect(r.x - 6, r.y - 6, r.w + 12, r.h + 12, 12); ctx.fill(); ctx.strokeStyle = '#0b0d10'; ctx.lineWidth = 3.5; ctx.stroke();
+    ctx.fillStyle = '#58606c'; rrect(r.x + 8, r.y + 8, r.w - 16, r.h - 16, 8); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,.1)'; for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(r.x + 8, r.y + 8 + i * (r.h - 16) / 4); ctx.lineTo(r.x + r.w - 8, r.y + 8 + i * (r.h - 16) / 4); ctx.stroke(); }
+    for (const [qx, qy] of [[14, 14], [r.w - 14, 14], [14, r.h - 14], [r.w - 14, r.h - 14]]) { ctx.fillStyle = '#20252b'; ctx.beginPath(); ctx.arc(r.x + qx, r.y + qy, 5, 0, 7); ctx.fill(); ctx.fillStyle = occ ? '#3bff7a' : '#ffd24a'; ctx.beginPath(); ctx.arc(r.x + qx, r.y + qy, 2.4, 0, 7); ctx.fill(); }
+    // borde amarillo y negro
+    ctx.save(); ctx.beginPath(); ctx.rect(r.x - 6, r.y - 6, r.w + 12, 7); ctx.rect(r.x - 6, r.y + r.h - 1, r.w + 12, 7); ctx.clip(); ctx.fillStyle = '#d6a21e'; ctx.fillRect(r.x - 6, r.y - 6, r.w + 12, r.h + 12); ctx.strokeStyle = '#17181a'; ctx.lineWidth = 6; for (let k2 = -20; k2 < r.w + 30; k2 += 18) { ctx.beginPath(); ctx.moveTo(r.x + k2, r.y + r.h + 8); ctx.lineTo(r.x + k2 + 12, r.y - 8); ctx.stroke(); } ctx.restore();
+    // antena y reflector que gira
+    ctx.strokeStyle = '#9aa3ae'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(r.x + r.w - 22, r.y + 22); ctx.lineTo(r.x + r.w - 22, r.y - 6); ctx.stroke(); ctx.fillStyle = '#ff4d4d'; ctx.beginPath(); ctx.arc(r.x + r.w - 22, r.y - 6, 3.5, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(r.x + 30, r.y + 30); ctx.rotate(tNow * (occ ? 3 : 1.2)); ctx.fillStyle = '#2b3139'; ctx.beginPath(); ctx.arc(0, 0, 11, 0, 7); ctx.fill(); ctx.fillStyle = occ ? '#3bff7a' : '#ffe27a'; ctx.fillRect(0, -4, 14, 8); ctx.restore();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, r.w * 1.2, occ ? '#3bff7a' : '#2ad4ff', (occ ? 0.26 : 0.16) * pulse + 0.05); ctx.restore();
+    ctx.fillStyle = '#0b0d10'; rrect(cx - 30, cy - 9, 60, 18, 5); ctx.fill(); ctx.fillStyle = occ ? '#3bff7a' : '#9fe9ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(occ ? 'TORRE (ADENTRO)' : 'TORRE', cx, cy + 4);
+    if (!occ) { ctx.fillStyle = '#ffe27a'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('E: ENTRAR', cx, r.y + r.h + wh + 12); }
   } else if (k === 'supply') {
     sh(); rrect(r.x, r.y, r.w, r.h, 6); ctx.fillStyle = r.open ? '#2b3b22' : '#47642f'; ctx.fill(); ctx.strokeStyle = '#141c0f'; ctx.lineWidth = 3; ctx.stroke();
     ctx.fillStyle = '#d6b53a'; ctx.fillRect(r.x + r.w * 0.2, r.y + 2, 8, r.h - 4); ctx.fillRect(r.x + r.w * 0.8 - 8, r.y + 2, 8, r.h - 4);
@@ -2794,6 +2986,18 @@ function drawFacilityObj(r, tNow) {
     const lit = G.lit[r.zn]; ctx.fillStyle = '#1b2026'; ctx.fillRect(r.x, r.y, r.w, r.h); ctx.strokeStyle = '#0a0c0f'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
     ctx.fillStyle = lit ? '#3bff7a' : '#ff4d4d'; ctx.fillRect(r.x + 5, r.y + 5, 10, r.h - 10); ctx.fillStyle = '#c8d0d8'; ctx.fillRect(r.x + r.w - 20, lit ? r.y + 4 : r.y + r.h - 12, 12, 8);
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, 70, lit ? '#3bff7a' : '#ff4d4d', 0.28); ctx.restore();
+  } else if (k === 'taskpt') {
+    const mo = mission && mission.objs[mission.cur], act = mo && mo.t === 'task' && mo.kind === r.tk, pu = 0.6 + Math.sin(tNow * 4) * 0.3;
+    sh(); rrect(r.x, r.y, r.w, r.h, 7); ctx.fillStyle = '#23293a'; ctx.fill(); ctx.strokeStyle = '#0a0d16'; ctx.lineWidth = 3; ctx.stroke();
+    const col = act ? '#7be0ff' : '#4a5a7a';
+    if (r.tk === 'wires') { for (let i = 0; i < 4; i++) { ctx.fillStyle = WCOL[i]; ctx.fillRect(r.x + 8 + i * (r.w - 16) / 4, r.y + 8, (r.w - 16) / 4 - 4, r.h - 16); } }
+    else if (r.tk === 'breakers') { for (let i = 0; i < 6; i++) { ctx.fillStyle = '#0b0e18'; ctx.fillRect(r.x + 6 + i * (r.w - 12) / 6, r.y + 6, (r.w - 12) / 6 - 3, r.h - 12); ctx.fillStyle = act ? '#ffd24a' : '#6a7a9a'; ctx.fillRect(r.x + 9 + i * (r.w - 12) / 6, r.y + 8 + (i % 2) * (r.h - 24), (r.w - 12) / 6 - 9, 8); } }
+    else { ctx.fillStyle = '#071018'; ctx.fillRect(r.x + 8, r.y + 8, r.w - 16, r.h * 0.35); ctx.fillStyle = col; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center'; ctx.fillText(act ? '____' : 'LOCK', cx, r.y + 8 + r.h * 0.27); for (let i = 0; i < 6; i++) { ctx.fillStyle = '#3a4a6a'; ctx.fillRect(r.x + 10 + (i % 3) * (r.w - 20) / 3, r.y + r.h * 0.5 + Math.floor(i / 3) * 9, (r.w - 20) / 3 - 4, 6); } }
+    if (act) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, Math.max(r.w, r.h) * 1.2, '#2ad4ff', 0.35 * pu); ctx.restore(); ctx.fillStyle = '#9fe9ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('E: TAREA', cx, r.y - 8); }
+  } else if (k === 'zapsw') {
+    const on = G.zap.on, rd = G.zap.cd <= 0; ctx.fillStyle = '#1b2026'; ctx.fillRect(r.x, r.y, r.w, r.h); ctx.strokeStyle = '#0a0c0f'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
+    ctx.fillStyle = on ? '#7be0ff' : rd ? '#ffd24a' : '#ff4d4d'; ctx.fillRect(r.x + 5, r.y + 5, r.w - 10, r.h - 10); ctx.fillStyle = '#10141a'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('\u26A1', cx, cy + 4);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(cx, cy, 80, on ? '#7be0ff' : rd ? '#ffd24a' : '#ff4d4d', 0.3); ctx.restore();
   } else if (k === 'buildpt') {
     ctx.save(); ctx.strokeStyle = 'rgba(255,210,74,.75)'; ctx.setLineDash([12, 9]); ctx.lineWidth = 3; ctx.strokeRect(r.x + 4, r.y + 4, r.w - 8, r.h - 8); ctx.setLineDash([]);
     ctx.fillStyle = 'rgba(255,210,74,.10)'; ctx.fillRect(r.x + 4, r.y + 4, r.w - 8, r.h - 8);
@@ -2905,7 +3109,7 @@ function drawFacilityMarkers(tNow) {
   if (o.t === 'collect') {
     for (const it of o.items) if (!it.got) { const c = LOCKCOL[it.card] || '#ffd24a'; glow(it.x, it.y, 90, c, 0.55 * pulse); ctx.strokeStyle = c; ctx.lineWidth = 3; ctx.globalAlpha = 0.5 + pulse * 0.4; ctx.beginPath(); ctx.arc(it.x, it.y, 34 + pulse * 6, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
   } else if (o.pos) {
-    const c = o.t === 'escape' ? '#3bff7a' : o.t === 'gen' ? '#ffb020' : '#ffd24a', R = o.t === 'hold' ? 130 : 100;
+    const c = o.t === 'escape' ? '#3bff7a' : o.t === 'gen' ? '#ffb020' : o.t === 'task' ? '#7be0ff' : '#ffd24a', R = o.t === 'hold' ? 130 : 100;
     ctx.strokeStyle = c; ctx.lineWidth = 4; ctx.globalAlpha = 0.4 + pulse * 0.5; ctx.beginPath(); ctx.arc(o.pos.x, o.pos.y, R, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(o.pos.x, o.pos.y, R * 0.9, c, 0.2);
     const pr = o.t === 'hold' || o.t === 'gen' ? o.prog / o.sec : 0;
     if (pr > 0) { ctx.strokeStyle = '#5fe08a'; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(o.pos.x, o.pos.y, R, -Math.PI / 2, -Math.PI / 2 + pr * Math.PI * 2); ctx.stroke(); }
@@ -2914,6 +3118,7 @@ function drawFacilityMarkers(tNow) {
 }
 
 function drawCardMarker(it, t) {
+  if (it.note) { const bob = Math.sin(t * 3) * 4; ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(it.x, it.y, 140, '#fff2a0', 0.5); ctx.restore(); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.beginPath(); ctx.ellipse(it.x + 3, it.y + 16, 20, 7, 0, 0, 7); ctx.fill(); ctx.save(); ctx.translate(it.x, it.y - 4 + bob); ctx.rotate(-0.12); ctx.fillStyle = '#f5ecc0'; rrect(-18, -22, 36, 44, 3); ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.fillStyle = '#6a5a3a'; for (let i = 0; i < 4; i++) ctx.fillRect(-12, -14 + i * 9, 24 - (i % 2) * 8, 3); ctx.restore(); ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#000'; ctx.strokeText('NOTA', it.x, it.y - 40); ctx.fillStyle = '#fff2a0'; ctx.fillText('NOTA', it.x, it.y - 40); return; }
   const c = LOCKCOL[it.card], bob = Math.sin(t * 3 + it.x) * 4, nm = it.card === 'green' ? 'TARJETA VERDE' : 'TARJETA AZUL';
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   glow(it.x, it.y, 150, c, 0.5 + Math.sin(t * 4) * 0.12);
@@ -2934,7 +3139,7 @@ function drawTopMarkers() {
   if (!o || o.t !== 'collect') return;
   ctx.save(); ctx.scale(camZoom, camZoom); ctx.translate(-cam.x, -cam.y);
   const t = performance.now() / 1000;
-  for (const it of o.items) if (!it.got && it.card && vis(it.x - 100, it.y - 100, 200, 200)) drawCardMarker(it, t);
+  for (const it of o.items) if (!it.got && (it.card || it.note) && vis(it.x - 100, it.y - 100, 200, 200)) drawCardMarker(it, t);
   ctx.restore();
 }
 
@@ -3094,7 +3299,8 @@ function draw() {
     const e = 1 - Math.pow(1 - cl, 2), lift = player.tower ? 18 * e : 0;
     const amp = clamp(player.amp * (player.tower ? 0 : 1), 0, 1.2);
     ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(player.x + 2, player.y + 8, 20, 11, 0, 0, 7); ctx.fill();
-    if (drawPuppet({ key:charSel, x:player.x, y:player.y - lift, ang:player.angle, mx:player.vx, my:player.vy, spd:player.tower ? 0 : spd, ph:player.ph, W:70 + 8 * e, weapon:player.cur, recoil:player.recoil, flash:0, red:player.hurtT, lunge:0 })) { /* ok */ }
+    if (player.tower) drawTowerBarrel();
+    else if (drawPuppet({ key:charSel, x:player.x, y:player.y - lift, ang:player.angle, mx:player.vx, my:player.vy, spd:player.tower ? 0 : spd, ph:player.ph, W:70 + 8 * e, weapon:player.cur, recoil:player.recoil, flash:0, red:player.hurtT, lunge:0 })) { /* ok */ }
     else if (CART.player) {
       drawCartoon('player', player.x, player.y - lift, player.angle, 84 + 8 * e, player.ph, amp, 0, player.hurtT, 1);
       drawCartoonWeapon(player.cur, player.x, player.y - lift, player.angle, player.recoil);
@@ -3282,7 +3488,7 @@ function loop(t) {
     else update(raw, t);
   }
   if (state !== 'menu') {
-    const t1 = performance.now(); draw(); const t2 = performance.now(); hud();
+    const t1 = performance.now(); draw(); const t2 = performance.now(); if (state !== 'task') hud();
     if (fxAuto && state === 'playing') { // si el dibujo va lento: primero se apagan los efectos de brillo y luego baja la resolucion
       fxAcc += t2 - t1; fxN++;
       if (fxN >= 60) {
@@ -3302,6 +3508,7 @@ window.addEventListener('keydown', e => {
   if (k === 'x') { el.snd.textContent = Sfx.toggle() ? 'ON' : 'OFF'; return; }
   if (!keys) return;
   keys[k] = true;
+  if (state === 'task') { if (k === 'escape') closeTask(false); return; }
   if (state === 'paused') { if (k === 'p') { state = prePause; lastT = performance.now(); Sfx.music(true); } return; }
   if (k === 'p' && (state === 'playing' || state === 'between')) { prePause = state; state = 'paused'; Sfx.music(false); return; }
   if (state !== 'playing' && state !== 'between') return;
