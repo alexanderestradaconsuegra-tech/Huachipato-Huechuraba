@@ -171,6 +171,16 @@
   @keyframes hglitch { 0%,93%,100% { text-shadow:none; transform:none; } 94% { transform:translate(3px,-1px) skewX(-3deg); } 95% { transform:translate(-4px,1px); } 96% { transform:none; } }
   @media (max-width:900px) { .hhero { grid-template-columns:1fr; min-height:0; } .hlinks { display:none; } .hview,.hplants { grid-template-columns:1fr; } .hart { order:-1; } .hscroll { display:none; } }
   @media (prefers-reduced-motion:reduce) { #hero *, #hero *::before, #hero *::after { animation:none !important; transition:none !important; } .hrev { opacity:1; transform:none; } }
+  /* hero con key art a pantalla completa */
+  #hero .hhero { display:flex; align-items:flex-end; justify-content:flex-start; grid-template-columns:none; margin:-62px auto 0; padding:0 clamp(16px,5vw,70px) clamp(34px,6vh,70px); min-height:max(100vh,640px); max-width:none; position:relative; overflow:hidden; }
+  #hero .hkey { position:absolute; inset:0; z-index:-1; background:url(img/promo/key.webp) 50% 22%/cover no-repeat; animation:hkeyz 22s ease-in-out infinite alternate; }
+  #hero .hhero::after { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(7,4,15,.55) 0%, rgba(7,4,15,0) 22%, rgba(7,4,15,0) 38%, rgba(7,4,15,.82) 72%, #07040f 100%), linear-gradient(90deg, rgba(7,4,15,.5), transparent 45%); }
+  #hero .hcopy { max-width:980px; width:100%; }
+  #hero .htitle { font-size:clamp(40px,5.7vw,88px); line-height:.92; margin-bottom:14px; } #hero .htitle br { display:none; } #hero .htitle span { font-size:.26em; margin-bottom:8px; }
+  #hero .htag { max-width:760px; margin-bottom:18px; } #hero .hsub { display:none; }
+  #hero .hscroll { bottom:12px; }
+  @keyframes hkeyz { from { transform:scale(1) translateX(0); } to { transform:scale(1.07) translateX(-1%); } }
+  @media (max-width:900px) { #hero .htitle br { display:block; } #hero .htitle { font-size:clamp(34px,11.2vw,80px); } #hero .hhero { min-height:max(100vh,720px); } #hero .hkey { background-position:42% 14%; } #hero .hhero::after { background:linear-gradient(180deg, rgba(7,4,15,.5) 0%, rgba(7,4,15,0) 20%, rgba(7,4,15,.25) 36%, rgba(7,4,15,.9) 62%, #07040f 100%); } }
 </style>
 </head>
 <body>
@@ -213,19 +223,14 @@
       <button class="hbtn main sm" data-play="start">Jugar</button>
     </nav>
     <section class="hhero">
+      <div class="hkey"></div>
       <div class="hcopy">
         <span class="hbadge">NUEVO · NIVEL 2: BIOLABORATORIO ARGOS</span>
-        <h1 class="htitle"><span>SHOOTER DE ZOMBIS</span>LOS<br>CONDENADOS</h1>
+        <h1 class="htitle"><span>SHOOTER DE ZOMBIS</span>LOS <br>CONDENADOS</h1>
         <p class="htag">Los ejecutados volvieron de la tumba. Tu eres el ultimo justiciero.</p>
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
         <div class="hcta"><button class="hbtn main" data-play="start">Jugar ahora</button><button class="hbtn alt" data-play="startL2">Nivel 2: Biolab</button></div>
         <ul class="hstats"><li><b>2</b>niveles</li><li><b>3</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
-      </div>
-      <div class="hart">
-        <div class="frame"><img src="img/promo/hero.webp" alt="Los Condenados"></div>
-        <img class="chr" src="img/cartoon/t_f.webp" alt="" style="left:-4%;bottom:-8%;width:23%">
-        <img class="chr" src="img/cartoon/t_boss.webp" alt="" style="right:-5%;top:-9%;width:22%;animation-delay:-1.4s">
-        <img class="chr" src="img/lab/pl_shoot.webp" alt="" style="right:6%;bottom:-10%;width:17%;animation-delay:-2.2s">
       </div>
       <div class="hscroll">DESLIZA</div>
     </section>
