@@ -225,6 +225,13 @@
   @media (prefers-reduced-motion:reduce) { #toast, .ovl button, #msg button, .hbtn { transition:none !important; } #hero .hkey, #hero .hbg { animation:none !important; } }
   .mbtns { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--sp3); margin-top:var(--sp4); } #msg .mbtns button { margin:0; } #msg #start { order:1; } #msg #startL2 { order:2; } #msg #startS { order:3; } #msg #toHero { order:4; }
   @media (max-height:520px) and (orientation:landscape) { #hero .hhero { min-height:100dvh; padding-bottom:20px; } #hero .htitle { font-size:clamp(30px,8vh,52px) !important; margin-bottom:6px; } #hero .htitle br { display:none !important; } #hero .htitle span { font-size:.34em; margin-bottom:2px; } #hero .hbadge { margin-bottom:8px; padding:4px 10px; } #hero .htag { font-size:15px; margin-bottom:10px; } #hero .hcta { margin-bottom:0; } #hero .hopts, #hero .hstats { display:none; } #msg h1 { font-size:34px; } #msg button { min-height:44px; margin-top:8px; } .hud { transform:scale(.85); transform-origin:top left; } }
+  /* paneles del HUD: se pueden minimizar y mover */
+  .pbar { display:flex; align-items:center; justify-content:space-between; gap:var(--sp2); margin:-4px -4px var(--sp2); padding:2px 2px 2px 6px; border-radius:var(--r1); font:800 12px/1 'Arial Black',system-ui,sans-serif; letter-spacing:1.4px; color:var(--c-cyan); cursor:grab; pointer-events:auto; user-select:none; touch-action:none; }
+  .pbar:active { cursor:grabbing; } .pbar:hover { background:rgba(43,232,240,.1); }
+  .pmin { pointer-events:auto; flex:none; width:30px; height:26px; border:0; border-radius:var(--r1); background:rgba(255,255,255,.14); color:#fff; font:800 15px/1 system-ui,sans-serif; cursor:pointer; transition:background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); }
+  .pmin:hover { background:rgba(255,63,180,.55); } .pmin:active { transform:scale(.92); } .pmin:focus-visible { outline:3px solid var(--c-cyan); outline-offset:2px; }
+  .pc > *:not(.pbar):not(.keep) { display:none !important; } .pc { min-width:0 !important; } .pc .pbar { margin-bottom:0; }
+  .hud.pc { width:auto; } .hud .keep { min-width:190px; } .pdrag { transition:none !important; }
 </style>
 </head>
 <body>
@@ -342,7 +349,7 @@
     </section>
     <section class="hsec hrev" id="h-ctl">
       <h2>Controles</h2><p class="hlead">Se juega con teclado y mouse.</p>
-      <div class="hkeys"><div><kbd>WASD</kbd> Moverte</div><div><kbd>MOUSE</kbd> Apuntar y disparar</div><div><kbd>R</kbd> Recargar</div><div><kbd>1-6</kbd> Cambiar arma</div><div><kbd>ESPACIO</kbd> Esquivar</div><div><kbd>SHIFT</kbd> Correr</div><div><kbd>E</kbd> Interactuar</div><div><kbd>G</kbd> Granada</div><div><kbd>T</kbd> Senuelo</div><div><kbd>F</kbd> Cuchillo</div><div><kbd>C</kbd> Sembrar planta</div><div><kbd>V</kbd> Cambiar semilla</div><div><kbd>P</kbd> Pausa</div></div>
+      <div class="hkeys"><div><kbd>TAB</kbd> Ocultar o mostrar paneles</div><div><kbd>WASD</kbd> Moverte</div><div><kbd>MOUSE</kbd> Apuntar y disparar</div><div><kbd>R</kbd> Recargar</div><div><kbd>1-6</kbd> Cambiar arma</div><div><kbd>ESPACIO</kbd> Esquivar</div><div><kbd>SHIFT</kbd> Correr</div><div><kbd>E</kbd> Interactuar</div><div><kbd>G</kbd> Granada</div><div><kbd>T</kbd> Senuelo</div><div><kbd>F</kbd> Cuchillo</div><div><kbd>C</kbd> Sembrar planta</div><div><kbd>V</kbd> Cambiar semilla</div><div><kbd>P</kbd> Pausa</div></div>
     </section>
     <section class="hcta2 hrev"><h2>Listo para sobrevivir?</h2><button class="hbtn main" data-play="start" style="font-size:20px;padding:22px 46px">Jugar ahora</button></section>
     <footer class="hfoot">LOS CONDENADOS · Juego de navegador · Los datos se guardan solo en tu dispositivo</footer>
@@ -4373,7 +4380,7 @@ function hud() {
   if (mode === 'mission' && mission) {
     el.left.textContent = aggroCount;
     const vis = player.hidden ? 'OCULTO' : player.sprinting ? 'ALTA' : Math.hypot(player.vx, player.vy) < 60 ? 'BAJA' : 'MEDIA';
-    el.obj.innerHTML = mission.lab ? labObjHtml() : (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
+    el.objc.innerHTML = mission.lab ? labObjHtml() : (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
     drawMini();
   } else {
     el.left.textContent = zombies.length + spawnQueue.length;
@@ -4406,6 +4413,7 @@ function loop(t) {
 window.addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   if (k === 'x') { el.snd.textContent = Sfx.toggle() ? 'ON' : 'OFF'; return; }
+  if (k === 'tab') { e.preventDefault(); if (!e.repeat) togglePanels(); return; }
   if (!keys) return;
   keys[k] = true;
   if (state === 'task') { if (k === 'escape') closeTask(false); return; }
@@ -4466,6 +4474,36 @@ setDiffLabel();
 el.startD.addEventListener('click', () => { diff = (diff + 1) % 3; try { localStorage.setItem('condenados_diff', diff); } catch (e) {} setDiffLabel(); });
 el.startS.addEventListener('click', () => { Sfx.init(); newGame('survival'); });
 el.startL2.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 2); });
+/* ---- paneles del HUD: minimizar (boton o TAB) y mover (arrastrar la barra) ---- */
+const PAN_KEY = 'condenados_panels'; let panSt = {}; const panEls = [];
+try { panSt = JSON.parse(localStorage.getItem(PAN_KEY)) || {}; } catch (e) {}
+const savePan = () => { try { localStorage.setItem(PAN_KEY, JSON.stringify(panSt)); } catch (e) {} };
+const clampPan = (p, x, y) => { const r = p.getBoundingClientRect(); return [clamp(x, 4, Math.max(4, innerWidth - r.width - 4)), clamp(y, 4, Math.max(4, innerHeight - 28))]; };
+const placePan = (p, x, y) => { [x, y] = clampPan(p, x, y); p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.right = 'auto'; p.style.bottom = 'auto'; p.style.transform = 'none'; };
+const setPanCollapsed = (p, key, c) => { p.classList.toggle('pc', c); const b = p.querySelector('.pmin'); b.textContent = c ? '+' : '–'; b.setAttribute('aria-expanded', String(!c)); b.setAttribute('aria-label', (c ? 'Mostrar panel ' : 'Ocultar panel ') + p.dataset.title); b.title = (c ? 'Mostrar' : 'Ocultar') + ' (TAB: todos)'; (panSt[key] = panSt[key] || {}).c = c; };
+function initPanels() {
+  const mk = (p, key, title, keepFirst) => {
+    p.dataset.title = title; const bar = document.createElement('div'); bar.className = 'pbar';
+    bar.innerHTML = '<span>' + title + '</span><button class="pmin" type="button"></button>'; p.prepend(bar);
+    if (keepFirst) bar.nextElementSibling.classList.add('keep');
+    const st = panSt[key] || {}; setPanCollapsed(p, key, !!st.c); if (st.x !== undefined) placePan(p, st.x, st.y);
+    bar.querySelector('.pmin').addEventListener('click', e => { e.stopPropagation(); setPanCollapsed(p, key, !p.classList.contains('pc')); savePan(); });
+    bar.addEventListener('pointerdown', e => {
+      if (e.target.closest('.pmin') || e.button !== 0) return; e.preventDefault();
+      const r = p.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; bar.setPointerCapture(e.pointerId); p.classList.add('pdrag');
+      const mv = ev => placePan(p, ev.clientX - dx, ev.clientY - dy);
+      const up = () => { bar.removeEventListener('pointermove', mv); bar.removeEventListener('pointerup', up); p.classList.remove('pdrag'); const q = p.getBoundingClientRect(); (panSt[key] = panSt[key] || {}).x = q.left; panSt[key].y = q.top; savePan(); };
+      bar.addEventListener('pointermove', mv); bar.addEventListener('pointerup', up);
+    });
+    bar.addEventListener('dblclick', () => { delete (panSt[key] || {}).x; if (panSt[key]) delete panSt[key].y; p.style.left = p.style.top = p.style.right = p.style.bottom = p.style.transform = ''; savePan(); });
+    panEls.push([p, key]);
+  };
+  const o = $('obj'), oc = document.createElement('div'); oc.id = 'objc'; o.appendChild(oc); el.objc = oc;
+  mk(document.querySelector('.hud:not(.r)'), 'hl', 'ESTADO', true); mk(document.querySelector('.hud.r'), 'hr', 'PARTIDA', false); mk(o, 'ob', 'OBJETIVO', false);
+  addEventListener('resize', () => panEls.forEach(([p, key]) => { const st = panSt[key]; if (st && st.x !== undefined) placePan(p, st.x, st.y); }));
+}
+function togglePanels() { const anyOpen = panEls.some(([p]) => !p.classList.contains('pc')); panEls.forEach(([p, key]) => setPanCollapsed(p, key, anyOpen)); savePan(); }
+initPanels();
 /* ---- pagina principal ---- */
 const hero = $('hero');
 const showHero = () => { Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
