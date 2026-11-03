@@ -217,7 +217,7 @@ const ZTYPES = {
 };
 
 /* ============================== SPRITES ============================== */
-const IMG = {}, VAR = {};
+const IMG = {}, VAR = {}, PAT = {};
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
 const UPRIGHT_W = { walker:5.8, runner:6.4, tank:6.2, spitter:5.6, boss:5.0 };
 function tintCanvas(img, color, alpha) {
@@ -229,6 +229,7 @@ function tintCanvas(img, color, alpha) {
   return c;
 }
 function buildVariants() {
+  for (const k of ['asfalto', 'acera', 'pasto']) if (IMG[k] && !PAT[k]) PAT[k] = ctx.createPattern(IMG[k], 'repeat');
   // sprites propios (vista frontal): reemplazan el tinte y llevan su silueta blanca para el destello
   for (const t of UPRIGHT_TYPES) if (IMG[t]) { VAR[t] = IMG[t]; VAR['w_' + t] = tintCanvas(IMG[t], '#ffffff', 1); }
   if (IMG.boss) VAR.r_boss = tintCanvas(IMG.boss, '#ff2010', 0.55);
@@ -238,7 +239,8 @@ function buildVariants() {
 // ruta base absoluta: con cleanUrls/trailingSlash:false la URL pierde la barra final y las rutas relativas fallan
 const BASE = location.pathname.replace(/[^/]*\.html$/, '').replace(/\/?$/, '/');
 [['player', 'jugador.png'], ['walker', 'zombi.png'], ['runner', 'corredor.png'], ['tank', 'tanque.png'],
-  ['spitter', 'escupidor.png'], ['boss', 'jefe.png'], ['pwalk', 'jugador_walk.png']].forEach(([k, f]) => {
+  ['spitter', 'escupidor.png'], ['boss', 'jefe.png'], ['pwalk', 'jugador_walk.png'],
+  ['asfalto', 'suelo_asfalto.jpg'], ['acera', 'suelo_acera.jpg'], ['pasto', 'suelo_pasto.jpg'], ['techo', 'techo.jpg'], ['fachada', 'fachada.jpg']].forEach(([k, f]) => {
   const src = BASE + 'img/' + f;
   const im = new Image();
   im.onload = () => { IMG[k] = im; buildVariants(); };
@@ -1048,17 +1050,45 @@ function drawZombie(z) {
 
 function vis(x, y, w, h) { return x < cam.x + W + 40 && x + w > cam.x - 40 && y < cam.y + H + 40 && y + h > cam.y - 40; }
 
+const WALL = 54; // alto visible de la pared sur de los edificios (incluido en el rectangulo de colision)
+const frac = v => v - Math.floor(v);
+
+function drawBuilding(r) {
+  const rh = r.h - WALL, fy = r.y + rh;
+  ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(r.x + 14, r.y + 18, r.w, r.h);
+  if (!IMG.techo || !IMG.fachada) { // respaldo sin texturas
+    ctx.fillStyle = '#2d3237'; ctx.fillRect(r.x, r.y, r.w, r.h);
+    ctx.strokeStyle = '#0d0f10'; ctx.lineWidth = 3; ctx.strokeRect(r.x, r.y, r.w, r.h);
+    return;
+  }
+  // pared sur: franja de fachada que se repite en espejo (sin costuras)
+  const fac = IMG.fachada, srcH = fac.height * 0.30, srcY = fac.height * 0.2, k = WALL / srcH, tw = fac.width * k;
+  ctx.save(); ctx.beginPath(); ctx.rect(r.x, fy, r.w, WALL); ctx.clip();
+  let i = 0;
+  for (let x = r.x - frac(r.seed * 977) * tw * 2; x < r.x + r.w; x += tw, i++) {
+    ctx.save(); ctx.translate(i % 2 ? x + tw : x, fy);
+    if (i % 2) ctx.scale(-1, 1);
+    ctx.drawImage(fac, 0, srcY, fac.width, srcH, 0, 0, tw, WALL);
+    ctx.restore();
+  }
+  const g = ctx.createLinearGradient(0, fy, 0, fy + WALL);
+  g.addColorStop(0, 'rgba(0,0,0,.05)'); g.addColorStop(1, 'rgba(0,0,0,.55)');
+  ctx.fillStyle = g; ctx.fillRect(r.x, fy, r.w, WALL);
+  ctx.restore();
+  // techo: recorte distinto de la textura para cada edificio
+  const roof = IMG.techo, m = Math.floor(roof.width * 0.07), avail = roof.width - 2 * m;
+  const sc = Math.min(2.5, avail / Math.max(r.w, rh)), sw = r.w * sc, sh = rh * sc;
+  ctx.drawImage(roof, m + frac(r.seed * 1.7) * (avail - sw), m + frac(r.seed * 3.1) * (avail - sh), sw, sh, r.x, r.y, r.w, rh);
+  // parapeto y bordes
+  ctx.lineWidth = 8; ctx.strokeStyle = '#4b473f'; ctx.strokeRect(r.x + 4, r.y + 4, r.w - 8, rh - 8);
+  ctx.lineWidth = 2; ctx.strokeStyle = '#8a8478'; ctx.strokeRect(r.x + 1, r.y + 1, r.w - 2, rh - 2);
+  ctx.strokeStyle = '#14120f'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(r.x, fy); ctx.lineTo(r.x + r.w, fy); ctx.stroke();
+  ctx.strokeStyle = '#0b0a09'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
+}
+
 function drawRectObj(r) {
   if (r.kind === 'b') {
-    ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(r.x + 12, r.y + 16, r.w, r.h);
-    ctx.fillStyle = '#23272b'; ctx.fillRect(r.x, r.y, r.w, r.h);
-    ctx.fillStyle = '#2d3237'; ctx.fillRect(r.x + 8, r.y + 8, r.w - 16, r.h - 16);
-    ctx.strokeStyle = '#0d0f10'; ctx.lineWidth = 3; ctx.strokeRect(r.x, r.y, r.w, r.h);
-    ctx.fillStyle = 'rgba(255,235,160,.10)';
-    for (let x = r.x + 22; x < r.x + r.w - 30; x += 46) for (let y = r.y + 22; y < r.y + r.h - 30; y += 40) ctx.fillRect(x, y, 20, 14);
-    ctx.fillStyle = '#3b4146';
-    const n = 2 + Math.floor(r.seed * 3);
-    for (let i = 0; i < n; i++) ctx.fillRect(r.x + 30 + ((r.seed * 997 * (i + 1)) % Math.max(10, r.w - 90)), r.y + 30 + ((r.seed * 577 * (i + 2)) % Math.max(10, r.h - 90)), 36, 28);
+    drawBuilding(r);
   } else if (r.kind === 'car') {
     ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(r.x + 5, r.y + 7, r.w, r.h);
     ctx.fillStyle = r.col; ctx.fillRect(r.x, r.y, r.w, r.h);
@@ -1076,14 +1106,21 @@ function drawRectObj(r) {
 
 function drawGround() {
   if (mode === 'mission' && mission) {
-    const m = mission.map;
-    ctx.fillStyle = '#111417'; ctx.fillRect(0, 0, WORLD.w, WORLD.h);
+    const m = mission.map, X = cam.x - 80, Y = cam.y - 80, VW = W + 160, VH = H + 160;
+    // calles de asfalto
+    ctx.fillStyle = PAT.asfalto || '#111417'; ctx.fillRect(X, Y, VW, VH);
     for (const b of m.blocks) {
       if (!vis(b.x, b.y, b.w, b.h)) continue;
-      ctx.fillStyle = '#1a1d19'; ctx.fillRect(b.x, b.y, b.w, b.h);
-      ctx.strokeStyle = '#272b25'; ctx.lineWidth = 4; ctx.strokeRect(b.x + 2, b.y + 2, b.w - 4, b.h - 4);
+      // manzana: pasto/tierra con acera alrededor
+      ctx.fillStyle = PAT.pasto || '#1a1d19'; ctx.fillRect(b.x, b.y, b.w, b.h);
+      ctx.fillStyle = PAT.acera || '#272b25';
+      const sw = 46;
+      ctx.fillRect(b.x, b.y, b.w, sw); ctx.fillRect(b.x, b.y + b.h - sw, b.w, sw);
+      ctx.fillRect(b.x, b.y, sw, b.h); ctx.fillRect(b.x + b.w - sw, b.y, sw, b.h);
+      ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.lineWidth = 4; ctx.strokeRect(b.x, b.y, b.w, b.h);
+      ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 3; ctx.strokeRect(b.x + sw, b.y + sw, b.w - sw * 2, b.h - sw * 2);
     }
-    ctx.strokeStyle = 'rgba(200,180,80,.22)'; ctx.lineWidth = 3; ctx.setLineDash([42, 52]);
+    ctx.strokeStyle = 'rgba(200,180,80,.28)'; ctx.lineWidth = 3; ctx.setLineDash([42, 52]);
     for (let j = 0; j <= m.rows; j++) { const y = m.road / 2 + j * (m.bh + m.road); if (y > cam.y - 10 && y < cam.y + H + 10) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD.w, y); ctx.stroke(); } }
     for (let i = 0; i <= m.cols; i++) { const x = m.road / 2 + i * (m.bw + m.road); if (x > cam.x - 10 && x < cam.x + W + 10) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD.h); ctx.stroke(); } }
     ctx.setLineDash([]);
@@ -1091,6 +1128,8 @@ function drawGround() {
     ctx.fillStyle = 'rgba(70,130,200,.10)'; ctx.beginPath(); ctx.arc(m.start.x, m.start.y, 150, 0, 7); ctx.fill();
     ctx.fillStyle = 'rgba(160,200,240,.35)'; ctx.font = 'bold 14px monospace'; ctx.textAlign = 'center'; ctx.fillText('REFUGIO', m.start.x, m.start.y + 4);
     for (const r of rects) if (vis(r.x, r.y, r.w, r.h)) drawRectObj(r);
+  } else if (PAT.asfalto) {
+    ctx.fillStyle = PAT.asfalto; ctx.fillRect(cam.x - 80, cam.y - 80, W + 160, H + 160);
   } else {
     ctx.strokeStyle = '#1b2016'; ctx.lineWidth = 1;
     for (let x = 0; x <= WORLD.w; x += 80) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD.h); ctx.stroke(); }
