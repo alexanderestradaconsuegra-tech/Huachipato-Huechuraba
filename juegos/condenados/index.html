@@ -357,7 +357,7 @@
         <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
         <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hShop" type="button">TIENDA · <span id="hCoins">0</span> MONEDAS</button><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
         <p class="hwarn" role="note">En el celular se juega en horizontal: arrastra a la izquierda para moverte. Tu personaje dispara solo a los zombis que te persiguen; toca un zombi para atacarlo y toca un objeto para usarlo.</p>
-        <ul class="hstats"><li><b>3</b>niveles</li><li><b>4</b>personajes</li><li><b>3</b>mascotas</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
+        <ul class="hstats"><li><b>3</b>niveles</li><li><b>9</b>personajes</li><li><b>3</b>mascotas</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
     </section>
@@ -770,8 +770,13 @@ const SKINS = {
   gold:{ n:'Oro', cost:450, d:'Para los mejores', hue:46, pal:{ sleeve:'#d9a31a', cuff:'#fff2a8', pants:'#7a5a10' } } };
 const CHARS = {
   f:{ n:'Nina', cost:0, d:'Equilibrada', t:'t_f' }, m:{ n:'Nino', cost:0, d:'Equilibrado', t:'t_m' },
-  r:{ n:'Robot R-7', cost:900, d:'+30% de vida, un poco mas lento', t:'t_r', hp:1.3, spd:0.94 },
-  k:{ n:'Ninja Neon', cost:900, d:'+12% de velocidad', t:'t_k', spd:1.12 } };
+  a:{ n:'Extraterrestre', cost:1000, d:'+8% velocidad y +10% vida', t:'t_a', spd:1.08, hp:1.1 },
+  l:{ n:'Leon', cost:1100, d:'+25% vida y +8% dano', t:'t_l', hp:1.25, dmg:1.08 },
+  e:{ n:'Ejecutivo', cost:1200, d:'+25% de monedas', t:'t_e', coin:1.25 },
+  c:{ n:'Caballero', cost:1100, d:'+50% de vida, mas lento', t:'t_c', hp:1.5, spd:0.9 },
+  s:{ n:'Esqueleto', cost:800, d:'+15% dano, -15% vida', t:'t_s', hp:0.85, dmg:1.15 },
+  k:{ n:'Ninja Neon', cost:900, d:'+12% de velocidad', t:'t_k', spd:1.12 },
+  r:{ n:'Robot R-7', cost:900, d:'+30% de vida, un poco mas lento', t:'t_r', hp:1.3, spd:0.94 } };
 const WITEMS = {
   w3:{ n:'Ametralladora', cost:600, d:'Empiezas cada nivel con ella', slot:3, spr:'w_lmg' },
   w4:{ n:'Lanzacohetes', cost:900, d:'Empiezas cada nivel con el', slot:4, spr:'w_rpg' },
@@ -800,7 +805,7 @@ try { SAVE = sanitizeSave(JSON.parse(localStorage.getItem(SAVE_KEY))); } catch (
 try { if (!localStorage.getItem(SAVE_KEY) && localStorage.getItem('condenados_char') === 'm') SAVE.eq.char = 'm'; } catch (e) {}
 const saveGame = () => { saveDirty = false; try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch (e) {} };
 setInterval(() => { if (saveDirty) saveGame(); }, 2000); addEventListener('pagehide', saveGame);
-function addCoins(n) { n = Math.floor(n); if (n <= 0) return; SAVE.coins += n; SAVE.earned += n; runCoins += n; saveDirty = true; }
+function addCoins(n) { n = Math.floor(n * ((CHARS[SAVE.eq.char] || {}).coin || 1)); if (n <= 0) return; SAVE.coins += n; SAVE.earned += n; runCoins += n; saveDirty = true; }
 const coinMsg = () => runCoins ? ' Monedas ganadas: ' + runCoins + ' (total ' + SAVE.coins + ').' : '';
 const hasItem = (k, id) => SAVE.own[k].includes(id);
 function dropCoins(z) {
@@ -824,7 +829,7 @@ function applyLoadout(p) {
   p.maxHp = Math.round(100 * (ch.hp || 1)); p.hp = p.maxHp; p.speed = Math.round(275 * (ch.spd || 1));
   let dm = 0, ammo = 1;
   for (const id of SAVE.own.wpn) { const it = WITEMS[id]; if (it.slot) p.has[it.slot] = true; if (it.dmg) dm += it.dmg; if (it.ammo) ammo = Math.max(ammo, it.ammo); }
-  p.dmgMul = 1 + dm;
+  p.dmgMul = (1 + dm) * (ch.dmg || 1);
   if (ammo > 1) for (let i = 0; i < WEAPONS.length; i++) if (isFinite(p.ws[i].reserve)) p.ws[i].reserve = Math.round(p.ws[i].reserve * ammo);
   return p;
 }
@@ -3347,7 +3352,7 @@ const PSTYLE = { skin:'#e2b392', shirt:'#6f7f4c', shirt2:'#4a5736', pants:'#5a46
 
 /* ---- personajes en estilo caricatura (sprites propios, miran a la derecha y se rotan hacia donde apuntan) ---- */
 const CART = {};
-const CART_NAMES = ['t_f', 't_m', 't_r', 't_k', 't_walker', 't_runner', 't_tank', 't_spitter', 't_boss', 'player', 'walker', 'runner', 'tank', 'spitter', 'boss', 'w_pistol', 'w_shotgun', 'w_ak', 'w_lmg', 'w_rpg', 'w_sniper'];
+const CART_NAMES = ['t_f', 't_m', 't_r', 't_k', 't_a', 't_l', 't_e', 't_c', 't_s', 't_walker', 't_runner', 't_tank', 't_spitter', 't_boss', 'player', 'walker', 'runner', 'tank', 'spitter', 'boss', 'w_pistol', 'w_shotgun', 'w_ak', 'w_lmg', 'w_rpg', 'w_sniper'];
 function loadCartoon() {
   for (const n of CART_NAMES) { const im = new Image(); im.onload = () => { CART[n] = { img:im, white:null, red:null }; }; im.src = BASE + 'img/cartoon/' + n + '.webp'; }
 }
@@ -3356,6 +3361,11 @@ const PUPPET = {
   f:      { t:'t_f',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#5f6d2f', cuff:'#ee7a1f', hand:'#f6c8a2', pants:'#6b4a2c', shoe:'#4a352b', sole:'#eadfca' } },
   m:      { t:'t_m',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#2a62c4', cuff:'#ee7a1f', hand:'#f6c8a2', pants:'#2b3a62', shoe:'#f4f4f4', sole:'#d63a3a' } },
   r:      { t:'t_r',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#e8741a', cuff:'#2be8f0', hand:'#cfd8e4', pants:'#4a5a6e', shoe:'#e8741a', sole:'#2be8f0' } },
+  a:      { t:'t_a',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#c9d4e0', cuff:'#2be8f0', hand:'#7bd13a', pants:'#8a96a8', shoe:'#2be8f0', sole:'#e8f0f8' } },
+  l:      { t:'t_l',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#c98a2a', cuff:'#d63a2a', hand:'#e9a63a', pants:'#5a3a1e', shoe:'#3a2412', sole:'#eadfca' } },
+  e:      { t:'t_e',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#1d2f6a', cuff:'#ffffff', hand:'#f6c8a2', pants:'#14224a', shoe:'#101010', sole:'#d63a3a' } },
+  c:      { t:'t_c',       sh:[-0.03, 0.26], hip:0.17, fat:1.1,  pal:{ sleeve:'#9aa4b2', cuff:'#6c7482', hand:'#c8ccd4', pants:'#6c7482', shoe:'#4a4f5a', sole:'#2a2d34' } },
+  s:      { t:'t_s',       sh:[-0.03, 0.26], hip:0.17, fat:0.95, pal:{ sleeve:'#6a2fb8', cuff:'#eeeeee', hand:'#f1ecd8', pants:'#3a2a5a', shoe:'#f1ecd8', sole:'#3a2a5a' } },
   k:      { t:'t_k',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#7a1fb8', cuff:'#ff3fb4', hand:'#e9c2a0', pants:'#2a1a4a', shoe:'#ff3fb4', sole:'#1a1226' } },
   walker: { t:'t_walker',  sh:[-0.02, 0.27], hip:0.18, fat:1,    pal:{ sleeve:'#f08a1e', cuff:'#c45f10', hand:'#8fae7a', pants:'#e57a14', shoe:'#4a2d1c', sole:'#2a1a10' }, arms:'reach', chain:true },
   runner: { t:'t_runner',  sh:[-0.06, 0.24], hip:0.15, fat:0.85, pal:{ sleeve:'#a2b44c', cuff:'#7e8f38', hand:'#a2b44c', pants:'#3a6fc0', shoe:'#dc3a3a', sole:'#f2f2f2' }, arms:'pump' },
