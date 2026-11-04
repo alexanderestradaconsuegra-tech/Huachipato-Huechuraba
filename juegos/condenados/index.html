@@ -387,7 +387,7 @@
       <div class="hgrid">
         <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img loading="lazy" decoding="async" src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
         <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(18,184,160,.3),rgba(125,255,106,.2)),url(img/promo/hub.webp)"><span class="tag">NUEVO</span></div><div class="body"><h3>Nivel 2 · Biolab ARGOS</h3><p>Hub con tres modulos, energia limitada, gas, torretas, guardias y plantas mutantes. Escapa con la muestra.</p><p style="margin-top:14px"><button class="hbtn alt sm" data-play="startL2">Jugar nivel 2</button></p></div></div>
-        <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(138,31,255,.3),rgba(255,63,180,.2)),url(img/promo/bg.webp)"><span class="tag">NUEVO · PARTE 1</span><img src="img/jungle/j_tree.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 3 · La Ciudad Selva</h3><p>5 actos: prepara tus plantas, resiste la emboscada de la radio, enciende el hospital y el puerto, destruye las raices y derrota al Titan Raiz. Escondete en los arbustos cuando pase una oleada.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL3">Jugar nivel 3</button></p></div></div>
+        <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(138,31,255,.3),rgba(255,63,180,.2)),url(img/promo/bg.webp)"><span class="tag">NUEVO · PARTE 1</span><img src="img/jungle/j_tree.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 3 · La Ciudad Selva</h3><p>5 actos: prepara tus plantas, resiste la emboscada de la radio, enciende el hospital y el puerto, destruye las raices, sobrevive al cerco de la noche y derrota al Titan Raiz en 3 fases. Escondete en los arbustos cuando pase una oleada.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL3">Jugar nivel 3</button></p></div></div>
       </div>
     </section>
     <section class="hsec hrev" id="h-ene">
@@ -1566,7 +1566,7 @@ function startJungle(retry = false) {
   WORLD.w = GC * TS; WORLD.h = GR * TS; setMini(180, 150);
   const T0 = v => v * TS;
   mission = { idx:2, facility:true, jungle:true, def:{ name:'LA CIUDAD SELVA', cap:0, patrols:0, mix:ZINFO[1].mix }, map:{ start:{ x:T0(35), y:T0(52) }, exit:{ x:T0(36), y:T0(6) }, lamps:[], decals:[], blocks:[], spots:[] },
-    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, sol:60, s:{ got:0, crafted:false, planted:false, radio:0, radioOn:false, radioDone:false, waves:0, med:0, hospGen:false, portPow:false, portCal:false, bossSpawned:false, bossDead:false }, roots:[], dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
+    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, sol:60, s:{ got:0, crafted:false, planted:false, radio:0, radioOn:false, radioDone:false, waves:0, med:0, hospGen:false, portPow:false, portCal:false, bossSpawned:false, bossDead:false, siege:null, wavesDone:0 }, roots:[], bulbs:[], erupts:[], waveZ:[], dayT:0, nightSpawnT:0, gateOpen:false, endT:0, lastSting:0 };
   const st = mission.map.start;
   player.x = st.x; player.y = st.y; player.cur = keepCur; player.vx = 0; player.vy = 0; player.reloading = 0; player.dashT = 0; player.sample = false;
   player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
@@ -1622,7 +1622,8 @@ function jungleItems() {
     { a:'4. PUERTO', t:'Conecta la energia de la grua (cables)', ok:s.portPow, req:R },
     { a:'', t:'Calibra la grua (secuencia de colores)', ok:P, req:R && s.portPow },
     { a:'5. PLAZA', t:'Destruye las 3 raices (' + (3 - alive) + '/3)', ok:alive === 0 && H && P, req:H && P },
-    { a:'', t:'Derrota al Titan Raiz', ok:!!s.bossDead, req:H && P && alive === 0 }];
+    { a:'', t:s.siege && s.siege.state === 'prep' ? 'Cerco de la noche: oleada ' + (s.siege.i + 1) + '/4 en ' + Math.ceil(s.siege.t) + ' s (siembra ya)' : s.siege && s.siege.state === 'wave' ? 'Cerco de la noche: oleada ' + (s.siege.i + 1) + '/4, quedan ' + (s.siege.left || 0) + ' zombis' : 'Sobrevive al cerco de la noche (' + s.wavesDone + '/4 oleadas)', ok:s.wavesDone >= 4, req:H && P && alive === 0 },
+    { a:'', t:'Derrota al Titan Raiz' + (M.bossPh ? ' (fase ' + M.bossPh + '/3' + (M.bulbs.some(z => z.hp > 0) ? ': destruye los bulbos' : '') + ')' : ''), ok:!!s.bossDead, req:s.wavesDone >= 4 }];
 }
 function jungleCands() { const it = jungleItems(); const c = it.map((q, i) => ({ q, i })).filter(o => !o.q.ok && o.q.req); return c.filter((o, k) => o.i >= 4 || k === 0); }
 function jungleClock() { const left = Math.max(0, DAY_LEN - mission.dayT); return Math.floor(left / 60) + ':' + String(Math.floor(left % 60)).padStart(2, '0'); }
@@ -1631,7 +1632,7 @@ function jungleObjHtml() {
   const groups = []; let g = null; for (const q of it) { if (q.a) { g = { name:q.a, items:[] }; groups.push(g); } g.items.push(q); }
   const rows = groups.map(g => g.items.every(q => q.ok) ? '<span class="mod ok">[x] ' + g.name + '</span>' : g.items.some(q => q.req) ? '<span class="mod no"><b style="color:#ffe14a">' + g.name + '</b></span>' + g.items.filter(q => q.req || q.ok).map(q => '<span class="mod ' + (q.ok ? 'ok' : 'no') + '">' + (q.ok ? '[x] ' : '[ ] ') + q.t + '</span>').join('') : '').join('');
   return 'NIVEL 3 - ' + z + '<br>' + rows + '<b>' + (c.length ? 'AHORA: ' + c.map(o => o.q.t).join('  |  ') : 'Nivel completado') + '</b><br><span style="opacity:.85">'
-    + (M.hordeOn ? '<b style="color:#ff6a7a">OLEADA EN CAMINO: ESCONDETE EN UN ARBUSTO (quieto) HASTA QUE PASE</b> | ' : '') + (M.dayT >= DAY_LEN ? '<b style="color:#ff6a7a">NOCHE</b>' : (M.dayT >= DAY_LEN * 0.75 ? '<b style="color:#ffb347">ANOCHECE</b> ' : 'Dia ') + jungleClock()) + ' | Alertas ' + M.alerts
+    + (M.hordeOn ? '<b style="color:#ff6a7a">OLEADA EN CAMINO: ESCONDETE EN UN ARBUSTO (quieto) HASTA QUE PASE</b> | ' : '') + (M.s.siege || M.dayT >= DAY_LEN ? '<b style="color:#ff6a7a">NOCHE</b>' : (M.dayT >= DAY_LEN * 0.75 ? '<b style="color:#ffb347">ANOCHECE</b> ' : 'Dia ') + jungleClock()) + ' | Alertas ' + M.alerts
     + '</span><br><span style="opacity:.9"><b style="color:#ffe14a">SOL ' + Math.floor(M.sol) + '/200</b> (siembra cuesta sol; el girasol da mas)</span><br><span style="opacity:.8">Ingredientes: ' + M.ing.spore + ' esporas, ' + M.ing.sap + ' savia, ' + M.ing.core + ' nucleos</span>';
 }
 function jungleTargets() {
@@ -1645,7 +1646,8 @@ function jungleTargets() {
     else if (i === 5) atR(rects.find(r => r.jtask === 'hosp'), '#ff7ad0');
     else if (i === 6 || i === 7) atR(rects.find(r => r.jtask === 'port'), '#2be8f0');
     else if (i === 8) { for (const z of M.roots) if (z.hp > 0) add(z.x, z.y, '#b6ff3a'); }
-    else if (i === 9 && M.boss) add(M.boss.x, M.boss.y, '#ff3a4a');
+    else if (i === 9) { const tr = rects.find(r => r.tree); if (tr && M.s.siege && M.s.siege.state === 'prep') { const c = centerOf(tr); add(c.x, c.y + 220, '#ffb347'); } }
+    else if (i === 10 && M.boss) { const bl = M.bulbs.filter(z => z.hp > 0); if (bl.length) for (const z of bl) add(z.x, z.y, '#ff3fb4'); else add(M.boss.x, M.boss.y, '#ff3a4a'); }
   }
   return out;
 }
@@ -1685,11 +1687,54 @@ function spawnAmbush(w) {
   }
   toast('EMBOSCADA ' + (w + 1) + '/4: VIENEN POR LOS DOS LADOS'); Sfx.siren(); addShake(0.35);
 }
+const WAVES = [[['walker', 8]], [['walker', 6], ['runner', 4]], [['runner', 6], ['spitter', 3], ['tank', 1]], [['walker', 8], ['runner', 6], ['tank', 3]]];
+function spawnWave(i) {
+  const M = mission, pts = [[17, 7], [55, 7], [26, 12.5], [46, 12.5]]; let k = 0; M.waveZ = [];
+  for (const [type, n0] of WAVES[i]) { const n = Math.max(1, Math.round(n0 * (0.8 + diff * 0.25))); for (let j = 0; j < n; j++) { const q = pts[k++ % pts.length], x = (q[0] + rand(-1.5, 1.5)) * TS, y = (q[1] + rand(-1, 1)) * TS; if (!floorAt(x, y) || solidAt(x, y)) continue; spawnZombie(type, { x, y }, true); M.waveZ.push(zombies[zombies.length - 1]); } }
+  toast('OLEADA ' + (i + 1) + '/4: VIENEN POR LOS LADOS Y POR ABAJO'); Sfx.siren(); addShake(0.4);
+}
+function jungleSiege(dt, alive) {
+  const M = mission, s = M.s;
+  if (s.hospGen && s.portCal && alive === 0 && !s.siege && !s.bossSpawned) { s.siege = { i:0, t:35, state:'prep', left:0 }; M.dayT = Math.max(M.dayT, DAY_LEN * 0.93); toast('CAE LA NOCHE: PREPARA TUS PLANTAS. OLEADA 1 EN 35 S'); Sfx.siren(); }
+  if (s.siege && s.siege.state !== 'done') {
+    const sg = s.siege; M.dayT = Math.min(Math.max(M.dayT, DAY_LEN * 0.93), DAY_LEN * 0.97);
+    if (sg.state === 'prep') { const pt = Math.ceil(sg.t); sg.t -= dt; if (Math.ceil(sg.t) !== pt && sg.t > 0 && sg.t <= 5) toast('OLEADA ' + (sg.i + 1) + ' EN ' + Math.ceil(sg.t)); if (sg.t <= 0) { spawnWave(sg.i); sg.state = 'wave'; } }
+    else if (sg.state === 'wave') {
+      sg.left = M.waveZ.filter(z => z.hp > 0).length;
+      if (sg.left === 0) {
+        s.wavesDone++; sg.i++; M.sol = Math.min(200, M.sol + 40); addCoins(30); Sfx.clear();
+        for (let k = 0; k < 2; k++) pickups.push({ x:player.x + rand(-120, 120), y:player.y + rand(-90, 90), kind:'ing', ing:['spore', 'sap', 'core'][Math.floor(Math.random() * 3)], life:Infinity });
+        if (sg.i >= 4) { sg.state = 'done'; toast('CERCO SUPERADO: EL TITAN RAIZ SE LEVANTA'); }
+        else { sg.state = 'prep'; sg.t = 20; toast('OLEADA ' + sg.i + ' SUPERADA: +40 SOL, +30 MONEDAS Y 2 INGREDIENTES. SIGUIENTE EN 20 S'); }
+      }
+    }
+  }
+  if (s.wavesDone >= 4 && !s.bossSpawned) {
+    s.bossSpawned = true; spawnZombie('boss', { x:40 * TS, y:12.2 * TS }, true); M.boss = zombies[zombies.length - 1]; M.boss.maxHp = M.boss.hp = Math.round(M.boss.maxHp * 1.6); M.bossPrev = M.boss.hp; M.bossPh = 0; M.sumT = 6; M.eruptT = 2;
+  }
+  const B = M.boss;
+  if (B && B.hp > 0 && !s.bossDead) {
+    const mx = B.maxHp, bulbs = M.bulbs.filter(z => z.hp > 0).length;
+    if (bulbs > 0) { const d = M.bossPrev - B.hp; if (d > 0) B.hp = M.bossPrev - d * 0.12; B.hp = Math.max(B.hp, mx * 0.34); if (B.flash > 0 && d > 0) B.flash = 0.03; }   // el escudo de los bulbos absorbe casi todo el dano
+    M.bossPrev = B.hp;
+    const ph = B.hp > mx * 0.66 ? 1 : B.hp > mx * 0.33 ? 2 : 3;
+    if (ph !== M.bossPh) {
+      M.bossPh = ph; Sfx.boss && Sfx.boss(); addShake(0.7);
+      if (ph === 1) toast('FASE 1: EL TITAN RAIZ DESPIERTA');
+      else if (ph === 2) { toast('FASE 2: DESTRUYE LOS 3 BULBOS (SU ESCUDO ABSORBE EL DANO)'); for (let k = 0; k < 3; k++) { const a = -1.9 + k * 1.9, x = clamp(B.x + Math.cos(a) * 260, 18 * TS, 56 * TS), y = clamp(B.y + Math.sin(a) * 200 + 60, 4 * TS, 13.5 * TS); spawnZombie('tank', { x, y }, false); const z = zombies[zombies.length - 1]; if (!z) continue; z.root = true; z.bulb = true; z.speed = 0; z.maxHp = z.hp = Math.round(240 * DIFFS[diff].hp); z.r = 34; z.kres = 0; z.pts = 150; M.bulbs.push(z); } }
+      else { toast('FASE 3: FURIA! ESQUIVA LOS CIRCULOS ROSAS'); B.speed *= 1.45; Sfx.siren(); }
+    }
+    M.sumT -= dt; if (M.sumT <= 0 && zombies.length < 60) { M.sumT = M.bossPh === 3 ? 6 : 9; for (let k = 0; k < (M.bossPh === 3 ? 3 : M.bossPh === 2 ? 1 : 2); k++) spawnZombie(M.bossPh === 3 && k === 0 ? 'runner' : 'walker', { x:B.x + rand(-160, 160), y:B.y + rand(90, 180) }, true); }
+    if (M.bossPh === 3) { M.eruptT -= dt; if (M.eruptT <= 0) { M.eruptT = 2.6; const a = Math.random() * 6.283, r = Math.random() * 130; M.erupts.push({ x:player.x + Math.cos(a) * r, y:player.y + Math.sin(a) * r, t:1.3 }); } }
+  }
+  for (const e of M.erupts) { e.t -= dt; if (e.t <= 0) { e.done = true; burst(e.x, e.y, 24, '#ff3fb4', 400, 0.7, 4); addShake(0.35); if (Math.hypot(player.x - e.x, player.y - e.y) < 95 && !player.tower) damagePlayer(24); for (const p of plants) if (Math.hypot(p.x - e.x, p.y - e.y) < 95) p.hp -= 70; makeNoise(e.x, e.y, 500, '#ff3fb4'); } }
+  M.erupts = M.erupts.filter(e => !e.done);
+}
 function jungleUpdate(dt) {
   const M = mission, s = M.s;
   M.dayT += dt; M.sol = Math.min(200, M.sol + 1.2 * dt);
   if (zombies.some(z => z.gone)) zombies = zombies.filter(z => !z.gone);
-  M.hordeT = (M.hordeT === undefined ? 70 : M.hordeT) - dt; if (M.hordeT <= 0 && s.radioDone) startHorde(); else if (M.hordeT <= 0) M.hordeT = 20;
+  M.hordeT = (M.hordeT === undefined ? 70 : M.hordeT) - dt; if (M.hordeT <= 0 && s.radioDone && !s.siege) startHorde(); else if (M.hordeT <= 0) M.hordeT = 20;
   M.hordeOn = zombies.some(z => z.horde && z.hp > 0);
   const zn = zoneAt(player.x, player.y);
   if (zn && zn !== M.curZone) {
@@ -1712,7 +1757,7 @@ function jungleUpdate(dt) {
   // acto 5: raices que llaman zombis y jefe final
   for (const z of M.roots) if (z.hp > 0) { z.spawnT = (z.spawnT === undefined ? 3 : z.spawnT) - dt; if (z.spawnT <= 0 && Math.hypot(z.x - player.x, z.y - player.y) < 950 && zombies.length < 70) { z.spawnT = 7; for (let k = 0; k < 2; k++) spawnZombie(Math.random() < 0.25 ? 'runner' : 'walker', { x:z.x + rand(-130, 130), y:z.y + rand(70, 150) }, true); burst(z.x, z.y, 12, '#ff3fb4', 200, 0.6, 3); } }
   const alive = M.roots.filter(z => z.hp > 0).length;
-  if (s.hospGen && s.portCal && alive === 0 && !s.bossSpawned) { s.bossSpawned = true; spawnZombie('boss', { x:40 * TS, y:12.2 * TS }, true); M.boss = zombies[zombies.length - 1]; for (let i = 0; i < 3; i++) spawnZombie('runner', { x:(30 + i * 5) * TS, y:12.6 * TS }, true); }
+  jungleSiege(dt, alive);
   if (M.boss && M.boss.hp <= 0 && !s.bossDead) { s.bossDead = true; M.endT = 3.2; toast('EL TITAN RAIZ CAE: LA CIUDAD ES LIBRE'); Sfx.stinger(); addShake(0.8); }
   if (s.bossDead) { M.endT -= dt; if (M.endT <= 0) completeMission(); }
   if (M.dayT >= DAY_LEN && !M.nightToast) { M.nightToast = true; toast('ES DE NOCHE: LA SELVA SE DESPIERTA'); Sfx.siren(); }
@@ -1725,11 +1770,23 @@ function drawJungleMarkers(tNow) {
   const pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
   const hz = zombies.filter(z => z.horde && z.hp > 0); if (hz.length) { let cx = 0, cy = 0; for (const z of hz) { cx += z.x; cy += z.y; } cx /= hz.length; cy /= hz.length; ctx.strokeStyle = '#ff3a4a'; ctx.globalAlpha = 0.35 + pulse * 0.35; ctx.lineWidth = 4; ctx.setLineDash([16, 12]); ctx.beginPath(); ctx.arc(cx, cy, 220 + hz.length * 5, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; glow(cx, cy, 260, '#ff3a4a', 0.12 * pulse); }
+  for (const e of mission.erupts) { const k = 1 - e.t / 1.3; ctx.strokeStyle = '#ff3fb4'; ctx.lineWidth = 4; ctx.globalAlpha = 0.5 + 0.4 * k; ctx.beginPath(); ctx.arc(e.x, e.y, 95, 0, 7); ctx.stroke(); ctx.globalAlpha = 0.18 + 0.3 * k; ctx.fillStyle = '#ff3fb4'; ctx.beginPath(); ctx.arc(e.x, e.y, 95 * k, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
   const s = mission.s; if (s.radioOn && !s.radioDone) { const c = centerOf(radioR()); ctx.strokeStyle = '#ffe14a'; ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.arc(c.x, c.y, 460, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
   for (const t of jungleTargets()) { ctx.strokeStyle = t.col; ctx.lineWidth = 3; ctx.globalAlpha = 0.4 + pulse * 0.4; ctx.beginPath(); ctx.arc(t.x, t.y, 90 + pulse * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(t.x, t.y, 110, t.col, 0.18 * pulse); }
   ctx.restore();
 }
+function drawBulb(z, t) {
+  const pulse = 0.5 + Math.sin(t * 6 + z.x) * 0.5;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(z.x, z.y, 120, '#ff3fb4', 0.38 + pulse * 0.25); ctx.restore();
+  shadowBlob(z.x + 3, z.y + 22, 34, 12, 0.55);
+  ctx.fillStyle = '#3a0a3a'; ctx.beginPath(); ctx.arc(z.x, z.y - 8, 33 + pulse * 3, 0, 7); ctx.fill();
+  const g = ctx.createRadialGradient(z.x - 8, z.y - 18, 4, z.x, z.y - 8, 32); g.addColorStop(0, '#fff0fb'); g.addColorStop(0.35, '#ff5ac8'); g.addColorStop(1, '#8a1fb8'); ctx.fillStyle = g; ctx.globalAlpha = z.flash > 0 ? 0.6 : 1; ctx.beginPath(); ctx.arc(z.x, z.y - 8, 30 + pulse * 3, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+  ctx.strokeStyle = '#7dff6a'; ctx.lineWidth = 3; for (let k = 0; k < 5; k++) { const a = k * 1.256 + t * 0.4; ctx.beginPath(); ctx.moveTo(z.x + Math.cos(a) * 30, z.y - 8 + Math.sin(a) * 30); ctx.quadraticCurveTo(z.x + Math.cos(a + 0.3) * 46, z.y - 8 + Math.sin(a + 0.3) * 46, z.x + Math.cos(a) * 58, z.y - 8 + Math.sin(a) * 58); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(z.x - 30, z.y - 58, 60, 7); ctx.fillStyle = '#ff3fb4'; ctx.fillRect(z.x - 29, z.y - 57, 58 * clamp(z.hp / z.maxHp, 0, 1), 5);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('BULBO', z.x, z.y - 63);
+}
 function drawRoot(z, t) {
+  if (z.bulb) { drawBulb(z, t); return; }
   const img = IMG.j_tree2, S = z.r * 3.2, pulse = 0.5 + Math.sin(t * 4 + z.x) * 0.5;
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(z.x, z.y, S * 0.9, '#ff3fb4', 0.28 + pulse * 0.2); ctx.restore();
   shadowBlob(z.x + 4, z.y + 24, S * 0.38, S * 0.14, 0.60);
@@ -2914,6 +2971,7 @@ function hitZombie(z, b) {
 function killZombie(z) {
   dropCoins(z);
   if (mission && mission.jungle && !z.root && Math.random() < 0.12) pickups.push({ x:z.x, y:z.y, kind:'ing', ing:['spore', 'sap', 'core'][Math.floor(Math.random() * 3)], life:Infinity });
+  if (z.bulb) { burst(z.x, z.y, 30, '#ff3fb4', 360, 0.8, 4); addShake(0.6); Sfx.explosion(); const left = mission.bulbs.filter(q => q.hp > 0).length; toast(left ? 'BULBO DESTRUIDO: QUEDAN ' + left : 'ESCUDO ROTO: AHORA EL TITAN RECIBE TODO EL DANO'); player.pts += 150; return; }
   if (z.root) { burst(z.x, z.y, 30, '#ff3fb4', 360, 0.8, 4); addShake(0.7); Sfx.explosion(); toast('RAIZ DESTRUIDA ' + (mission.roots.filter(q => q.hp <= 0).length) + '/3'); player.pts += 300; return; }
   dying.push({ x:z.x, y:z.y, type:z.type, r:z.r, t:0, dir:Math.random() < 0.5 ? -1 : 1, ph:z.ph });
   killsTotal++;
@@ -4561,7 +4619,7 @@ function drawDarkness() {
       }
     }
   }
-  if (nf > 0) { dctx.fillStyle = 'rgba(30,6,76,' + 0.42 * nf + ')'; dctx.fillRect(0, 0, W, H); dctx.fillStyle = 'rgba(255,30,120,' + 0.1 * nf * (0.6 + Math.sin(performance.now() / 350) * 0.4) + ')'; dctx.fillRect(0, 0, W, H); }
+  if (nf > 0) { dctx.fillStyle = 'rgba(24,4,64,' + (mission.jungle ? 0.62 : 0.42) * nf + ')'; dctx.fillRect(0, 0, W, H); dctx.fillStyle = 'rgba(255,30,120,' + 0.1 * nf * (0.6 + Math.sin(performance.now() / 350) * 0.4) + ')'; dctx.fillRect(0, 0, W, H); }
   const px = (player.x - cam.x) * z, py = (player.y - cam.y) * z, R = (player.tower ? 340 : 260) * z;
   dctx.globalCompositeOperation = 'destination-out';
   const g = dctx.createRadialGradient(px, py, 16 * z, px, py, R); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.55, 'rgba(0,0,0,.85)'); g.addColorStop(1, 'rgba(0,0,0,0)');
