@@ -212,7 +212,7 @@
   #msg button:hover { filter:brightness(1.12); transform:translateY(-2px); } #msg button:active { transform:scale(.97); }
   #msg #start { background:linear-gradient(135deg,#ff2d8f,#ff8a3d); box-shadow:var(--glow-pink); font-size:16px; }
   #msg #startL2 { background:linear-gradient(135deg,#12b8a0,#3ad66a); box-shadow:0 8px 24px rgba(43,232,160,.4); }
-  #msg #startS, #msg #toHero { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.25); box-shadow:none; } #msg #startF, #msg #startD, #msg #startC { display:none; }
+  #msg #startS, #msg #toHero, #msg #toShop { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.25); box-shadow:none; } #msg #startF, #msg #startD, #msg #startC { display:none; }
   /* pagina principal: accesibilidad y objetivos tactiles */
   #hero { scroll-padding-top:76px; } #hero .hhero { min-height:max(100vh,640px); min-height:max(100dvh,640px); }
   #hero .hbg { filter:saturate(1.2) brightness(.5); will-change:transform; }
@@ -268,6 +268,33 @@
   body.touch.ingame #seedhud { display:none !important; }
   body.touch #mini { opacity:.55; pointer-events:none; } body.touch.mini1 #mini { width:96px !important; opacity:.45; } body.touch.mini2 #mini { display:none !important; }
   #expp { max-height:calc(100vh - 160px); overflow-y:auto; }
+  /* monedas y tienda */
+  .cn { display:inline-block; width:14px; height:14px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff2a0 0 22%, #ffc928 45%, #b87a00 100%); border:1.5px solid #7a4a00; vertical-align:-2px; margin-right:4px; flex:none; }
+  #coinchip { position:absolute; left:14px; bottom:14px; display:none; padding:6px 12px; border-radius:var(--r2); background:var(--c-panel); border:1px solid var(--c-line); font:800 14px 'Arial Black',system-ui,sans-serif; color:#ffe14a; pointer-events:none; z-index:2; }
+  body.ingame #coinchip { display:block; }
+  #shopm { position:absolute; inset:0; z-index:45; display:none; flex-direction:column; background:radial-gradient(ellipse at 50% 0%, rgba(138,31,255,.35), transparent 60%), rgba(7,4,15,.98); color:var(--c-text); pointer-events:auto; font-family:'Inter','Segoe UI',system-ui,sans-serif; }
+  #shopm button { font:inherit; cursor:pointer; touch-action:manipulation; }
+  .shh { display:flex; align-items:center; gap:var(--sp3); padding:var(--sp3) var(--sp4); } .shh h2 { font:900 clamp(22px,4vw,34px)/1 'Arial Black',Impact,sans-serif; letter-spacing:1px; background:linear-gradient(90deg,#ffe14a,#ff3fb4); -webkit-background-clip:text; background-clip:text; color:transparent; margin-right:auto; }
+  .shcoins { font:800 16px 'Arial Black',system-ui,sans-serif; color:#ffe14a; padding:8px 14px; border-radius:var(--r2); background:rgba(255,225,74,.12); border:1px solid rgba(255,225,74,.5); white-space:nowrap; }
+  .shx { width:44px; height:44px; border:0; border-radius:var(--r2); background:rgba(255,255,255,.12); color:#fff; font-weight:800; }
+  .sht { display:flex; gap:var(--sp2); padding:0 var(--sp4) var(--sp2); overflow-x:auto; } .sht button { min-height:44px; padding:0 18px; border:2px solid rgba(255,255,255,.2); border-radius:var(--r2); background:rgba(255,255,255,.06); color:#fff; font-weight:800; letter-spacing:1px; white-space:nowrap; } .sht button.on { background:linear-gradient(135deg,#ff2d8f,#ff8a3d); border-color:#fff; }
+  .shg { flex:1; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--sp3); padding:var(--sp3) var(--sp4); align-content:start; }
+  .sc { display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; padding:var(--sp3); border-radius:var(--r3); background:var(--c-panel); border:1px solid var(--c-line); } .sc.eqd { border-color:#7dff6a; box-shadow:0 0 18px rgba(125,255,106,.3); }
+  .sc .pv { width:96px; height:96px; object-fit:contain; } .sc .pv.none { display:flex; align-items:center; justify-content:center; font-size:40px; opacity:.4; } .sc b { font-size:14px; } .sc small { font-size:12px; opacity:.8; line-height:1.35; min-height:32px; }
+  .sc button { width:100%; min-height:44px; margin-top:auto; border:0; border-radius:var(--r2); font-weight:800; font-size:13px; color:#fff; letter-spacing:.5px; }
+  .sc button.buy { background:linear-gradient(135deg,#17a653,#3ad66a); } .sc button.low { background:#5a3a6a; } .sc button.ok { background:linear-gradient(135deg,#6a5cff,#2ab0ff); } .sc button:disabled { opacity:.55; cursor:default; }
+  .shf { display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp3); padding:var(--sp3) var(--sp4); border-top:1px solid rgba(255,255,255,.12); background:rgba(7,4,15,.7); } .shs { flex:1 1 260px; font-size:13px; line-height:1.4; } .shs span { opacity:.65; font-size:12px; }
+  .shb { display:flex; gap:var(--sp2); flex-wrap:wrap; } .shb button { min-height:46px; padding:0 16px; border:2px solid rgba(255,255,255,.25); border-radius:var(--r2); background:rgba(255,255,255,.08); color:#fff; font-weight:800; font-size:12px; } .shb button.go { background:linear-gradient(135deg,#ff2d8f,#ff8a3d); border-color:#fff; font-size:15px; padding:0 34px; box-shadow:var(--glow-pink); }
+  @media (max-height:540px) { .shh { padding:6px 12px; } .shh h2 { font-size:20px; } .sht { padding:0 12px 4px; } .sht button { min-height:38px; } .shg { grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:8px; padding:8px 12px; } .sc { padding:8px; } .sc .pv { width:64px; height:64px; } .sc small { min-height:0; } .shf { padding:6px 12px; } .shs span { display:none; } .shb button { min-height:40px; } }
+  /* paneles de nivel 2 y experimento: caben en pantallas bajas (celular horizontal) */
+  .sysgrid { display:block; }
+  #pwr, #camov, #expp { max-height:calc(100vh - 12px); max-height:calc(100dvh - 12px); overflow-y:auto; }
+  @media (max-height:560px), (pointer:coarse) {
+    #pwr, #expp { top:6px; right:6px; width:min(600px,94vw); padding:8px 12px; } #camov { left:6px; bottom:6px; width:min(500px,68vw); padding:8px 12px; }
+    .sysgrid { display:grid; grid-template-columns:1fr 1fr; column-gap:16px; } .sysr { padding:4px 0; } .sysr small { font-size:11px !important; } .ovl h3 { margin-bottom:4px; } .cbar { margin:2px 0 4px; }
+    .ovl button[data-close] { min-width:44px; min-height:40px; } .ovl button { min-height:38px; }
+    #camov { width:min(660px,94vw); } .camwrap { display:flex; gap:10px; align-items:flex-start; } #camc { width:auto !important; flex:0 0 auto; max-width:50%; max-height:calc(100dvh - 76px); margin:0; } #camb { flex:1; min-width:0; } .gbt button { min-height:36px; font-size:11px; padding:4px 8px; }
+  }
 </style>
 </head>
 <body>
@@ -307,6 +334,8 @@
     <div id="tshop"><button class="tb" data-k="b">BOTIQUIN</button><button class="tb" data-k="n">MUNICION</button><button class="tb" data-k="m">DANO</button><button class="tb" data-k="v">GRANADAS</button><button class="tb main" data-k="enter">CONTINUAR</button></div>
   </div>
   <div id="rot"><div>Gira tu celular a horizontal para jugar</div></div>
+  <div id="coinchip" aria-label="Monedas"><i class="cn"></i> <b id="coinsHud">0</b></div>
+  <div id="shopm" role="dialog" aria-label="Tienda"></div>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="shop"></div>
   <div id="hero" role="main" aria-label="Los Condenados, menu principal">
@@ -315,7 +344,7 @@
     <div class="hdots"></div>
     <nav class="hnav">
       <div class="hlogo">LOS CONDENADOS</div>
-      <div class="hlinks"><button class="hlink" data-go="h-ver">El juego</button><button class="hlink" data-go="h-niv">Niveles</button><button class="hlink" data-go="h-ene">Enemigos</button><button class="hlink" data-go="h-pla">Plantas</button><button class="hlink" data-go="h-ctl">Controles</button></div>
+      <div class="hlinks"><button class="hlink" data-go="h-ver">El juego</button><button class="hlink" data-go="h-niv">Niveles</button><button class="hlink" data-go="h-ene">Enemigos</button><button class="hlink" data-go="h-pla">Plantas</button><button class="hlink" data-go="h-ctl">Controles</button><button class="hlink" id="hNavShop">Tienda</button></div>
       <button class="hbtn main sm" data-play="start">Jugar</button>
     </nav>
     <section class="hhero">
@@ -326,9 +355,9 @@
         <p class="htag">Los ejecutados volvieron de la tumba. Tu eres el ultimo justiciero.</p>
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
         <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
-        <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
+        <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hShop" type="button">TIENDA · <span id="hCoins">0</span> MONEDAS</button><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
         <p class="hwarn" role="note">En el celular se juega en horizontal: arrastra a la izquierda para moverte. Tu personaje dispara solo a los zombis que te persiguen; toca un zombi para atacarlo y toca un objeto para usarlo.</p>
-        <ul class="hstats"><li><b>3</b>niveles</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
+        <ul class="hstats"><li><b>3</b>niveles</li><li><b>9</b>personajes</li><li><b>3</b>mascotas</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
       </div>
       <div class="hscroll">DESLIZA</div>
     </section>
@@ -409,7 +438,7 @@
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
-    <div class="mbtns"><button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL3" style="background:linear-gradient(135deg,#8a1fff,#ff3fb4)">NIVEL 3: CIUDAD SELVA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button></div>
+    <div class="mbtns"><button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toShop" style="background:linear-gradient(135deg,#d9a31a,#ffd24a);color:#2a1a00">TIENDA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL3" style="background:linear-gradient(135deg,#8a1fff,#ff3fb4)">NIVEL 3: CIUDAD SELVA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button></div>
   </div>
 </div>
 <script>
@@ -710,7 +739,7 @@ function drawPlayerFrames() {
   if (player.hurtT > 0) { ctx.globalAlpha = clamp(player.hurtT * 3, 0, 1); put(VAR.pwalkRed); ctx.globalAlpha = 1; }
 }
 const WLBL = ['', '', '', 'LMG', 'RPG', 'SNP'];
-const PK = { ing:{ c:'#7dff6a', g:'#7dff6a', l:'' }, scrap:{ c:'#7d8a99', g:'#cfe0f0', l:'S' }, wpn:{ c:'#3a8a4a', g:'#5fe08a', l:'W' }, hp:{ c:'#e04040', g:'#ff3030', l:'+' }, ammo:{ c:'#d8b030', g:'#ffcc30', l:'A' }, bomb:{ c:'#d86a1c', g:'#ff8a30', l:'G' } };
+const PK = { coin:{ c:'#ffc928', g:'#ffd24a', l:'$' }, ing:{ c:'#7dff6a', g:'#7dff6a', l:'' }, scrap:{ c:'#7d8a99', g:'#cfe0f0', l:'S' }, wpn:{ c:'#3a8a4a', g:'#5fe08a', l:'W' }, hp:{ c:'#e04040', g:'#ff3030', l:'+' }, ammo:{ c:'#d8b030', g:'#ffcc30', l:'A' }, bomb:{ c:'#d86a1c', g:'#ff8a30', l:'G' } };
 const TLIFT = 92;   // altura visual de la plataforma de la torre
 const GUN_DY = 0, PS = 1.55; // PS: escala del personaje (el arma crece con el)
 const muzzleOf = cur => 0.4 * 70 + WEAPONS[cur].len * PS * 0.8;   // distancia del centro del jugador a la boca del arma // altura de las manos respecto al centro del jugador
@@ -729,7 +758,159 @@ let fp = false, fpYaw = -0.9, hitMark = 0, fpLockFail = false;
 let ambT = 6;
 let mode = 'survival', rects = [], mission = null, missionIdx = 0, snap = null, aggroCount = 0;
 
-function makePlayer() {
+function makePlayer() { return applyLoadout(makePlayerBase()); }
+/* ============================== MONEDAS, TIENDA Y GUARDADO ============================== */
+const SAVE_KEY = 'condenados_save_v1';
+const SKINS = {
+  classic:{ n:'Clasico', cost:0, d:'El look original', hue:null },
+  neon:{ n:'Neon Rosa', cost:120, d:'Magenta fluorescente', hue:318, pal:{ sleeve:'#d62f9a', cuff:'#2be8f0', pants:'#4a2a7a' } },
+  toxic:{ n:'Toxico', cost:120, d:'Verde radiactivo', hue:100, pal:{ sleeve:'#3fb82a', cuff:'#ffe14a', pants:'#2a4a2a' } },
+  ice:{ n:'Hielo', cost:160, d:'Azul polar', hue:195, pal:{ sleeve:'#2b9bff', cuff:'#ffffff', pants:'#1a3a7a' } },
+  fire:{ n:'Fuego', cost:160, d:'Rojo ardiente', hue:12, pal:{ sleeve:'#e0301e', cuff:'#ffd24a', pants:'#5a1a10' } },
+  gold:{ n:'Oro', cost:450, d:'Para los mejores', hue:46, pal:{ sleeve:'#d9a31a', cuff:'#fff2a8', pants:'#7a5a10' } } };
+const CHARS = {
+  f:{ n:'Nina', cost:0, d:'Equilibrada', t:'t_f' }, m:{ n:'Nino', cost:0, d:'Equilibrado', t:'t_m' },
+  a:{ n:'Extraterrestre', cost:1000, d:'+8% velocidad y +10% vida', t:'t_a', spd:1.08, hp:1.1 },
+  l:{ n:'Leon', cost:1100, d:'+25% vida y +8% dano', t:'t_l', hp:1.25, dmg:1.08 },
+  e:{ n:'Ejecutivo', cost:1200, d:'+25% de monedas', t:'t_e', coin:1.25 },
+  c:{ n:'Caballero', cost:1100, d:'+50% de vida, mas lento', t:'t_c', hp:1.5, spd:0.9 },
+  s:{ n:'Esqueleto', cost:800, d:'+15% dano, -15% vida', t:'t_s', hp:0.85, dmg:1.15 },
+  k:{ n:'Ninja Neon', cost:900, d:'+12% de velocidad', t:'t_k', spd:1.12 },
+  r:{ n:'Robot R-7', cost:900, d:'+30% de vida, un poco mas lento', t:'t_r', hp:1.3, spd:0.94 } };
+const WITEMS = {
+  w3:{ n:'Ametralladora', cost:600, d:'Empiezas cada nivel con ella', slot:3, spr:'w_lmg' },
+  w4:{ n:'Lanzacohetes', cost:900, d:'Empiezas cada nivel con el', slot:4, spr:'w_rpg' },
+  w5:{ n:'Francotirador', cost:800, d:'Empiezas cada nivel con el', slot:5, spr:'w_sniper' },
+  dmg1:{ n:'Balas afiladas I', cost:300, d:'+8% de dano con todas las armas', dmg:0.08, spr:'w_pistol' },
+  dmg2:{ n:'Balas afiladas II', cost:700, d:'Otro +8% (necesita la I)', dmg:0.08, req:'dmg1', spr:'w_pistol' },
+  ammo:{ n:'Mochila de municion', cost:400, d:'+50% de municion de reserva', ammo:1.5, spr:'w_shotgun' } };
+const PETS = {
+  dog:{ n:'Rayo', cost:500, d:'Muerde a los zombis que se acercan', spr:'pet_dog' },
+  drone:{ n:'Zap', cost:800, d:'Dispara a los zombis desde el aire', spr:'pet_drone' },
+  slime:{ n:'Moco', cost:700, d:'Atrae monedas y te cura poco a poco', spr:'pet_slime' } };
+const CAT = { skin:SKINS, char:CHARS, wpn:WITEMS, pet:PETS };
+const newSave = () => ({ v:1, coins:0, earned:0, own:{ skin:['classic'], char:['f', 'm'], wpn:[], pet:[] }, eq:{ skin:'classic', char:'f', pet:'' } });
+function sanitizeSave(o) {
+  const s = newSave(); if (!o || typeof o !== 'object') return s;
+  s.coins = Math.max(0, Math.floor(+o.coins) || 0); s.earned = Math.max(0, Math.floor(+o.earned) || 0);
+  const pick = (arr, valid) => [...new Set((Array.isArray(arr) ? arr : []).filter(k => typeof k === 'string' && Object.prototype.hasOwnProperty.call(valid, k)))];
+  const own = o.own || {};
+  s.own.skin = [...new Set(['classic', ...pick(own.skin, SKINS)])]; s.own.char = [...new Set(['f', 'm', ...pick(own.char, CHARS)])];
+  s.own.wpn = pick(own.wpn, WITEMS); s.own.pet = pick(own.pet, PETS);
+  const eq = o.eq || {}; s.eq.skin = s.own.skin.includes(eq.skin) ? eq.skin : 'classic'; s.eq.char = s.own.char.includes(eq.char) ? eq.char : 'f'; s.eq.pet = s.own.pet.includes(eq.pet) ? eq.pet : '';
+  return s;
+}
+let SAVE, saveDirty = false, runCoins = 0;
+try { SAVE = sanitizeSave(JSON.parse(localStorage.getItem(SAVE_KEY))); } catch (e) { SAVE = newSave(); }
+try { if (!localStorage.getItem(SAVE_KEY) && localStorage.getItem('condenados_char') === 'm') SAVE.eq.char = 'm'; } catch (e) {}
+const saveGame = () => { saveDirty = false; try { localStorage.setItem(SAVE_KEY, JSON.stringify(SAVE)); } catch (e) {} };
+setInterval(() => { if (saveDirty) saveGame(); }, 2000); addEventListener('pagehide', saveGame);
+function addCoins(n) { n = Math.floor(n * ((CHARS[SAVE.eq.char] || {}).coin || 1)); if (n <= 0) return; SAVE.coins += n; SAVE.earned += n; runCoins += n; saveDirty = true; }
+const coinMsg = () => runCoins ? ' Monedas ganadas: ' + runCoins + ' (total ' + SAVE.coins + ').' : '';
+const hasItem = (k, id) => SAVE.own[k].includes(id);
+function dropCoins(z) {
+  if (pickups.length > 260) return;
+  const n = z.boss ? 6 : 1, v = z.boss ? 10 : ({ walker:1, runner:2, spitter:3, tank:6 }[z.type] || 1);
+  for (let i = 0; i < n; i++) pickups.push({ x:z.x + (n > 1 ? rand(-50, 50) : rand(-14, 14)), y:z.y + (n > 1 ? rand(-50, 50) : rand(-14, 14)), kind:'coin', v, life:50, sp:Math.random() * 6 });
+}
+function drawCoin(p, t) {
+  const a = Math.abs(Math.cos(t * 4 + p.sp)), w = 5 + 8 * a, blink = p.life < 8 && Math.sin(t * 18) < 0;
+  if (blink) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(p.x, p.y, 30, '#ffd24a', 0.42); ctx.restore();
+  shadowBlob(p.x + 1, p.y + 9, 9, 3.5, 0.4);
+  const y = p.y - 3 + Math.sin(t * 5 + p.sp) * 2.2;
+  ctx.fillStyle = '#7a4a00'; ctx.beginPath(); ctx.ellipse(p.x, y, w + 1.8, 9.6, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#ffc928'; ctx.beginPath(); ctx.ellipse(p.x, y, w, 8, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#fff2a0'; ctx.beginPath(); ctx.ellipse(p.x - w * 0.25, y - 2.5, w * 0.45, 3, 0, 0, 7); ctx.fill();
+  if (a > 0.5) { ctx.fillStyle = '#b87a00'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('$', p.x, y + 3.4); }
+}
+function applyLoadout(p) {
+  const ch = CHARS[SAVE.eq.char] || CHARS.f;
+  p.maxHp = Math.round(100 * (ch.hp || 1)); p.hp = p.maxHp; p.speed = Math.round(275 * (ch.spd || 1));
+  let dm = 0, ammo = 1;
+  for (const id of SAVE.own.wpn) { const it = WITEMS[id]; if (it.slot) p.has[it.slot] = true; if (it.dmg) dm += it.dmg; if (it.ammo) ammo = Math.max(ammo, it.ammo); }
+  p.dmgMul = (1 + dm) * (ch.dmg || 1);
+  if (ammo > 1) for (let i = 0; i < WEAPONS.length; i++) if (isFinite(p.ws[i].reserve)) p.ws[i].reserve = Math.round(p.ws[i].reserve * ammo);
+  return p;
+}
+/* ---- mascotas ---- */
+let pet = null;
+function petUpdate(dt) {
+  const id = SAVE.eq.pet; if (!id || fp || !player) { pet = null; return; }
+  if (!pet || pet.type !== id) pet = { type:id, x:player.x - 60, y:player.y + 36, cd:0, face:1, t:0, r:12, tx:0, ty:0 };
+  pet.t += dt; pet.cd = Math.max(0, pet.cd - dt);
+  let goal = { x:player.x - Math.cos(player.angle) * 62 + Math.sin(player.angle) * 26, y:player.y - Math.sin(player.angle) * 62 - Math.cos(player.angle) * 26 }, spd = 5;
+  let tz = null, td = id === 'drone' ? 480 : id === 'dog' ? 210 : 0;
+  if (td) for (const z of zombies) { if (z.hp <= 0 || z.root) continue; const d = Math.hypot(z.x - pet.x, z.y - pet.y); if (d < td && (id !== 'drone' || losClear(pet.x, pet.y, z.x, z.y))) { td = d; tz = z; } }
+  if (id === 'dog' && tz) { goal = { x:tz.x, y:tz.y }; spd = 9; if (td < 46 && pet.cd <= 0) { pet.cd = 0.8; tz.hp -= 18; tz.flash = 0.12; tz.aggro = true; burst(tz.x, tz.y, 5, '#ffe14a', 160, 0.3, 2.5); if (floaters.length < 40) floaters.push({ x:tz.x, y:tz.y - tz.r, vy:-70, text:18, life:0.7, max:0.7, color:'#ffe14a', big:false }); } }
+  else if (id === 'drone' && tz && pet.cd <= 0) { const a = Math.atan2(tz.y - pet.y, tz.x - pet.x); pet.cd = 0.45; pet.face = Math.cos(a) < 0 ? -1 : 1; bullets.push({ x:pet.x + Math.cos(a) * 20, y:pet.y - 10 + Math.sin(a) * 20, px:pet.x, py:pet.y - 10, vx:Math.cos(a) * 1050, vy:Math.sin(a) * 1050, ang:a, dmg:9, kb:40, life:0.5, pierce:0, hit:[], tr:20 }); }
+  else if (id === 'slime' && player.hp > 0 && player.hp < player.maxHp) player.hp = Math.min(player.maxHp, player.hp + 1.5 * dt);
+  const dd = Math.hypot(goal.x - pet.x, goal.y - pet.y);
+  if (dd > 900) { pet.x = goal.x; pet.y = goal.y; }
+  else { const k = Math.min(1, spd * dt); pet.x += (goal.x - pet.x) * k; pet.y += (goal.y - pet.y) * k; if (Math.abs(goal.x - pet.x) > 6) pet.face = goal.x < pet.x ? -1 : 1; }
+  if (rects.length) pushOutRects(pet);
+}
+function drawPet(t) {
+  if (!pet) return; const d = PETS[pet.type], img = IMG[d.spr] || pimg('img/pets/' + d.spr + '.webp'); if (!img || !img.width) return;
+  const H = pet.type === 'drone' ? 46 : 52, W = H * img.width / img.height, hov = pet.type === 'drone' ? -26 : 0, bob = Math.sin(pet.t * (pet.type === 'slime' ? 7 : 6)) * (pet.type === 'slime' ? 3 : 2.4), sq = pet.type === 'slime' ? 1 + Math.sin(pet.t * 7) * 0.06 : 1;
+  shadowBlob(pet.x + 2, pet.y + 8, 15, 6, 0.45);
+  ctx.save(); ctx.translate(pet.x, pet.y + 8 + hov + bob); ctx.scale(pet.face * (2 - sq), sq); ctx.drawImage(img, -W / 2, -H, W, H); ctx.restore();
+  if (fxOn) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(pet.x, pet.y - 12 + hov, 40, pet.type === 'dog' ? '#2be8f0' : pet.type === 'drone' ? '#2be8f0' : '#7dff6a', 0.2); ctx.restore(); }
+}
+/* ---- imagenes de vista previa ---- */
+const PIMG = {}; function pimg(src) { if (PIMG[src]) return PIMG[src]; const im = new Image(); im.src = src; return PIMG[src] = im; }
+const SKINC = {};
+function skinImg(tkey, img, skinId) { const sk = SKINS[skinId]; if (!sk || sk.hue == null) return img; const k = tkey + ':' + skinId; return SKINC[k] || (SKINC[k] = hueVariant(img, sk.hue)); }
+/* ---- interfaz de la tienda ---- */
+let shopTab = 'skin', shopPending = null;
+const SHOP_TABS = [['skin', 'SKINS'], ['wpn', 'ARMAS'], ['char', 'PERSONAJES'], ['pet', 'MASCOTAS']];
+function openShop(pending) { shopPending = pending || null; $('shopm').style.display = 'flex'; renderShop(); Sfx.task && Sfx.task(); }
+function closeShop() { $('shopm').style.display = 'none'; shopPending = null; const c = $('hCoins'); if (c) c.textContent = SAVE.coins; }
+function renderShop() {
+  const wrap = $('shopm'), eq = SAVE.eq, ch = CHARS[eq.char], pt = eq.pet ? PETS[eq.pet].n : 'ninguna';
+  const cards = [];
+  const list = Object.keys(CAT[shopTab]).map(id => [id, CAT[shopTab][id]]);
+  if (shopTab === 'pet') list.unshift(['', { n:'Sin mascota', cost:0, d:'Jugar sin companero' }]);
+  for (const [id, it] of list) {
+    const own = id === '' || hasItem(shopTab, id), on = shopTab !== 'wpn' && eq[shopTab] === id, low = !own && SAVE.coins < it.cost, locked = it.req && !hasItem('wpn', it.req);
+    let pv = '';
+    if (shopTab === 'skin') pv = '<canvas class="pv" width="104" height="104" data-sk="' + id + '"></canvas>';
+    else if (shopTab === 'char') pv = '<canvas class="pv" width="104" height="104" data-ch="' + id + '"></canvas>';
+    else if (shopTab === 'wpn') pv = '<img class="pv" alt="" src="img/cartoon/' + it.spr + '.webp">';
+    else pv = id ? '<img class="pv" alt="" src="img/pets/' + it.spr + '.webp">' : '<div class="pv none">-</div>';
+    let lab, dis = false;
+    if (own) { if (shopTab === 'wpn') { lab = 'COMPRADO'; dis = true; } else if (on) { lab = 'EQUIPADO'; dis = true; } else lab = 'EQUIPAR'; }
+    else if (locked) { lab = 'REQUIERE ' + WITEMS[it.req].n; dis = true; }
+    else lab = 'COMPRAR  ' + it.cost;
+    cards.push('<div class="sc' + (on ? ' eqd' : '') + (own ? ' own' : '') + '">' + pv + '<b>' + it.n + '</b><small>' + (it.d || '') + '</small><button type="button" data-sh="' + shopTab + ':' + id + '"' + (dis ? ' disabled' : '') + ' class="' + (low ? 'low' : own ? 'ok' : 'buy') + '">' + (!own && !locked ? '<i class="cn"></i>' : '') + lab + '</button></div>');
+  }
+  wrap.innerHTML = '<div class="shh"><h2>TIENDA</h2><div class="shcoins" aria-live="polite"><i class="cn"></i> <b>' + SAVE.coins + '</b> monedas</div><button type="button" class="shx" data-shclose aria-label="Cerrar tienda">X</button></div>'
+    + '<div class="sht" role="tablist">' + SHOP_TABS.map(([k, n]) => '<button type="button" role="tab" aria-selected="' + (k === shopTab) + '" class="' + (k === shopTab ? 'on' : '') + '" data-tab="' + k + '">' + n + '</button>').join('') + '</div>'
+    + '<div class="shg">' + cards.join('') + '</div>'
+    + '<div class="shf"><div class="shs">Equipado: <b>' + ch.n + '</b> | Skin <b>' + SKINS[eq.skin].n + '</b> | Mascota <b>' + pt + '</b><br><span>Las monedas se ganan matando zombis y completando niveles. Se guardan en este navegador.</span></div>'
+    + '<div class="shb"><button type="button" data-shexp>COPIAR CODIGO</button><button type="button" data-shimp>CARGAR CODIGO</button>' + (shopPending ? '<button type="button" class="go" data-shplay>JUGAR</button>' : '<button type="button" class="go" data-shclose>CERRAR</button>') + '</div></div>';
+  const draw = (cv, tkey, skinId) => { const im = pimg('img/cartoon/' + tkey + '.webp'), go = () => { const g = cv.getContext('2d'); g.clearRect(0, 0, 104, 104); const src = skinImg(tkey, im, skinId), s = Math.min(100 / src.width, 100 / src.height); g.drawImage(src, (104 - src.width * s) / 2, (104 - src.height * s) / 2, src.width * s, src.height * s); }; if (im.complete && im.width) go(); else im.addEventListener('load', go, { once:true }); };
+  wrap.querySelectorAll('canvas[data-sk]').forEach(cv => draw(cv, CHARS[eq.char].t, cv.dataset.sk));
+  wrap.querySelectorAll('canvas[data-ch]').forEach(cv => draw(cv, CHARS[cv.dataset.ch].t, eq.skin));
+}
+function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify(SAVE)))); } catch (e) { return ''; } }
+function importCode(txt) { try { const o = JSON.parse(decodeURIComponent(escape(atob(String(txt).trim())))); SAVE = sanitizeSave(o); charSel = SAVE.eq.char; saveGame(); return true; } catch (e) { return false; } }
+$('shopm').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.tab) { shopTab = b.dataset.tab; renderShop(); return; }
+  if (b.hasAttribute('data-shclose')) { closeShop(); return; }
+  if (b.hasAttribute('data-shplay')) { const f = shopPending; closeShop(); if (f) f(); return; }
+  if (b.hasAttribute('data-shexp')) { const c = exportCode(); (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(c).then(() => toast('CODIGO COPIADO. GUARDALO EN UN LUGAR SEGURO')).catch(() => prompt('Copia tu codigo:', c)) : Promise.resolve(prompt('Copia tu codigo:', c))); return; }
+  if (b.hasAttribute('data-shimp')) { const t = prompt('Pega tu codigo de guardado:'); if (t) { if (importCode(t)) { toast('PROGRESO CARGADO'); renderShop(); if (typeof setCharLabel === 'function') setCharLabel(); } else toast('CODIGO NO VALIDO'); } return; }
+  if (b.dataset.sh) {
+    const [k, id] = b.dataset.sh.split(':');
+    if (id === '' || hasItem(k, id)) { SAVE.eq[k] = id; if (k === 'char') { charSel = id; if (typeof setCharLabel === 'function') setCharLabel(); } saveGame(); Sfx.task(); }
+    else { const it = CAT[k][id]; if (it.req && !hasItem('wpn', it.req)) return; if (SAVE.coins < it.cost) { Sfx.deny(); toast('TE FALTAN ' + (it.cost - SAVE.coins) + ' MONEDAS'); return; } SAVE.coins -= it.cost; SAVE.own[k].push(id); if (k !== 'wpn') { SAVE.eq[k] = id; if (k === 'char') { charSel = id; if (typeof setCharLabel === 'function') setCharLabel(); } } saveGame(); Sfx.buy(); toast('COMPRADO: ' + it.n.toUpperCase()); }
+    renderShop();
+  }
+});
+
+function makePlayerBase() {
   return { x:WORLD.w/2, y:WORLD.h/2, r:14, hp:100, maxHp:100, angle:0, speed:275, pts:0, dmgMul:1,
     cur:0, lastShot:0, reloading:0, reloadMax:0, hurtT:0, flash:0, recoil:0, ph:0, amp:0, lean:0, bloom:0, gren:3, grenMax:9, grenCd:0,
     decoys:3, stabCd:0, hidden:false, cards:{ green:false, blue:false }, scrap:3, ia:null, tower:null, driving:false,
@@ -739,7 +920,7 @@ function makePlayer() {
 }
 
 function resetState() {
-  zombies = []; plants = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = []; decoys = []; noiseRings = []; pendingBlasts = []; vehicle = null; G = null;
+  pet = null; zombies = []; plants = []; bullets = []; spits = []; particles = []; blood = []; pickups = []; floaters = []; grenades = []; blasts = []; scorch = []; rockets = []; dying = []; decoys = []; noiseRings = []; pendingBlasts = []; vehicle = null; G = null;
   keys = {}; mouse = { x:W/2, y:H/2, down:false };
   cam = { x:0, y:0, kx:0, ky:0, lx:0, ly:0, vw:W, vh:H }; camZoom = zoomUser; camZoomT = 1;
   wave = 0; toastT = 0; lastT = performance.now();
@@ -748,6 +929,7 @@ function resetState() {
 }
 
 function newGame(m, fpFlag = false, lvl = 1) {
+  runCoins = 0;
   mode = m; if (m === 'survival') { G = null; setMini(200, 127); el.facHud.style.display = 'none'; } fp = !!fpFlag && m === 'mission'; el.dashKey.textContent = fp ? 'E' : 'ESPACIO';
   resetState();
   el.msg.style.display = 'none';
@@ -1160,7 +1342,7 @@ function renderExp() {
   const I = mission.ing;
   el.expp.innerHTML = '<h3><span>MESA DE EXPERIMENTO</span><button data-close="exp">X</button></h3><div>Tus ingredientes: Esporas <b>' + I.spore + '</b> | Savia <b>' + I.sap + '</b> | Nucleos <b>' + I.core + '</b></div>'
     + '<div style="opacity:.8;margin:4px 0 6px">Mezcla 2 ingredientes (pueden ser iguales) y creas 1 semilla. Las plantas tardan en crecer y defienden donde las siembres. En el Nivel 3 sembrar cuesta sol.</div>'
-    + RECIPES.map(([k, a, b]) => { const ok = a === b ? I[a] > 1 : I[a] > 0 && I[b] > 0; return '<div class="sysr"><div><b>' + PLANTS[k].n + '</b><small>' + INGN[a] + ' + ' + INGN[b] + ': ' + PLANTS[k].d + '</small></div><button data-craft="' + k + '"' + (ok ? '' : ' disabled') + ' class="' + (ok ? 'on' : 'off') + '">CREAR</button></div>'; }).join('')
+    + '<div class="sysgrid">' + RECIPES.map(([k, a, b]) => { const ok = a === b ? I[a] > 1 : I[a] > 0 && I[b] > 0; return '<div class="sysr"><div><b>' + PLANTS[k].n + '</b><small>' + INGN[a] + ' + ' + INGN[b] + ': ' + PLANTS[k].d + '</small></div><button data-craft="' + k + '"' + (ok ? '' : ' disabled') + ' class="' + (ok ? 'on' : 'off') + '">CREAR</button></div>'; }).join('') + '</div>'
     + '<div style="margin-top:6px">Semillas: ' + Object.keys(PLANTS).map(k => PLANTS[k].n + ' <b>' + seeds[k] + '</b>').join(' | ') + '</div><small style="opacity:.7;display:block;margin-top:4px">Siembra con C y cambia de planta con V.</small>';
 }
 function craft(k) {
@@ -1700,7 +1882,7 @@ function openPwr() { closeExp(); pwrOpen = true; el.pwr.style.display = 'block';
 function renderPwr() {
   const M = mission, used = sysUsed();
   el.pwr.innerHTML = '<h3><span>PANEL DE ENERGIA</span><button data-close="pwr">X</button></h3><div>Capacidad: <b>' + used + ' / ' + M.cap + '</b> ' + (M.done.A ? '' : '<span style="color:#ffd02b">(repara el generador y sube a 5)</span>') + '</div><div class="cbar"><i style="width:' + (used / 5 * 100) + '%"></i></div>'
-    + SYSD.map(d => { const on = M.sys[d.k]; return '<div class="sysr"><div><b>' + d.n + '</b> <span style="opacity:.7">(' + d.c + ')</span><small>' + d.d + '</small></div><button data-sys="' + d.k + '" class="' + (on ? 'on' : 'off') + '">' + (on ? 'ON' : 'OFF') + '</button></div>'; }).join('')
+    + '<div class="sysgrid">' + SYSD.map(d => { const on = M.sys[d.k]; return '<div class="sysr"><div><b>' + d.n + '</b> <span style="opacity:.7">(' + d.c + ')</span><small>' + d.d + '</small></div><button data-sys="' + d.k + '" class="' + (on ? 'on' : 'off') + '">' + (on ? 'ON' : 'OFF') + '</button></div>'; }).join('') + '</div>'
     + '<small style="opacity:.7;display:block;margin-top:6px">Enciende solo lo que necesitas ahora. El juego sigue corriendo mientras decides.</small>';
 }
 function toggleSys(k) {
@@ -1713,7 +1895,7 @@ function toggleSys(k) {
 }
 function openCam() {
   camOpen = true; el.camov.style.display = 'block';
-  el.camov.innerHTML = '<h3><span>CAMARAS DE SEGURIDAD</span><button data-close="cam">X</button></h3><canvas id="camc" width="336" height="312"></canvas><div id="camb"></div>';
+  el.camov.innerHTML = '<h3><span>CAMARAS DE SEGURIDAD</span><button data-close="cam">X</button></h3><div class="camwrap"><canvas id="camc" width="336" height="312"></canvas><div id="camb"></div></div>';
   camHash = ''; Sfx.task(); renderCam();
 }
 function renderCam() {
@@ -2197,6 +2379,7 @@ function advance() {
 }
 
 function completeMission() {
+  addCoins(mission.facility ? (mission.jungle ? 150 : mission.lab ? 100 : 60) : 40);
   if (mission.facility) { player.pts += (mission.jungle ? 1200 : mission.lab ? 900 : 500) + Math.max(0, 400 - 25 * mission.alerts); zombies = []; spits = []; victory(); return; }
   const stealth = Math.max(0, 300 - 25 * mission.alerts);
   player.pts += 200 * (mission.idx + 1) + stealth;
@@ -2222,6 +2405,7 @@ function victory() {
   ps[0].textContent = mission && mission.jungle ? 'Destruiste las raices y derrotaste al Titan Raiz: la ciudad es libre. ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
   el.start.textContent = 'JUGAR DE NUEVO'; el.startS.textContent = 'SUPERVIVENCIA';
+  ps[0].textContent += coinMsg();
   setTimeout(() => { if (state === 'won') { closeLabPanels(); el.msg.style.display = 'flex'; } }, 1200);
 }
 
@@ -2701,6 +2885,7 @@ function gameOver() {
     el.start.textContent = 'MISIONES'; el.startS.textContent = 'REINTENTAR';
   }
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
+  ps[0].textContent += coinMsg();
   setTimeout(() => { if (state === 'over') { closeLabPanels(); el.msg.style.display = 'flex'; } }, 900);
 }
 
@@ -2727,6 +2912,7 @@ function hitZombie(z, b) {
 }
 
 function killZombie(z) {
+  dropCoins(z);
   if (mission && mission.jungle && !z.root && Math.random() < 0.12) pickups.push({ x:z.x, y:z.y, kind:'ing', ing:['spore', 'sap', 'core'][Math.floor(Math.random() * 3)], life:Infinity });
   if (z.root) { burst(z.x, z.y, 30, '#ff3fb4', 360, 0.8, 4); addShake(0.7); Sfx.explosion(); toast('RAIZ DESTRUIDA ' + (mission.roots.filter(q => q.hp <= 0).length) + '/3'); player.pts += 300; return; }
   dying.push({ x:z.x, y:z.y, type:z.type, r:z.r, t:0, dir:Math.random() < 0.5 ? -1 : 1, ph:z.ph });
@@ -3072,10 +3258,11 @@ function update(dt, now) {
   if (comboT > 0) { comboT -= dt; if (comboT <= 0) combo = 0; }
   comboPulse = Math.max(0, comboPulse - 5 * dt);
 
-  plantsUpdate(dt);
+  plantsUpdate(dt); petUpdate(dt);
   // pickups
   for (const p of pickups) {
     p.life -= dt;
+    if (p.kind === 'coin') { const d0 = dist(p, player), R = pet && pet.type === 'slime' ? 430 : 175; if (d0 < R && d0 > 1) { const k = Math.min(1, (720 * dt) / d0); p.x += (player.x - p.x) * k; p.y += (player.y - p.y) * k; } }
     if (dist(p, player) < player.r + 14) {
       p.life = 0; Sfx.pickup();
       burst(p.x, p.y, 10, PK[p.kind].c, 180, 0.4, 2);
@@ -3083,6 +3270,7 @@ function update(dt, now) {
       else if (p.kind === 'bomb') player.gren = Math.min(player.grenMax, player.gren + 2);
       else if (p.kind === 'wpn') unlockWeapon(p.slot);
       else if (p.kind === 'ing') { mission.ing[p.ing]++; if (mission.jungle) mission.s.got++; toast('+1 ' + INGN[p.ing].toUpperCase() + (mission.ingTip ? '' : '  |  LLEVA LOS INGREDIENTES A LA MESA DE EXPERIMENTO (CENTRO)')); mission.ingTip = true; if (expOpen) renderExp(); }
+      else if (p.kind === 'coin') { addCoins(p.v); if (floaters.length < 40) floaters.push({ x:p.x, y:p.y - 14, vy:-60, text:'+' + p.v, life:0.7, max:0.7, color:'#ffd24a', big:false }); }
       else if (p.kind === 'scrap') { player.scrap += 2; toast('+2 CHATARRA'); }
       else addAmmo();
     }
@@ -3164,7 +3352,7 @@ const PSTYLE = { skin:'#e2b392', shirt:'#6f7f4c', shirt2:'#4a5736', pants:'#5a46
 
 /* ---- personajes en estilo caricatura (sprites propios, miran a la derecha y se rotan hacia donde apuntan) ---- */
 const CART = {};
-const CART_NAMES = ['t_f', 't_m', 't_walker', 't_runner', 't_tank', 't_spitter', 't_boss', 'player', 'walker', 'runner', 'tank', 'spitter', 'boss', 'w_pistol', 'w_shotgun', 'w_ak', 'w_lmg', 'w_rpg', 'w_sniper'];
+const CART_NAMES = ['t_f', 't_m', 't_r', 't_k', 't_a', 't_l', 't_e', 't_c', 't_s', 't_walker', 't_runner', 't_tank', 't_spitter', 't_boss', 'player', 'walker', 'runner', 'tank', 'spitter', 'boss', 'w_pistol', 'w_shotgun', 'w_ak', 'w_lmg', 'w_rpg', 'w_sniper'];
 function loadCartoon() {
   for (const n of CART_NAMES) { const im = new Image(); im.onload = () => { CART[n] = { img:im, white:null, red:null }; }; im.src = BASE + 'img/cartoon/' + n + '.webp'; }
 }
@@ -3172,6 +3360,13 @@ function loadCartoon() {
 const PUPPET = {
   f:      { t:'t_f',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#5f6d2f', cuff:'#ee7a1f', hand:'#f6c8a2', pants:'#6b4a2c', shoe:'#4a352b', sole:'#eadfca' } },
   m:      { t:'t_m',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#2a62c4', cuff:'#ee7a1f', hand:'#f6c8a2', pants:'#2b3a62', shoe:'#f4f4f4', sole:'#d63a3a' } },
+  r:      { t:'t_r',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#e8741a', cuff:'#2be8f0', hand:'#cfd8e4', pants:'#4a5a6e', shoe:'#e8741a', sole:'#2be8f0' } },
+  a:      { t:'t_a',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#c9d4e0', cuff:'#2be8f0', hand:'#7bd13a', pants:'#8a96a8', shoe:'#2be8f0', sole:'#e8f0f8' } },
+  l:      { t:'t_l',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#c98a2a', cuff:'#d63a2a', hand:'#e9a63a', pants:'#5a3a1e', shoe:'#3a2412', sole:'#eadfca' } },
+  e:      { t:'t_e',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#1d2f6a', cuff:'#ffffff', hand:'#f6c8a2', pants:'#14224a', shoe:'#101010', sole:'#d63a3a' } },
+  c:      { t:'t_c',       sh:[-0.03, 0.26], hip:0.17, fat:1.1,  pal:{ sleeve:'#9aa4b2', cuff:'#6c7482', hand:'#c8ccd4', pants:'#6c7482', shoe:'#4a4f5a', sole:'#2a2d34' } },
+  s:      { t:'t_s',       sh:[-0.03, 0.26], hip:0.17, fat:0.95, pal:{ sleeve:'#6a2fb8', cuff:'#eeeeee', hand:'#f1ecd8', pants:'#3a2a5a', shoe:'#f1ecd8', sole:'#3a2a5a' } },
+  k:      { t:'t_k',       sh:[-0.03, 0.26], hip:0.17, fat:1,    pal:{ sleeve:'#7a1fb8', cuff:'#ff3fb4', hand:'#e9c2a0', pants:'#2a1a4a', shoe:'#ff3fb4', sole:'#1a1226' } },
   walker: { t:'t_walker',  sh:[-0.02, 0.27], hip:0.18, fat:1,    pal:{ sleeve:'#f08a1e', cuff:'#c45f10', hand:'#8fae7a', pants:'#e57a14', shoe:'#4a2d1c', sole:'#2a1a10' }, arms:'reach', chain:true },
   runner: { t:'t_runner',  sh:[-0.06, 0.24], hip:0.15, fat:0.85, pal:{ sleeve:'#a2b44c', cuff:'#7e8f38', hand:'#a2b44c', pants:'#3a6fc0', shoe:'#dc3a3a', sole:'#f2f2f2' }, arms:'pump' },
   tank:   { t:'t_tank',    sh:[-0.04, 0.32], hip:0.2,  fat:1.7,  pal:{ sleeve:'#9097a4', cuff:'#6c7280', hand:'#a64a68', pants:'#7a818d', shoe:'#202226', sole:'#0f1012' }, arms:'reach', chain:true },
@@ -3182,7 +3377,7 @@ const PW = { walker:4.0, runner:4.0, tank:3.8, spitter:4.2, boss:2.6 };
 const bossName = () => mission && mission.jungle ? 'TITAN RAIZ' : mission && mission.lab ? 'EL EXPERIMENTO' : 'EL ALCAIDE';
 const WGRIP = [[0.26, 0.58], [0.2, 0.6], [0.2, 0.6], [0.18, 0.55], [0.34, 0.62], [0.2, 0.62]];  // manos: fraccion del arma (agarre trasero, delantero)
 let charSel = 'f';
-try { const c = localStorage.getItem('condenados_char'); if (c === 'f' || c === 'm') charSel = c; } catch (e) {}
+charSel = SAVE.eq.char;
 
 function limb(x1, y1, x2, y2, w, col) {
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -3194,7 +3389,7 @@ function limb(x1, y1, x2, y2, w, col) {
 // o: key,x,y,ang,mx,my,spd,ph,W,weapon(cur|null),recoil,flash,red,lunge
 function drawPuppet(o) {
   const P = PUPPET[o.key], c = P && CART[P.t]; if (!c) return false;
-  const W = o.W, ls = W / 68, im = c.img, Hh = W * im.height / im.width, pal = P.pal;
+  const sk = o.skin && SKINS[o.skin] && SKINS[o.skin].hue != null ? SKINS[o.skin] : null, W = o.W, ls = W / 68, im = sk ? skinImg(P.t, c.img, o.skin) : c.img, Hh = W * im.height / im.width, pal = sk ? Object.assign({}, P.pal, sk.pal) : P.pal;
   const flip = Math.cos(o.ang) < 0, ca = Math.cos(o.ang), sa = Math.sin(o.ang);
   const run = clamp((o.spd - 140) / 230, 0, 1), mov = clamp(o.spd / 80, 0, 1), fat = P.fat;
   let lx = o.mx * ca + o.my * sa, ly = -o.mx * sa + o.my * ca; if (flip) ly = -ly;
@@ -4534,6 +4729,7 @@ function draw() {
   const tNow = performance.now() / 1000;
   if (mode === 'mission' && mission) drawMissionWorld(tNow);
   for (const p of pickups) {
+    if (p.kind === 'coin') { drawCoin(p, tNow); continue; }
     if (p.kind === 'ing') { drawIng(p, tNow); continue; }
     const pulse = 0.6 + Math.sin(tNow * 6) * 0.4;
     glow(p.x, p.y, 34, PK[p.kind].g, 0.5 * pulse);
@@ -4561,7 +4757,7 @@ function draw() {
       if (!player.driving && vehicle.fuel > 0) { ctx.fillStyle = '#7be0ff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('CARRO', vehicle.x, vehicle.y - 50); }
     }
   }
-  if (!fp) drawPlants(tNow);
+  if (!fp) { drawPlants(tNow); drawPet(tNow); }
   if (TOUCH_DEV) for (const [z, c] of [[tapLock, '#ff3a4a'], [autoTgt !== tapLock ? autoTgt : null, '#ffe14a']]) if (z && z.hp > 0) { const pu = 0.6 + Math.sin(tNow * 8) * 0.4, R = z.r * 1.7; ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = 3; ctx.globalAlpha = 0.5 + pu * 0.4; ctx.beginPath(); ctx.arc(z.x, z.y, R, 0, 7); ctx.stroke(); for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + tNow; ctx.beginPath(); ctx.moveTo(z.x + Math.cos(a) * (R - 8), z.y + Math.sin(a) * (R - 8)); ctx.lineTo(z.x + Math.cos(a) * (R + 10), z.y + Math.sin(a) * (R + 10)); ctx.stroke(); } ctx.restore(); }
   if (fxOn && !fp) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(player.x, player.y + 10, 78, '#2be8f0', 0.30 + Math.sin(tNow * 3) * 0.05);
     for (const z of zombies) { if (z.x < cam.x - 200 || z.x > cam.x + cam.vw + 200 || z.y < cam.y - 200 || z.y > cam.y + cam.vh + 200) continue; glow(z.x, z.y + z.r * 0.5, z.r * 2.4, z.st === 'chase' ? '#ff3a4a' : z.st && z.st !== 'idle' ? '#ffa12b' : z.boss ? '#ff3a4a' : '#7dff6a', z.st === 'chase' ? 0.34 : 0.2); }
@@ -4629,7 +4825,7 @@ function draw() {
     const e = 1 - Math.pow(1 - cl, 2), lift = player.tower ? TLIFT * e : 0;
     const amp = clamp(player.amp * (player.tower ? 0 : 1), 0, 1.2);
     shadowBlob(player.x + 2, player.y + 8, 20, 11, 0.45);
-    if (drawPuppet({ key:charSel, x:player.x, y:player.y - lift + (player.tower ? 4 * e : 0), ang:player.angle, mx:player.vx, my:player.vy, spd:player.tower ? (cl < 1 ? 90 : 0) : spd, ph:player.tower && cl < 1 ? cl * 14 : player.ph, W:70, weapon:player.cur, recoil:player.recoil, flash:0, red:player.hurtT, lunge:0 })) { if (player.tower && cl >= 1) drawTowerFront(); }
+    if (drawPuppet({ key:charSel, x:player.x, y:player.y - lift + (player.tower ? 4 * e : 0), ang:player.angle, mx:player.vx, my:player.vy, spd:player.tower ? (cl < 1 ? 90 : 0) : spd, ph:player.tower && cl < 1 ? cl * 14 : player.ph, W:70, weapon:player.cur, recoil:player.recoil, flash:0, red:player.hurtT, lunge:0, skin:SAVE.eq.skin })) { if (player.tower && cl >= 1) drawTowerFront(); }
     else if (CART.player) {
       drawCartoon('player', player.x, player.y - lift, player.angle, 84 + 8 * e, player.ph, amp, 0, player.hurtT, 1);
       drawCartoonWeapon(player.cur, player.x, player.y - lift, player.angle, player.recoil);
@@ -4778,6 +4974,7 @@ function drawMini() {
 
 function hud() {
   updSeedHud();
+  { const ch = $('coinsHud'); if (ch && ch.textContent !== String(SAVE.coins)) ch.textContent = SAVE.coins; }
   const w = WEAPONS[player.cur], s = player.ws[player.cur];
   el.hp.style.width = clamp(player.hp / player.maxHp * 100, 0, 100) + '%';
   el.hp.style.background = player.hp < 30 ? '#c0392b' : '#7fbf5f';
@@ -4794,6 +4991,7 @@ function hud() {
       el.prompt.style.display = 'block'; el.prompt.innerHTML = (TOUCH_DEV ? 'TOCA: ' + ia.label.replace(/^E( \(mantener\))? - /, '').replace(/^Manten E para /, 'MANTEN PARA ').split(':')[0].split(' (')[0] : ia.label) + (ia.hold ? '<i style="width:' + clamp(pr, 0, 1) * 100 + '%"></i>' : '');
     } else el.prompt.style.display = 'none';
   } else el.prompt.style.display = 'none';
+  if (typeof pwrOpen !== 'undefined' && (pwrOpen || camOpen || expOpen)) el.prompt.style.display = 'none';
   el.stm.style.width = player.stamina + '%'; el.stm.style.background = player.winded ? '#c0562b' : '';
   el.dsh.style.width = (1 - player.dashCd / 0.9) * 100 + '%';
   const wkey = player.cur + '|' + player.has.join('');
@@ -4890,9 +5088,9 @@ el.start.addEventListener('click', () => {
   Sfx.init();
   if (mode === 'mission' && state === 'over') { retryMission(); if (fp && cv.requestPointerLock) cv.requestPointerLock(); } else newGame('mission');
 });
-const setCharLabel = () => { el.startC.textContent = 'PERSONAJE: ' + (charSel === 'f' ? 'NINA' : 'NINO'); };
+const setCharLabel = () => { el.startC.textContent = 'PERSONAJE: ' + CHARS[charSel].n.toUpperCase(); const h = $('hChar'); if (h) h.textContent = el.startC.textContent; };
 setCharLabel();
-el.startC.addEventListener('click', () => { charSel = charSel === 'f' ? 'm' : 'f'; try { localStorage.setItem('condenados_char', charSel); } catch (e) {} setCharLabel(); });
+el.startC.addEventListener('click', () => { const o = SAVE.own.char; charSel = o[(o.indexOf(charSel) + 1) % o.length]; SAVE.eq.char = charSel; saveGame(); setCharLabel(); });
 const setDiffLabel = () => { el.startD.textContent = 'DIFICULTAD: ' + DIFFS[diff].n; };
 setDiffLabel();
 el.startD.addEventListener('click', () => { diff = (diff + 1) % 3; try { localStorage.setItem('condenados_diff', diff); } catch (e) {} setDiffLabel(); });
@@ -5030,13 +5228,16 @@ if (IS_TOUCH) {
 }
 /* ---- pagina principal ---- */
 const hero = $('hero');
-const showHero = () => { document.body.classList.remove('ingame'); Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
-hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => {
+const showHero = () => { { const c = $('hCoins'); if (c) c.textContent = SAVE.coins; } document.body.classList.remove('ingame'); Sfx.music(false); el.msg.style.display = 'none'; hero.style.display = 'block'; hero.scrollTop = 0; const b = $('hBest'); if (b) b.textContent = best; };
+hero.querySelectorAll('[data-play]').forEach(b => b.addEventListener('click', () => openShop(() => {
   state = 'menu'; hero.style.display = 'none'; document.body.classList.add('ingame');
   if (IS_TOUCH) { const d = document.documentElement; if (d.requestFullscreen && !document.fullscreenElement) d.requestFullscreen().then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); }
-  el[b.dataset.play].click(); }));
+  el[b.dataset.play].click(); })));
 hero.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => { const t = document.getElementById(a.dataset.go); if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); }));
 $('toHero').addEventListener('click', showHero);
+$('toShop').addEventListener('click', () => openShop(null));
+$('hShop').addEventListener('click', () => openShop(null)); $('hNavShop').addEventListener('click', () => openShop(null));
+$('hCoins').textContent = SAVE.coins;
 const syncOpts = () => { $('hChar').textContent = el.startC.textContent; $('hDiff').textContent = el.startD.textContent; };
 $('hChar').addEventListener('click', () => { el.startC.click(); syncOpts(); });
 $('hDiff').addEventListener('click', () => { el.startD.click(); syncOpts(); });
