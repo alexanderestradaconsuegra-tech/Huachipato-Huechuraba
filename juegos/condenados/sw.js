@@ -1,5 +1,5 @@
 // Service worker: imagenes desde cache (cargan al instante la segunda vez) y el HTML siempre desde la red con respaldo sin conexion.
-const CACHE = 'condenados-v2';
+const CACHE = 'condenados-v3';
 self.addEventListener('install', () => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

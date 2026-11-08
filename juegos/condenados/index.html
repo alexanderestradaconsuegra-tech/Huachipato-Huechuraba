@@ -236,7 +236,7 @@
   .pmin:hover { background:rgba(255,63,180,.55); } .pmin:active { transform:scale(.92); } .pmin:focus-visible { outline:3px solid var(--c-cyan); outline-offset:2px; }
   .pc > *:not(.pbar):not(.keep) { display:none !important; } .pc { min-width:0 !important; } .pc .pbar { margin-bottom:0; }
   .hud.pc { width:auto; } .hud .keep { min-width:190px; } .pdrag { transition:none !important; }
-  #msg #startL3 { order:2; box-shadow:0 8px 24px rgba(138,31,255,.45); } #msg #startL2 { order:3; } #msg #startS { order:4; } #msg #toHero { order:5; }
+  #msg #startL4 { order:1; box-shadow:0 8px 24px rgba(43,232,240,.4); } #msg #startL3 { order:2; box-shadow:0 8px 24px rgba(138,31,255,.45); } #msg #startL2 { order:3; } #msg #startS { order:4; } #msg #toHero { order:5; }
   /* controles tactiles (movil) */
   html, body { overscroll-behavior:none; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; }
   #touch { position:absolute; inset:0; display:none; z-index:3; touch-action:none; user-select:none; -webkit-user-select:none; pointer-events:auto; }
@@ -354,7 +354,7 @@
         <h1 class="htitle"><span>SHOOTER DE ZOMBIS</span>LOS <br>CONDENADOS</h1>
         <p class="htag">Los ejecutados volvieron de la tumba. Tu eres el ultimo justiciero.</p>
         <p class="hsub">Sigilo, estrategia y plantas mutantes. Colate por una prision-laboratorio, reparte la energia, cultiva tus propias armas y escapa. Gratis, directo en tu navegador.</p>
-        <div class="hcta"><button class="hbtn main" data-play="startL3">Nivel 3: Ciudad Selva</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
+        <div class="hcta"><button class="hbtn main" data-play="startL4">Nivel 4: Playa Maldita</button><button class="hbtn alt" data-play="start">Jugar desde el inicio</button></div>
         <div class="hopts" role="group" aria-label="Ajustes de partida"><button class="hbtn ghost sm" id="hShop" type="button">TIENDA · <span id="hCoins">0</span> MONEDAS</button><button class="hbtn ghost sm" id="hChar" type="button"></button><button class="hbtn ghost sm" id="hDiff" type="button"></button></div>
         <p class="hwarn" role="note">En el celular se juega en horizontal: arrastra a la izquierda para moverte. Tu personaje dispara solo a los zombis que te persiguen; toca un zombi para atacarlo y toca un objeto para usarlo.</p>
         <ul class="hstats"><li><b>3</b>niveles</li><li><b>9</b>personajes</li><li><b>3</b>mascotas</li><li><b>6</b>plantas de combate</li><li><b>6</b>armas</li><li><b id="hBest">0</b>tu record</li></ul>
@@ -388,6 +388,7 @@
         <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,61,.35),rgba(255,45,143,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">DISPONIBLE</span><img loading="lazy" decoding="async" src="img/cartoon/boss.webp" alt="" style="position:absolute;right:8px;bottom:-6px;height:150px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 1 · Instalacion Kronos</h3><p>Una prision-laboratorio por secciones. Generador, tarjetas, codigo, torres y un jefe: El Alcaide.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="start">Jugar nivel 1</button></p></div></div>
         <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(18,184,160,.3),rgba(125,255,106,.2)),url(img/promo/hub.webp)"><span class="tag">NUEVO</span></div><div class="body"><h3>Nivel 2 · Biolab ARGOS</h3><p>Hub con tres modulos, energia limitada, gas, torretas, guardias y plantas mutantes. Escapa con la muestra.</p><p style="margin-top:14px"><button class="hbtn alt sm" data-play="startL2">Jugar nivel 2</button></p></div></div>
         <div class="hcard"><div class="pic" style="background-image:linear-gradient(135deg,rgba(138,31,255,.3),rgba(255,63,180,.2)),url(img/promo/bg.webp)"><span class="tag">NUEVO · PARTE 1</span><img src="img/jungle/j_tree.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 3 · La Ciudad Selva</h3><p>5 actos: prepara tus plantas, resiste la emboscada de la radio, enciende el hospital y el puerto, destruye las raices, sobrevive al cerco de la noche y derrota al Titan Raiz en 3 fases. Escondete en los arbustos cuando pase una oleada.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL3">Jugar nivel 3</button></p></div></div>
+        <div class="hcard"><div class="pic" style="background:linear-gradient(135deg,rgba(255,138,31,.35),rgba(43,232,240,.3)),url(img/promo/bg.webp) center/cover"><span class="tag">NUEVO</span><img src="img/beach/b_palm.webp" alt="" loading="lazy" decoding="async" style="position:absolute;right:6px;bottom:-8px;height:160px;filter:drop-shadow(0 8px 12px #000)"></div><div class="body"><h3>Nivel 4 · La Playa Maldita</h3><p>Sombras que salen de la arena y manos que te agarran 5 segundos mientras llegan zombis con traje de bano, lentes de sol y salvavidas. Consigue combustible y la llave del Salvavidas Zombi para escapar en lancha.</p><p style="margin-top:14px"><button class="hbtn main sm" data-play="startL4">Jugar nivel 4</button></p></div></div>
       </div>
     </section>
     <section class="hsec hrev" id="h-ene">
@@ -418,7 +419,7 @@
     </section>
     <section class="hsec hrev">
       <h2>Elige como jugar</h2><p class="hlead">Tambien hay supervivencia infinita y modo primera persona.</p>
-      <div class="hmodes"><button class="hbtn main" data-play="start">Misiones · Nivel 1</button><button class="hbtn alt" data-play="startL2">Nivel 2 · Biolab</button><button class="hbtn alt" data-play="startL3">Nivel 3 · Ciudad Selva</button><button class="hbtn ghost" data-play="startS">Supervivencia</button><button class="hbtn ghost" data-play="startF">Primera persona</button></div>
+      <div class="hmodes"><button class="hbtn main" data-play="start">Misiones · Nivel 1</button><button class="hbtn alt" data-play="startL2">Nivel 2 · Biolab</button><button class="hbtn alt" data-play="startL3">Nivel 3 · Ciudad Selva</button><button class="hbtn main" data-play="startL4">Nivel 4 · Playa Maldita</button><button class="hbtn ghost" data-play="startS">Supervivencia</button><button class="hbtn ghost" data-play="startF">Primera persona</button></div>
     </section>
     <section class="hsec hrev" id="h-ctl">
       <h2>Controles</h2><p class="hlead">Se juega con teclado y mouse.</p>
@@ -438,7 +439,7 @@
     <p>PUERTAS: las de los costados se abren solas al acercarte (tambien a los zombis que te persiguen). Las de color necesitan energia o tarjeta: acercate y pulsa E.</p>
     <p>SIGILO: los zombis ven en un cono (se dibuja en el suelo) y oyen disparos y pasos. No todos te persiguen: un zombi que te ve avisa solo a los cercanos. Quedate quieto junto a un contenedor para esconderte. T lanza un senuelo que los atrae, F apunala en silencio, y puedes disparar a los barriles rojos (explotan en cadena) o a las alarmas de los autos para llevarlos a otro lado.</p>
     <p>Entre misiones: B = botiquin (50), N = municion (30), M = mejora de dano (100), V = 2 granadas (60), Enter = continuar</p>
-    <div class="mbtns"><button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toShop" style="background:linear-gradient(135deg,#d9a31a,#ffd24a);color:#2a1a00">TIENDA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL3" style="background:linear-gradient(135deg,#8a1fff,#ff3fb4)">NIVEL 3: CIUDAD SELVA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button></div>
+    <div class="mbtns"><button id="start">MISIONES</button><button id="startF">PRIMERA PERSONA</button><button id="startS">SUPERVIVENCIA</button><button id="toShop" style="background:linear-gradient(135deg,#d9a31a,#ffd24a);color:#2a1a00">TIENDA</button><button id="toHero" style="background:linear-gradient(135deg,#3a2d7a,#6a5cff)">MENU PRINCIPAL</button><button id="startL4" style="background:linear-gradient(135deg,#ff8a1f,#2be8f0);color:#1a1226">NIVEL 4: PLAYA MALDITA</button><button id="startL3" style="background:linear-gradient(135deg,#8a1fff,#ff3fb4)">NIVEL 3: CIUDAD SELVA</button><button id="startL2" style="background:linear-gradient(135deg,#1aa890,#3ad66a)">NIVEL 2: BIOLAB</button><button id="startD" style="background:linear-gradient(135deg,#6a5a2a,#9a7a1a)"></button><button id="startC" style="background:linear-gradient(135deg,#7a3aa0,#c04aa0)"></button></div>
   </div>
 </div>
 <script>
@@ -612,7 +613,7 @@ const TOUCH_DEV = matchMedia('(pointer:coarse)').matches || /[?&]touch=1/.test(l
 let DPR = 1, renderScale = 1;
 const $ = id => document.getElementById(id);
 const el = { hp:$('hp'), wpn:$('wpn'), ammo:$('ammo'), wave:$('wave'), pts:$('pts'), best:$('best'),
-  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), startL2:$('startL2'), startL3:$('startL3'), pwr:$('pwr'), camov:$('camov'), expp:$('expp'), seedhud:$('seedhud'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
+  left:$('left'), msg:$('msg'), toast:$('toast'), shop:$('shop'), start:$('start'), startS:$('startS'), startF:$('startF'), startD:$('startD'), startC:$('startC'), startL2:$('startL2'), startL3:$('startL3'), startL4:$('startL4'), pwr:$('pwr'), camov:$('camov'), expp:$('expp'), seedhud:$('seedhud'), task:$('task'), taskBox:$('taskBox'), snd:$('snd'), dec:$('dec'), cards:$('cards'), scr:$('scr'), facHud:$('facHud'), prompt:$('prompt'), dashKey:$('dashKey'), gren:$('gren'), stm:$('stm'), dsh:$('dsh'), wbar:$('wbar'),
   obj:$('obj'), mini:$('mini'), waveLbl:$('waveLbl') };
 const mctx = el.mini.getContext('2d');
 
@@ -656,7 +657,7 @@ const ZTYPES = {
 
 /* ============================== SPRITES ============================== */
 const IMG = {}, VAR = {}, PAT = {};
-const EXTRA_IMGS = [['car_policia', 'car_policia.webp'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp'], ['pl_shoot', 'lab/pl_shoot.webp'], ['pl_trap', 'lab/pl_trap.webp'], ['pl_bomb', 'lab/pl_bomb.webp'], ['pl_wall', 'lab/pl_wall.webp'], ['pl_sun', 'lab/pl_sun.webp'], ['pl_mine', 'lab/pl_mine.webp'], ['i_spore', 'lab/i_spore.webp'], ['i_sap', 'lab/i_sap.webp'], ['i_core', 'lab/i_core.webp'], ['j_tree', 'jungle/j_tree.webp'], ['j_container', 'jungle/j_container.webp'], ['j_ambulance', 'jungle/j_ambulance.webp'], ['j_bush', 'jungle/j_bush.webp'], ['j_fountain', 'jungle/j_fountain.webp'], ['j_mushroom', 'jungle/j_mushroom.webp'], ['j_bus', 'jungle/j_bus.webp'], ['j_bench', 'jungle/j_bench.webp'], ['j_lamp', 'jungle/j_lamp.webp'], ['j_tree2', 'jungle/j_tree2.webp'], ['j_tent', 'jungle/j_tent.webp'], ['j_fire', 'jungle/j_fire.webp'], ['j_stall', 'jungle/j_stall.webp'], ['j_taxi', 'jungle/j_taxi.webp'], ['j_barricade', 'jungle/j_barricade.webp'], ['j_solar', 'jungle/j_solar.webp'], ['j_wtower', 'jungle/j_wtower.webp'], ['j_crane', 'jungle/j_crane.webp'], ['j_billboard', 'jungle/j_billboard.webp'], ['j_rocks', 'jungle/j_rocks.webp'], ['r_hospital', 'jungle/r_hospital.webp'], ['r_warehouse', 'jungle/r_warehouse.webp'], ['r_shop', 'jungle/r_shop.webp'], ['r_apartment', 'jungle/r_apartment.webp']]
+const EXTRA_IMGS = [['car_policia', 'car_policia.webp'], ['camp1', 'camp1.webp'], ['camp2', 'camp2.webp'], ['valla', 'valla.webp'], ['farola', 'farola.webp'], ['l_drum', 'lab/l_drum.webp'], ['l_case', 'lab/l_case.webp'], ['l_barrier', 'lab/l_barrier.webp'], ['l_boxes', 'lab/l_boxes.webp'], ['l_locker', 'lab/l_locker.webp'], ['l_tube', 'lab/l_tube.webp'], ['l_labtable', 'lab/l_labtable.webp'], ['l_planter', 'lab/l_planter.webp'], ['l_cryo', 'lab/l_cryo.webp'], ['l_turret', 'lab/l_turret.webp'], ['l_console', 'lab/l_console.webp'], ['pl_shoot', 'lab/pl_shoot.webp'], ['pl_trap', 'lab/pl_trap.webp'], ['pl_bomb', 'lab/pl_bomb.webp'], ['pl_wall', 'lab/pl_wall.webp'], ['pl_sun', 'lab/pl_sun.webp'], ['pl_mine', 'lab/pl_mine.webp'], ['i_spore', 'lab/i_spore.webp'], ['i_sap', 'lab/i_sap.webp'], ['i_core', 'lab/i_core.webp'], ['j_tree', 'jungle/j_tree.webp'], ['j_container', 'jungle/j_container.webp'], ['j_ambulance', 'jungle/j_ambulance.webp'], ['j_bush', 'jungle/j_bush.webp'], ['j_fountain', 'jungle/j_fountain.webp'], ['j_mushroom', 'jungle/j_mushroom.webp'], ['j_bus', 'jungle/j_bus.webp'], ['j_bench', 'jungle/j_bench.webp'], ['j_lamp', 'jungle/j_lamp.webp'], ['j_tree2', 'jungle/j_tree2.webp'], ['j_tent', 'jungle/j_tent.webp'], ['j_fire', 'jungle/j_fire.webp'], ['j_stall', 'jungle/j_stall.webp'], ['j_taxi', 'jungle/j_taxi.webp'], ['j_barricade', 'jungle/j_barricade.webp'], ['j_solar', 'jungle/j_solar.webp'], ['j_wtower', 'jungle/j_wtower.webp'], ['j_crane', 'jungle/j_crane.webp'], ['j_billboard', 'jungle/j_billboard.webp'], ['j_rocks', 'jungle/j_rocks.webp'], ['r_hospital', 'jungle/r_hospital.webp'], ['r_warehouse', 'jungle/r_warehouse.webp'], ['r_shop', 'jungle/r_shop.webp'], ['r_apartment', 'jungle/r_apartment.webp'],['b_palm','beach/b_palm.webp'],['b_umbrella','beach/b_umbrella.webp'],['b_tower','beach/b_tower.webp'],['r_bar','beach/r_bar.webp'],['b_boat','beach/b_boat.webp'],['b_fuel','beach/b_fuel.webp'],['b_lounger','beach/b_lounger.webp'],['b_lighthouse','beach/b_lighthouse.webp'],['b_wreck','beach/b_wreck.webp']]
   .concat(['crates', 'barrels', 'barrier', 'sandbags', 'dumpster', 'wreck', 'tires', 'barricade'].map(n => ['p_' + n, 'p_' + n + '.webp']))
   .concat(Array.from({ length:12 }, (_, i) => ['d' + i, 'd' + i + '.webp']));
 const UPRIGHT_TYPES = ['walker', 'runner', 'tank', 'spitter', 'boss'];
@@ -768,6 +769,8 @@ const SKINS = {
   ice:{ n:'Hielo', cost:160, d:'Azul polar', hue:195, pal:{ sleeve:'#2b9bff', cuff:'#ffffff', pants:'#1a3a7a' } },
   fire:{ n:'Fuego', cost:160, d:'Rojo ardiente', hue:12, pal:{ sleeve:'#e0301e', cuff:'#ffd24a', pants:'#5a1a10' } },
   gold:{ n:'Oro', cost:450, d:'Para los mejores', hue:46, pal:{ sleeve:'#d9a31a', cuff:'#fff2a8', pants:'#7a5a10' } } };
+const ZSKIN = { b0:{ hue:188 }, b1:{ hue:350 }, b2:{ hue:52 }, b3:{ hue:140 }, b4:{ hue:312 } };
+for (const k in ZSKIN) ZSKIN[k].pal = { sleeve:'#9fbf8a', cuff:'#9fbf8a', hand:'#8fae7a', pants:'#9fbf8a', shoe:'#8fae7a', sole:'#8fae7a' };
 const CHARS = {
   f:{ n:'Nina', cost:0, d:'Equilibrada', t:'t_f' }, m:{ n:'Nino', cost:0, d:'Equilibrado', t:'t_m' },
   a:{ n:'Extraterrestre', cost:1000, d:'+8% velocidad y +10% vida', t:'t_a', spd:1.08, hp:1.1 },
@@ -860,7 +863,7 @@ function drawPet(t) {
 /* ---- imagenes de vista previa ---- */
 const PIMG = {}; function pimg(src) { if (PIMG[src]) return PIMG[src]; const im = new Image(); im.src = src; return PIMG[src] = im; }
 const SKINC = {};
-function skinImg(tkey, img, skinId) { const sk = SKINS[skinId]; if (!sk || sk.hue == null) return img; const k = tkey + ':' + skinId; return SKINC[k] || (SKINC[k] = hueVariant(img, sk.hue)); }
+function skinImg(tkey, img, skinId) { const sk = SKINS[skinId] || ZSKIN[skinId]; if (!sk || sk.hue == null) return img; const k = tkey + ':' + skinId; return SKINC[k] || (SKINC[k] = hueVariant(img, sk.hue)); }
 /* ---- interfaz de la tienda ---- */
 let shopTab = 'skin', shopPending = null;
 const SHOP_TABS = [['skin', 'SKINS'], ['wpn', 'ARMAS'], ['char', 'PERSONAJES'], ['pet', 'MASCOTAS']];
@@ -945,7 +948,7 @@ function newGame(m, fpFlag = false, lvl = 1) {
     el.waveLbl.textContent = fp ? 'MISION' : 'NIVEL';
     el.obj.style.display = 'block'; el.mini.style.display = 'block';
     player = makePlayer();
-    if (fp) startMission(0); else if (lvl === 3) startJungle(); else if (lvl === 2) startLab(); else startFacility();
+    if (fp) startMission(0); else if (lvl === 4) startBeach(); else if (lvl === 3) startJungle(); else if (lvl === 2) startLab(); else startFacility();
   }
 }
 
@@ -1795,6 +1798,340 @@ function drawRoot(z, t) {
   ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('RAIZ', z.x, z.y - S * 0.86 - 4);
 }
 
+/* ============================== NIVEL 4: LA PLAYA MALDITA ============================== */
+const ZINFO_BEACH = [null,
+  { name:'PLAYA SUR', col:'#ffd23a', fl:'#fff0b0', w1:'#27b4e8', w2:'#0e6cb4', acc:'#2be8f0', tint:'', mix:{ walker:1, runner:0.15 } },
+  { name:'CHIRINGUITO', col:'#ff7ad0', fl:'#ffd6f0', w1:'#27b4e8', w2:'#0e6cb4', acc:'#ff7ad0', tint:'', mix:{ walker:1, runner:0.3, spitter:0.1 } },
+  { name:'FARO Y SALVAVIDAS', col:'#ff5a4a', fl:'#ffd0c8', w1:'#27b4e8', w2:'#0e6cb4', acc:'#ff5a4a', tint:'', mix:{ walker:1, runner:0.4, spitter:0.2, tank:0.05 } },
+  { name:'MUELLE', col:'#2be8f0', fl:'#c8fbff', w1:'#27b4e8', w2:'#0e6cb4', acc:'#ffe14a', tint:'', mix:{ walker:1, runner:0.5, spitter:0.25, tank:0.08 } }];
+const BROOMS = [[18,42,36,12,1],[3,18,26,22,2],[46,18,24,22,3],[6,4,60,12,4]];
+const BLINKS = [[20,40,6,2,1],[46,40,6,2,1],[10,16,6,2,2],[54,16,6,2,3]];
+const BBLOCKS = [[30,46,5,3,'lag'],[12,26,5,4,'lag'],[57,26,5,4,'lag'],[34,10,6,3,'lag'],[6,21,8,5,'bar']];
+const BSAFE = [[20,40,6,2],[46,40,6,2],[10,16,6,2],[54,16,6,2],[28,3.6,18,7.6],[33,42,4,4],[3,31,26,1.4],[46,31,24,1.4]];   // tablas de madera: no hay manos
+const BKIND = [null, 'sand', 'sand', 'sand', 'wet'];
+const ESC_T = 25;
+const bRect = k => rects.find(r => r.jtask === k);
+const bSafe = (x, y) => BSAFE.some(q => x >= q[0] * TS && x <= (q[0] + q[2]) * TS && y >= q[1] * TS && y <= (q[1] + q[3]) * TS);
+
+function buildBeach() {
+  GC = 72; GR = 60; ZINFO = ZINFO_BEACH; METAL = null; METALZ = [];
+  const grid = new Uint8Array(GC * GR).fill(1), zone = new Uint8Array(GC * GR);
+  const carve = (x, y, w, h, z) => { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) { grid[j * GC + i] = 0; zone[j * GC + i] = z; } };
+  for (const r of BROOMS) carve(...r);
+  for (const l of BLINKS) carve(...l);
+  for (const [x, y, w, h] of BBLOCKS) for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) { grid[j * GC + i] = 1; zone[j * GC + i] = 0; }
+  const doors = [{ x:10, y:16, w:6, h:1, lock:'gate', name:'MUELLE' }, { x:54, y:16, w:6, h:1, lock:'gate', name:'MUELLE' }].map(d => ({ ...d, px:d.x * TS, py:d.y * TS, pw:d.w * TS, ph:d.h * TS, open:false, t:0 }));
+  for (const d of doors) for (let j = d.y; j < d.y + d.h; j++) for (let i = d.x; i < d.x + d.w; i++) grid[j * GC + i] = 2;
+  const wallZ = new Uint8Array(GC * GR);
+  for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) {
+    if (grid[j * GC + i] !== 1) continue;
+    for (let dj = -1; dj <= 1 && !wallZ[j * GC + i]; dj++) for (let di = -1; di <= 1; di++) {
+      const a = i + di, b = j + dj;
+      if (a >= 0 && b >= 0 && a < GC && b < GR && grid[b * GC + a] !== 1 && zone[b * GC + a]) { wallZ[j * GC + i] = zone[b * GC + a]; break; }
+    }
+  }
+  G = { zap:{ x:-9e4, y:-9e4, w:10, h:10, on:false, t:0, cd:0, zt:0 }, grid, zone, wallZ, doors, lit:[0, true, true, true, true], items:[], decos:[], mini:null, chunks:{}, chs:Math.min(1.5, Math.max(1, window.devicePixelRatio || 1)), gas:{}, gasR:{} };
+  const out = [];
+  const O = (kind, x, y, w, h, extra) => { const r = { kind, x:x * TS, y:y * TS, w:w * TS, h:h * TS, seed:Math.random(), ...extra }; out.push(r); return r; };
+  const P = (spr, x, y, w, h, sc, extra) => O('prop', x, y, w, h, { spr, sc, flip:Math.random() < 0.5, dir:1, ...extra });
+  O('roof', 6, 21, 8, 5, { spr:'r_bar', walk:true });
+  // playa sur (salida)
+  for (const [x, y] of [[19.4, 43.2], [51.2, 43.4], [21, 51.4], [50.4, 51.6]]) P('b_palm', x, y, 1.2, 1.2, 2.7, { flip:false });
+  for (const [x, y] of [[26, 46.5], [42, 46], [46.5, 50]]) P('b_umbrella', x, y, 1.5, 1.5, 1.7, { hide:true, flip:false });
+  for (const [x, y] of [[24, 50], [38.5, 51.8], [28.5, 44]]) P('b_lounger', x, y, 2.2, 1.2, 1.0);
+  P('b_wreck', 40, 49, 2.8, 1.6, 1.0); O('tower', 25.4, 52, 1.9, 1.9);
+  // chiringuito
+  for (const [x, y] of [[4.4, 19.6], [26, 19.8], [4.4, 36.4], [26, 37.4]]) P('b_palm', x, y, 1.2, 1.2, 2.7, { flip:false });
+  for (const [x, y] of [[18, 22], [20, 33]]) P('b_umbrella', x, y, 1.5, 1.5, 1.7, { hide:true, flip:false });
+  for (const [x, y] of [[8, 32.4], [22, 28], [15.5, 36.4]]) P('b_lounger', x, y, 2.2, 1.2, 1.0);
+  P('b_wreck', 4.6, 28.6, 2.8, 1.6, 1.0); P('b_fuel', 9.6, 27, 1.0, 1.3, 1.0, { jtask:'fuel', flip:false }); O('tower', 24, 34, 1.9, 1.9);
+  // faro y puesto de salvavidas
+  P('b_lighthouse', 64.4, 19.4, 2.2, 3.6, 1.0, { flip:false }); P('b_tower', 51.2, 22.4, 2.6, 2.6, 1.0, { flip:false });
+  for (const [x, y] of [[47.4, 19.4], [67.6, 36.2], [47.4, 37.4]]) P('b_palm', x, y, 1.2, 1.2, 2.7, { flip:false });
+  for (const [x, y] of [[54, 34], [64, 31]]) P('b_umbrella', x, y, 1.5, 1.5, 1.7, { hide:true, flip:false });
+  for (const [x, y] of [[50, 29.4], [66, 23.4], [60, 36]]) P('b_lounger', x, y, 2.2, 1.2, 1.0);
+  P('b_wreck', 61, 21.4, 2.8, 1.6, 1.0); O('tower', 48.4, 33.6, 1.9, 1.9);
+  // muelle
+  P('b_boat', 33.6, 4.6, 5.6, 2.1, 1.0, { jtask:'boat', flip:false });
+  for (const [x, y] of [[8, 5], [62.6, 5], [8, 12.6], [62.6, 12.6]]) P('b_palm', x, y, 1.2, 1.2, 2.7, { flip:false });
+  for (const [x, y] of [[24, 11], [46, 12]]) P('b_umbrella', x, y, 1.5, 1.5, 1.7, { hide:true, flip:false });
+  for (const [x, y] of [[14, 11.4], [52, 8], [20, 6]]) P('b_lounger', x, y, 2.2, 1.2, 1.0);
+  P('b_wreck', 56, 12, 2.8, 1.6, 1.0); O('tower', 12, 5.4, 1.9, 1.9);
+  rects = out;
+  const D = (t, x, y, w, h, col) => G.decos.push({ t, x:x * TS, y:y * TS, w:w * TS, h:h * TS, col });
+  for (const [x, y, w, h] of BSAFE) D('plank', x, y, w, h, '#b9814a');
+  for (const [x, y, w] of [[22, 46, 1.4], [44, 44, 1.2], [14, 30, 1.3], [66, 34, 1.4], [30, 8, 1.2], [48, 6, 1.4]]) D('puddle', x, y, w, w * 0.6, '#2be8f0');
+  const mc = document.createElement('canvas'); mc.width = GC * 3; mc.height = GR * 3; const mg = mc.getContext('2d');
+  mg.fillStyle = '#0a4c94'; mg.fillRect(0, 0, mc.width, mc.height);
+  for (let j = 0; j < GR; j++) for (let i = 0; i < GC; i++) { if (grid[j * GC + i] === 1) continue; mg.fillStyle = ZINFO[zone[j * GC + i] || 1].col; mg.globalAlpha = 0.5; mg.fillRect(i * 3, j * 3, 3, 3); }
+  mg.globalAlpha = 1; G.mini = mc;
+  return out;
+}
+
+function makeBeachTile(kind = 'sand') {
+  const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d');
+  let sd = 31 + kind.length * 11; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  const speck = (n, cols, rmax) => { for (let i = 0; i < n; i++) { g.fillStyle = cols[(rnd() * cols.length) | 0]; const r = 1 + rnd() * rmax; g.fillRect(rnd() * 160, rnd() * 160, r, r); } };
+  if (kind === 'wet') { g.fillStyle = '#e2c27a'; g.fillRect(0, 0, 160, 160); speck(260, ['#cfa95a', '#d9b768', '#c29a4c'], 3); for (let i = 0; i < 6; i++) { g.fillStyle = 'rgba(60,150,200,.16)'; g.beginPath(); g.ellipse(rnd() * 160, rnd() * 160, 14 + rnd() * 22, 6 + rnd() * 9, rnd() * 3, 0, 7); g.fill(); } }
+  else { g.fillStyle = '#f6dc90'; g.fillRect(0, 0, 160, 160); speck(320, ['#e8c874', '#fde9b0', '#e0bd68', '#ffefc4'], 2.8); }
+  g.strokeStyle = 'rgba(190,140,50,.28)'; g.lineWidth = 3; for (let i = 0; i < 4; i++) { const y = 20 + i * 40 + rnd() * 12; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= 160; x += 20) g.lineTo(x, y + Math.sin(x * 0.07 + i) * 5); g.stroke(); }
+  g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 2; for (let i = 0; i < 3; i++) { const y = 34 + i * 48 + rnd() * 10; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= 160; x += 20) g.lineTo(x, y + Math.sin(x * 0.07 + i + 2) * 4); g.stroke(); }
+  for (let i = 0; i < 7; i++) { const x = rnd() * 150 + 4, y = rnd() * 150 + 4, col = ['#ff7ad0', '#2be8f0', '#fff', '#ff9a3d'][(rnd() * 4) | 0]; g.fillStyle = col; g.beginPath(); g.ellipse(x, y, 3.2, 2.4, rnd() * 3, 0, 7); g.fill(); g.strokeStyle = 'rgba(80,40,10,.5)'; g.lineWidth = 1; g.stroke(); }
+  return c;
+}
+
+function drawBeachWater(tx, ty) {
+  const x = tx * TS, y = ty * TS, h = hashT(tx, ty);
+  const g = ctx.createLinearGradient(x, y, x, y + TS); g.addColorStop(0, '#2cc0f0'); g.addColorStop(1, '#0e6cb4'); ctx.fillStyle = g; ctx.fillRect(x, y, TS, TS);
+  ctx.strokeStyle = 'rgba(255,255,255,.34)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  for (let k = 0; k < 2; k++) { const yy = y + 16 + ((h >> (k * 3)) % 40) + k * 24, xx = x + ((h >> (k * 2 + 1)) % 30); ctx.beginPath(); ctx.moveTo(xx, yy); ctx.quadraticCurveTo(xx + 14, yy - 7, xx + 28, yy); ctx.quadraticCurveTo(xx + 42, yy + 7, xx + 56, yy); ctx.stroke(); }
+  const fl = (a, b, c2, d) => { ctx.fillStyle = 'rgba(180,250,255,.38)'; ctx.fillRect(a, b, c2, d); };
+  const gv = (i, j) => i >= 0 && j >= 0 && i < GC && j < GR && G.grid[j * GC + i] !== 1;
+  const N = gv(tx, ty - 1), S = gv(tx, ty + 1), Wd = gv(tx - 1, ty), E = gv(tx + 1, ty);
+  ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 0.9;
+  if (N) { fl(x, y, TS, 18); ctx.fillRect(x, y, TS, 6); } if (S) { fl(x, y + TS - 18, TS, 18); ctx.fillRect(x, y + TS - 6, TS, 6); }
+  if (Wd) { fl(x, y, 18, TS); ctx.fillRect(x, y, 6, TS); } if (E) { fl(x + TS - 18, y, 18, TS); ctx.fillRect(x + TS - 6, y, 6, TS); }
+  ctx.globalAlpha = 1;
+}
+function drawOceanWaves(t) {
+  ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  const x0 = Math.floor(cam.x / 160) * 160 - 160, y0 = Math.floor(cam.y / 120) * 120 - 120;
+  for (let yy = y0; yy < cam.y + cam.vh + 120; yy += 120) for (let xx = x0; xx < cam.x + cam.vw + 160; xx += 160) {
+    const hh = hashT(xx / 160, yy / 120), ox = (hh % 90) + Math.sin(t * 0.8 + hh) * 14, oy = ((hh >> 3) % 60);
+    ctx.beginPath(); ctx.moveTo(xx + ox, yy + oy); ctx.quadraticCurveTo(xx + ox + 20, yy + oy - 9, xx + ox + 40, yy + oy); ctx.quadraticCurveTo(xx + ox + 60, yy + oy + 9, xx + ox + 80, yy + oy); ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawPlank(d) {
+  ctx.fillStyle = d.col; ctx.fillRect(d.x, d.y, d.w, d.h);
+  ctx.save(); ctx.beginPath(); ctx.rect(d.x, d.y, d.w, d.h); ctx.clip();
+  const vert = d.h > d.w;
+  for (let k = 0; k < (vert ? d.w : d.h); k += 20) { ctx.fillStyle = (k / 20) % 2 ? 'rgba(255,230,170,.16)' : 'rgba(80,40,10,.12)'; if (vert) ctx.fillRect(d.x + k, d.y, 20, d.h); else ctx.fillRect(d.x, d.y + k, d.w, 20); ctx.fillStyle = 'rgba(60,30,10,.55)'; if (vert) ctx.fillRect(d.x + k, d.y, 2, d.h); else ctx.fillRect(d.x, d.y + k, d.w, 2); }
+  ctx.fillStyle = 'rgba(60,30,10,.6)'; for (let k = 0; k < (vert ? d.h : d.w); k += 70) { if (vert) { ctx.fillRect(d.x + 8, d.y + k + 10, 4, 4); ctx.fillRect(d.x + d.w - 12, d.y + k + 10, 4, 4); } else { ctx.fillRect(d.x + k + 10, d.y + 8, 4, 4); ctx.fillRect(d.x + k + 10, d.y + d.h - 12, 4, 4); } }
+  ctx.restore();
+  ctx.strokeStyle = '#3a1f0a'; ctx.lineWidth = 4; ctx.strokeRect(d.x, d.y, d.w, d.h);
+  ctx.strokeStyle = 'rgba(255,225,74,.55)'; ctx.lineWidth = 2; ctx.strokeRect(d.x + 4, d.y + 4, d.w - 8, d.h - 8);
+}
+
+/* --- zombis de playa: traje de bano, lentes de sol, flotador y salvavidas --- */
+function drawBeachGear(z) {
+  const W = z.r * (PW[z.type] || 4), k = z.bsk || 'swim';
+  ctx.save(); ctx.translate(z.x, z.y); ctx.rotate(z.fd);
+  if (k === 'ring' || k === 'guard') {
+    const rr = W * (k === 'guard' ? 0.3 : 0.27);
+    ctx.lineCap = 'butt'; ctx.strokeStyle = '#1a1226'; ctx.lineWidth = W * 0.17; ctx.beginPath(); ctx.arc(0, 0, rr, 0, 7); ctx.stroke();
+    ctx.strokeStyle = k === 'guard' ? '#ff3a4a' : '#2be8f0'; ctx.lineWidth = W * 0.12; ctx.beginPath(); ctx.arc(0, 0, rr, 0, 7); ctx.stroke();
+    ctx.strokeStyle = '#ffffff'; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(0, 0, rr, i * 1.5708 + 0.2, i * 1.5708 + 0.75); ctx.stroke(); }
+  }
+  if (k === 'guard') { ctx.fillStyle = '#ff3a4a'; ctx.strokeStyle = '#1a1226'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(-W * 0.02, 0, W * 0.15, 0, 7); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.fillRect(-W * 0.04, -W * 0.09, W * 0.04, W * 0.18); ctx.fillRect(-W * 0.11, -W * 0.02, W * 0.18, W * 0.04); }
+  const gx = W * (k === 'guard' ? 0.12 : 0.1), gy = W * 0.075, gr = W * 0.058;
+  ctx.fillStyle = '#10101c'; ctx.strokeStyle = '#ff3fb4'; ctx.lineWidth = 2;
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(gx + W * 0.07, s * gy, gr * 0.85, gr, 0, 0, 7); ctx.fill(); ctx.stroke(); }
+  ctx.strokeStyle = '#10101c'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(gx + W * 0.07, -gy + gr); ctx.lineTo(gx + W * 0.07, gy - gr); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,.75)'; for (const s of [-1, 1]) ctx.fillRect(gx + W * 0.07 - gr * 0.4, s * gy - gr * 0.5, gr * 0.5, gr * 0.3);
+  ctx.restore();
+}
+
+/* --- sombras de arena y manos que agarran --- */
+function nearFree(px, py) {
+  for (let rad = 0; rad < 7; rad++) for (let k = 0; k < (rad ? 8 : 1); k++) {
+    const a = k * 0.785, x = px + Math.cos(a) * rad * TS * 0.6, y = py + Math.sin(a) * rad * TS * 0.6;
+    if (floorAt(x, y) && !solidAt(x, y) && !solidAt(x + 34, y) && !solidAt(x - 34, y) && !solidAt(x, y + 34) && !solidAt(x, y - 34)) return { x, y };
+  }
+  return { x:px, y:py };
+}
+function addShadow(x, y, dyn, force) { const M = mission; M.shadows.push({ x, y, r:46, st:'idle', t:0, cd:0, dyn:!!dyn, force:!!force, age:0, life:dyn ? (force ? 6 : 38) : Infinity, arm:dyn ? (force ? 1.2 : 1.4) : 0 }); }
+const SHADOWS0 = [[24,45],[28,50],[33,44],[40,44],[44,48],[48,45],[22,48],[37,50.5],[50,52],[26,53],[8,29],[15,23],[20,26],[10,35],[22,33],[6,38],[18,30],[50,26],[58,22],[64,28],[55,31],[62,34],[49,35],[66,20],[14,8],[22,6],[28,12],[44,13],[50,7],[58,9],[10,12],[30,7]];
+function drawShadows(t) {
+  const M = mission; if (!M || !M.shadows) return;
+  for (const s of M.shadows) {
+    if (!vis(s.x - 90, s.y - 90, 180, 180)) continue;
+    const a = s.st === 'cool' ? 0.28 : s.dyn && s.age < s.arm ? 0.25 + 0.5 * (s.age / s.arm) : s.dyn && s.life < 2 ? s.life / 2 : 1, pulse = 0.5 + Math.sin(t * 3 + s.x) * 0.5;
+    ctx.save(); ctx.globalAlpha = 0.85 * a;
+    const g = ctx.createRadialGradient(s.x, s.y, 4, s.x, s.y, s.r * 1.15); g.addColorStop(0, 'rgba(18,0,40,.95)'); g.addColorStop(0.7, 'rgba(40,6,70,.7)'); g.addColorStop(1, 'rgba(40,6,70,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(s.x, s.y, s.r * 1.15, s.r * 0.95, 0, 0, 7); ctx.fill();
+    if (s.st !== 'cool') {
+      ctx.globalAlpha = (0.35 + pulse * 0.4) * a; ctx.strokeStyle = '#b06aff'; ctx.lineWidth = 3; ctx.setLineDash([9, 9]); ctx.beginPath(); ctx.ellipse(s.x, s.y, s.r * 0.95, s.r * 0.78, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      ctx.globalAlpha = 0.9 * a; ctx.fillStyle = '#2a0a3a'; ctx.strokeStyle = '#1a1226'; ctx.lineWidth = 2;
+      for (let k = 0; k < 5; k++) { const ang = k * 1.2566 + 0.4, bob = Math.sin(t * 2.4 + k + s.x) * 3, rx = s.x + Math.cos(ang) * (s.r * 0.62 + bob), ry = s.y + Math.sin(ang) * (s.r * 0.5 + bob); ctx.beginPath(); ctx.ellipse(rx, ry, 5, 9, ang + 1.57, 0, 7); ctx.fill(); ctx.stroke(); }
+    }
+    ctx.restore();
+  }
+}
+function drawHandAt(x, y, flip, rise) {
+  const s = flip ? -1 : 1; ctx.save(); ctx.translate(x, y); ctx.scale(1.55, 1.55); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const arm = (w, col) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(s * 6, 74 - 52 * rise); ctx.quadraticCurveTo(s * 8, 40 - 24 * rise, 0, 16); ctx.stroke(); };
+  arm(19, '#1a1226'); arm(14, '#7fae5e');
+  ctx.fillStyle = '#7fae5e'; ctx.strokeStyle = '#1a1226'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(0, 12, 17, 13, 0, 0, 7); ctx.fill(); ctx.stroke();
+  for (let k = 0; k < 5; k++) {
+    const a2 = -2.5 + k * 0.5, fx = Math.cos(a2) * 24, fy = 12 + Math.sin(a2) * 22 - 4;
+    for (const [w, col] of [[10, '#1a1226'], [6.4, '#8fc06a']]) { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(Math.cos(a2) * 10, 12 + Math.sin(a2) * 8); ctx.lineTo(fx, fy); ctx.stroke(); }
+    ctx.fillStyle = '#e8e2c8'; ctx.beginPath(); ctx.arc(fx + Math.cos(a2) * 3, fy + Math.sin(a2) * 3, 2.4, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawBeachMarkers(tNow) {
+  const M = mission, pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
+  if (player.grab > 0) {
+    const k = clamp((5 - player.grab) / 0.35, 0, 1), px = player.x, py = player.y + 10;
+    drawHandAt(px - 26, py - 2, true, k); drawHandAt(px + 26, py - 2, false, k); drawHandAt(px, py + 10, false, k);
+    const gf = clamp(player.grab / 5, 0, 1);
+    ctx.save(); ctx.strokeStyle = '#1a1226'; ctx.lineWidth = 9; ctx.beginPath(); ctx.arc(px, py - 52, 20, -1.5708, -1.5708 + 6.2832 * gf); ctx.stroke(); ctx.strokeStyle = '#b06aff'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(px, py - 52, 20, -1.5708, -1.5708 + 6.2832 * gf); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000'; ctx.strokeText(player.grab.toFixed(1), px, py - 47); ctx.fillText(player.grab.toFixed(1), px, py - 47); ctx.restore();
+  }
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const s = M.s;
+  if (s.escapeOn && !s.escapeDone) { const c = centerOf(bRect('boat')); ctx.strokeStyle = '#ffe14a'; ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath(); ctx.arc(c.x, c.y, 380, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+  for (const t of beachTargets()) { ctx.strokeStyle = t.col; ctx.lineWidth = 3; ctx.globalAlpha = 0.4 + pulse * 0.4; ctx.beginPath(); ctx.arc(t.x, t.y, 90 + pulse * 10, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; glow(t.x, t.y, 110, t.col, 0.18 * pulse); }
+  ctx.restore();
+}
+
+/* --- objetivos --- */
+function beachItems() {
+  const M = mission, s = M.s, F = s.fuel, K = s.key, both = F && K;
+  return [
+    { a:'1. CHIRINGUITO', t:'Saca el bidon de combustible de la nevera del bar (oeste)', ok:F, req:true },
+    { a:'2. FARO', t:s.guardDead ? 'Toma la llave de la lancha' : 'Derrota al Salvavidas Zombi: tiene la llave de la lancha (este)', ok:K, req:true },
+    { a:'3. MUELLE', t:'Ve al muelle (norte): la compuerta se abre sola', ok:M.gateOpen && !!M.zoneSeen[4], req:both },
+    { a:'', t:'Repara el motor de la lancha (secuencia de colores)', ok:s.engine, req:M.gateOpen },
+    { a:'', t:s.escapeOn && !s.escapeDone ? 'Resiste cerca de la lancha: ' + Math.floor(s.esc) + '/' + ESC_T + ' s' : 'Arranca la lancha y resiste ' + ESC_T + ' s', ok:s.escapeDone, req:s.engine }];
+}
+function beachCands() { return beachItems().map((q, i) => ({ q, i })).filter(o => !o.q.ok && o.q.req); }
+function beachObjHtml() {
+  const M = mission, it = beachItems(), c = beachCands(), z = ZINFO[M.curZone] ? ZINFO[M.curZone].name : '';
+  const groups = []; let g = null; for (const q of it) { if (q.a) { g = { name:q.a, items:[] }; groups.push(g); } g.items.push(q); }
+  const rows = groups.map(g => g.items.every(q => q.ok) ? '<span class="mod ok">[x] ' + g.name + '</span>' : g.items.some(q => q.req) ? '<span class="mod no"><b style="color:#ffe14a">' + g.name + '</b></span>' + g.items.filter(q => q.req || q.ok).map(q => '<span class="mod ' + (q.ok ? 'ok' : 'no') + '">' + (q.ok ? '[x] ' : '[ ] ') + q.t + '</span>').join('') : '').join('');
+  return 'NIVEL 4 - ' + z + '<br>' + rows + '<b>' + (c.length ? 'AHORA: ' + c.map(o => o.q.t).join('  |  ') : 'Nivel completado') + '</b><br><span style="opacity:.85">Alertas ' + M.alerts + ' | ' + (player.grab > 0 ? '<b style="color:#b06aff">ATRAPADO: ' + player.grab.toFixed(1) + ' s</b>' : 'Las <b style="color:#b06aff">sombras oscuras</b> de la arena son manos: esquivalas (ESPACIO) o pisa las tablas') + '</span>';
+}
+function beachTargets() {
+  const M = mission, s = M.s, out = [], add = (x, y, col) => out.push({ x, y, col }), atR = (r, col) => { if (r) { const c = centerOf(r); add(c.x, c.y, col); } };
+  for (const o of beachCands()) {
+    if (o.i === 0) atR(bRect('fuel'), '#ff7ad0');
+    else if (o.i === 1) { const g = M.guard; if (g && g.hp > 0) add(g.x, g.y, '#ff5a4a'); else if (M.keyDrop) add(M.keyDrop.x, M.keyDrop.y, '#ffe14a'); }
+    else atR(bRect('boat'), '#2be8f0');
+  }
+  return out;
+}
+function beachNearest() {
+  const M = mission, s = M.s; if (player.driving || player.grab > 0) return null;
+  if (player.tower) return { type:'tower', ref:player.tower, label:'E - Bajar de la torre' };
+  let best = null, bd = 1e9; const nd = r => Math.hypot(clamp(player.x, r.x, r.x + r.w) - player.x, clamp(player.y, r.y, r.y + r.h) - player.y);
+  const consider = (type, ref, d, lim, label) => { if (d < lim && d < bd) { bd = d; best = { type, ref, label }; } };
+  for (const r of rects) {
+    if (r.jtask === 'fuel' && !s.fuel) consider('fuel', r, nd(r), 110, 'E - Abrir la nevera del bar (hay un bidon de combustible)');
+    else if (r.jtask === 'boat' && !s.escapeDone) consider('boat', r, nd(r), 150, !(s.fuel && s.key) ? 'Lancha: falta ' + (!s.fuel ? 'el bidon de combustible' : '') + (!s.fuel && !s.key ? ' y ' : '') + (!s.key ? 'la llave del salvavidas' : '') : !s.engine ? 'E - Reparar el motor (secuencia de colores)' : s.escapeOn ? 'Resiste cerca de la lancha: ' + Math.floor(s.esc) + '/' + ESC_T + ' s' : 'E - ARRANCAR LA LANCHA (resiste ' + ESC_T + ' s cerca de ella)');
+    else if (r.kind === 'tower') consider('tower', r, nd(r), 70, 'E - Subir a la torre (vision y disparo desde arriba)');
+  }
+  return best;
+}
+function beachPress() {
+  const ia = beachNearest(); if (!ia) return; const M = mission, s = M.s;
+  if (ia.type === 'tower') { toggleTower(ia.ref); return; }
+  if (ia.type === 'fuel') openTask({ kind:'breakers', live:true, title:'ABRIR LA NEVERA', hint:'Sube todos los interruptores para soltar el candado', pos:centerOf(ia.ref), cb:() => { s.fuel = true; ia.ref.dead = true; dropChunksFor(ia.ref); rects = rects.filter(q => !q.dead); toast('BIDON LISTO: AHORA LA LLAVE (ESTE)'); Sfx.clear(); makeNoise(ia.ref.x, ia.ref.y, 500, '#ff7ad0'); } });
+  else if (ia.type === 'boat') {
+    if (!(s.fuel && s.key)) { Sfx.deny(); toast('FALTA ' + (!s.fuel ? 'EL BIDON DE COMBUSTIBLE' : 'LA LLAVE DEL SALVAVIDAS')); }
+    else if (!s.engine) openTask({ kind:'seq', live:true, title:'REPARAR EL MOTOR', hint:'Mira la secuencia de colores y repitela en el mismo orden', pos:centerOf(ia.ref), cb:() => { s.engine = true; toast('MOTOR LISTO: ARRANCA LA LANCHA (E)'); Sfx.clear(); } });
+    else if (!s.escapeOn) { s.escapeOn = true; s.esc = 0; s.escW = 0; M.shT = 1; const c = centerOf(ia.ref); toast('RESISTE ' + ESC_T + ' S CERCA DE LA LANCHA'); Sfx.siren(); makeNoise(c.x, c.y, 1500, '#ffe14a'); addShake(0.4); }
+  }
+}
+function spawnShore(w) {
+  const n = Math.round((5 + w * 2 + diff) * (0.9 + diff * 0.15));
+  for (let i = 0; i < n; i++) {
+    const west = i % 2 === 0, x = (west ? 9 : 62) + rand(-2, 2), y = rand(6, 14), type = w === 0 ? 'walker' : w === 1 ? (Math.random() < 0.5 ? 'runner' : 'walker') : (i === 0 ? 'tank' : Math.random() < 0.4 ? 'runner' : 'walker');
+    spawnZombie(type, { x:x * TS, y:y * TS }, true);
+  }
+  toast('OLEADA ' + (w + 1) + '/3 POR LOS DOS LADOS'); Sfx.siren(); addShake(0.35);
+}
+function grabPlayer(sh) {
+  const M = mission; sh.st = 'grab'; sh.t = 5; player.grab = 5; player.vx = player.vy = 0; M.grabSh = sh; M.grabs = (M.grabs || 0) + 1;
+  burst(sh.x, sh.y, 18, '#e8c474', 260, 0.6, 3); addShake(0.5); Sfx.pin(); makeNoise(player.x, player.y, 650, '#b06aff'); M.alerts++;
+  if (M.grabs === 1) toast('UNA MANO TE AGARRA: 5 SEGUNDOS');
+  else toast('TE AGARRAN: LLEGAN ZOMBIS');
+  const n = 2 + diff + (M.grabs > 4 ? 1 : 0);
+  for (let i = 0; i < n && zombies.length < 60; i++) { const q = ringPos(380, 560); if (q) spawnZombie(Math.random() < 0.2 ? 'runner' : 'walker', q, true); }
+}
+function startBeach(retry = false) {
+  missionIdx = 0;
+  const keepCur = player.cur;
+  resetState(); buildBeach();
+  WORLD.w = GC * TS; WORLD.h = GR * TS; setMini(180, 150);
+  const T0 = v => v * TS;
+  mission = { idx:3, facility:true, beach:true, def:{ name:'LA PLAYA MALDITA', cap:0, patrols:0, mix:ZINFO[1].mix }, map:{ start:{ x:T0(36), y:T0(50) }, exit:{ x:T0(36), y:T0(6) }, lamps:[], decals:[], blocks:[], spots:[] },
+    objs:[], cur:0, ambT:14, boss:null, alerts:0, curZone:0, zoneSeen:{}, cycleT:0, power:true, s:{ fuel:false, key:false, guardDead:false, engine:false, escapeOn:false, esc:0, escapeDone:false, escW:0 }, shadows:[], guard:null, keyDrop:null, gateOpen:false, shT:6, endT:0, lastSting:0 };
+  const st = mission.map.start;
+  player.x = st.x; player.y = st.y; player.cur = keepCur; player.vx = 0; player.vy = 0; player.reloading = 0; player.dashT = 0; player.sample = false; player.grab = 0;
+  player.cards = { green:false, blue:false }; player.tower = null; player.driving = false;
+  player.hp = retry ? Math.max(player.hp, 60) : player.maxHp;
+  snap = { pts:player.pts, dmgMul:player.dmgMul, hp:player.hp, ws:player.ws.map(w => ({ ...w })) };
+  el.facHud.style.display = 'block'; closeLabPanels(); mission.ing = { spore:0, sap:0, core:0 };
+  if (!retry || !seedsStart) seedsStart = { ...seeds }; else { seeds = { ...seedsStart }; saveSeeds(); }
+  for (const [tx, ty] of SHADOWS0) { if (diff === 0 && (tx * 7 + ty * 3) % 5 === 0) continue; const q = nearFree(tx * TS, ty * TS); if (!bSafe(q.x, q.y) && Math.hypot(q.x - st.x, q.y - st.y) > 260) addShadow(q.x, q.y, false); }
+  const PK = [['ammo',34,44],['hp',30,48],['bomb',40,52.5],['hp',10,24],['ammo',20,36],['bomb',24,23],['hp',8,36],['ammo',52,34],['hp',66,28],['bomb',60,22],['ammo',48,23],['hp',20,8],['ammo',36,13.5],['bomb',50,8],['hp',60,12],['scrap',22,44],['scrap',14,29],['scrap',62,30],['scrap',40,11],['wpn',27,50,2],['wpn',62,37,5]];
+  PK.forEach(([k, tx, ty, slot], idx) => { if (diff > 0 && (k === 'ammo' || k === 'hp') && idx % (diff === 1 ? 3 : 2) === 1) return; const q = nearFree(tx * TS, ty * TS); pickups.push({ x:q.x, y:q.y, kind:k, slot, life:Infinity }); });
+  const NEST = [[24,46,2],[44,50,2],[10,28,3],[20,30,3,'blind'],[22,22,2,'deaf'],[8,34,2],[52,28,3],[60,24,3],[58,35,2,'blind'],[66,30,2],[18,9,3],[30,12,3],[46,9,3,'deaf'],[56,12,3],[40,7,2]];
+  for (const [tx, ty, n0, sense] of NEST) {
+    const z = zoneAt(tx * TS, ty * TS) || 2, n = Math.max(1, Math.round(n0 * DIFFS[diff].cnt * 0.8));
+    for (let k = 0; k < n; k++) {
+      const a2 = rand(0, 6.283), r2 = rand(15, 80), px = tx * TS + Math.cos(a2) * r2, py = ty * TS + Math.sin(a2) * r2;
+      if (!floorAt(px, py) || solidAt(px, py)) continue;
+      spawnZombie(pickType({ mix:ZINFO[z].mix }), { x:px, y:py }, false, undefined, undefined, undefined, sense);
+    }
+  }
+  const gp = nearFree(53.6 * TS, 27.4 * TS); spawnZombie('tank', gp, false); const gz = zombies[zombies.length - 1];
+  if (gz) { gz.guard = true; gz.bsk = 'guard'; gz.zs = 'b1'; gz.maxHp = gz.hp = Math.round(900 * DIFFS[diff].hp); gz.r = 34; gz.kres = 0.15; gz.pts = 400; gz.whT = 8; mission.guard = gz; }
+  const ROUTES = [[[20,44],[50,44],[50,52],[20,52]], [[6,36],[26,36],[26,22],[6,30]], [[48,22],[68,22],[68,36],[48,36]], [[10,8],[60,8],[60,13],[10,13]]];
+  for (const rt of ROUTES) { spawnZombie('walker', { x:rt[0][0] * TS, y:rt[0][1] * TS }, false); const z = zombies[zombies.length - 1]; if (!z) continue; z.patrol = rt.map(q => ({ x:q[0] * TS, y:q[1] * TS })); z.pp = 1; z.speed *= 1.1; }
+  state = 'playing'; el.shop.style.display = 'none'; el.wave.textContent = 4;
+  toast('NIVEL 4: LA PLAYA MALDITA'); Sfx.wave();
+  setTimeout(() => { if (mission && mission.beach) toast('LAS SOMBRAS DE LA ARENA SON MANOS'); }, 2300);
+  setTimeout(() => { if (mission && mission.beach) toast('BUSCA COMBUSTIBLE (OESTE) Y LLAVE (ESTE)'); }, 6800);
+}
+function beachUpdate(dt) {
+  const M = mission, s = M.s;
+  if (zombies.some(z => z.gone)) zombies = zombies.filter(z => !z.gone);
+  const zn = zoneAt(player.x, player.y);
+  if (zn && zn !== M.curZone) { M.curZone = zn; if (!M.zoneSeen[zn]) { M.zoneSeen[zn] = true; toast(ZINFO[zn].name + ({ 1:'  |  OJO CON LAS SOMBRAS', 2:'  |  BUSCA EL COMBUSTIBLE', 3:'  |  LA LLAVE ESTA AQUI', 4:'  |  LA LANCHA' })[zn]); } }
+  player.grab = Math.max(0, (player.grab || 0) - dt);
+  // sombras: se activan al pisarlas; las dinamicas aparecen cerca de ti
+  M.shT -= dt;
+  if (M.shT <= 0 && !s.escapeOn) { M.shT = rand(5, 8) / (0.8 + diff * 0.2); if (M.shadows.length < 46) { const a = rand(0, 6.283), d = rand(200, 430), x = player.x + Math.cos(a) * d, y = player.y + Math.sin(a) * d; if (floorAt(x, y) && !solidAt(x, y) && !bSafe(x, y) && zoneAt(x, y) && Math.hypot(x - player.x, y - player.y) > 180) addShadow(x, y, true); } }
+  if (s.escapeOn && !s.escapeDone) { M.escH = (M.escH || 0) - dt; if (M.escH <= 0) { M.escH = 2.1 - diff * 0.25; const a = rand(0, 6.283), d = rand(80, 200); addShadow(player.x + Math.cos(a) * d, player.y + Math.sin(a) * d, true, true); } }
+  for (const sh of M.shadows) {
+    sh.age += dt;
+    if (sh.dyn && sh.st === 'idle') { sh.life -= dt; }
+    if (sh.st === 'idle') {
+      if (sh.age >= (sh.arm || 0) && !player.tower && !player.driving && !(player.grab > 0) && player.dashT <= 0 && player.iframes <= 0 && !s.escapeDone && Math.hypot(player.x - sh.x, player.y - sh.y) < (sh.force ? 44 : 36) && (sh.force || !bSafe(player.x, player.y))) grabPlayer(sh);
+    } else if (sh.st === 'grab') {
+      sh.t -= dt; player.x += (sh.x - player.x) * Math.min(1, 6 * dt); player.y += (sh.y - player.y) * Math.min(1, 6 * dt);
+      if (sh.t <= 0 || player.grab <= 0) { sh.st = 'cool'; sh.cd = 14; player.grab = 0; burst(sh.x, sh.y, 10, '#e8c474', 180, 0.5, 3); if (sh.dyn) sh.life = 0; }
+    } else if (sh.st === 'cool') { sh.cd -= dt; if (sh.cd <= 0) { sh.st = 'idle'; sh.age = 0; sh.arm = 0.8; } }
+  }
+  M.shadows = M.shadows.filter(sh => !(sh.dyn && (sh.life <= 0 || (sh.force && sh.st === 'cool'))));
+  // salvavidas: silbato y llave
+  const gz = M.guard;
+  if (gz && gz.hp > 0 && gz.st !== 'idle') { gz.whT -= dt; if (gz.whT <= 0 && zombies.length < 55) { gz.whT = 12; for (let k = 0; k < 3; k++) spawnZombie(k === 0 ? 'runner' : 'walker', { x:gz.x + rand(-170, 170), y:gz.y + rand(-120, 120) }, true); toast('EL SALVAVIDAS TOCA EL SILBATO'); Sfx.siren(); addShake(0.25); } }
+  if (gz && gz.hp <= 0 && !s.guardDead) { s.guardDead = true; M.keyDrop = { x:gz.x, y:gz.y }; toast('EL SALVAVIDAS CAE: TOMA LA LLAVE'); Sfx.stinger(); }
+  if (M.keyDrop && !s.key) { M.keyT = (M.keyT || 0) + dt; if (Math.hypot(player.x - M.keyDrop.x, player.y - M.keyDrop.y) < 60) { s.key = true; burst(M.keyDrop.x, M.keyDrop.y, 14, '#ffe14a', 240, 0.6, 3); toast('LLAVE CONSEGUIDA' + (s.fuel ? '' : ': AHORA EL BIDON (OESTE)')); Sfx.pickup(); } }
+  // compuerta del muelle
+  if (s.fuel && s.key && !M.gateOpen) { M.gateOpen = true; for (const d of G.doors) { d.open = true; setDoorGrid(d, 0); } Sfx.door(); Sfx.clear(); toast('SE ABRE EL MUELLE (NORTE)'); }
+  for (const d of G.doors) d.t += ((d.open ? 1 : 0) - d.t) * Math.min(1, 8 * dt);
+  player.ia = beachNearest();
+  if (taskObj && taskObj.live && taskObj.pos && Math.hypot(taskObj.pos.x - player.x, taskObj.pos.y - player.y) > 220) { closeTask(false); toast('TE ALEJASTE DE LA TAREA'); }
+  // arranque de la lancha: resistir cerca de ella
+  if (s.escapeOn && !s.escapeDone) {
+    const boat = bRect('boat'), c = centerOf(boat), near = Math.hypot(c.x - player.x, c.y - player.y) < 380;
+    if (near) s.esc += dt; else { M.farT = (M.farT || 0) - dt; if (M.farT <= 0) { M.farT = 5; toast('VUELVE A LA LANCHA'); } s.esc = Math.max(0, s.esc - dt * 0.5); }
+    const th = [1, 9, 17]; if (s.escW < th.length && s.esc >= th[s.escW]) { spawnShore(s.escW); s.escW++; }
+    if (s.esc >= ESC_T) { s.escapeDone = true; M.endT = 3.4; boat.pass = true; M.boatX = boat.x; player.grab = 0; for (const sh of M.shadows) if (sh.st === 'grab') sh.st = 'cool'; toast('LA LANCHA ARRANCA: ESCAPAS'); Sfx.stinger(); addShake(0.6); }
+  }
+  if (s.escapeDone) {
+    const boat = bRect('boat'); boat.x += 140 * dt * Math.min(1, (3.4 - M.endT) * 0.8 + 0.1); const c = centerOf(boat); player.x = c.x; player.y = c.y; player.vx = player.vy = 0; player.iframes = 1;
+    M.endT -= dt; if (M.endT <= 0) completeMission();
+  }
+  M.ambT -= dt;
+  if (M.ambT <= 0) { M.ambT = rand(8, 13); if (Math.random() < 0.3 && zombies.length < 45 && !s.escapeOn) { const q = ringPos(750, 1100); if (q) spawnZombie('walker', q, false); } }
+}
+
 /* ============================== LOGICA DEL BIOLAB ============================== */
 const sysUsed = () => SYSD.reduce((a, d) => a + (mission.sys[d.k] ? d.c : 0), 0);
 const labRect = k => rects.find(r => r.kind === k);
@@ -2074,6 +2411,7 @@ function drawSpores() {
 }
 
 function nightF() {
+  if (mission && mission.beach) return 0;
   if (mission && mission.jungle) { const p = mission.dayT / DAY_LEN; return p < 0.7 ? 0 : p < 0.9 ? (p - 0.7) / 0.2 * 0.85 : 0.85; }
   if (!mission || !mission.facility || mission.lab) return 0;
   const t = mission.cycleT % 150;
@@ -2404,7 +2742,7 @@ function retryMission() {
   Object.assign(player, { pts:snap.pts, dmgMul:snap.dmgMul, hp:snap.hp, ws:snap.ws.map(w => ({ ...w })) });
   el.msg.style.display = 'none';
   Sfx.music(true);
-  if (mission && mission.jungle) startJungle(true); else if (mission && mission.lab) startLab(true); else if (mission && mission.facility) startFacility(true); else startMission(missionIdx, true);
+  if (mission && mission.beach) startBeach(true); else if (mission && mission.jungle) startJungle(true); else if (mission && mission.lab) startLab(true); else if (mission && mission.facility) startFacility(true); else startMission(missionIdx, true);
 }
 
 function objText() {
@@ -2419,6 +2757,7 @@ function objText() {
 }
 
 function targets() {
+  if (mission && mission.beach) return beachTargets();
   if (mission && mission.jungle) return jungleTargets();
   if (mission && mission.lab) return labTargets();
   const o = mission && mission.objs[mission.cur];
@@ -2436,8 +2775,8 @@ function advance() {
 }
 
 function completeMission() {
-  addCoins(mission.facility ? (mission.jungle ? 150 : mission.lab ? 100 : 60) : 40);
-  if (mission.facility) { player.pts += (mission.jungle ? 1200 : mission.lab ? 900 : 500) + Math.max(0, 400 - 25 * mission.alerts); zombies = []; spits = []; victory(); return; }
+  addCoins(mission.facility ? (mission.beach ? 200 : mission.jungle ? 150 : mission.lab ? 100 : 60) : 40);
+  if (mission.facility) { player.pts += (mission.beach ? 1500 : mission.jungle ? 1200 : mission.lab ? 900 : 500) + Math.max(0, 400 - 25 * mission.alerts); zombies = []; spits = []; victory(); return; }
   const stealth = Math.max(0, 300 - 25 * mission.alerts);
   player.pts += 200 * (mission.idx + 1) + stealth;
   zombies = []; spits = [];
@@ -2458,8 +2797,8 @@ function victory() {
     el.best.textContent = best;
   }
   const ps = el.msg.querySelectorAll('p');
-  el.msg.querySelector('h1').textContent = mission && mission.jungle ? 'NIVEL 3 COMPLETADO' : mission && mission.lab ? 'NIVEL 2 COMPLETADO' : mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
-  ps[0].textContent = mission && mission.jungle ? 'Destruiste las raices y derrotaste al Titan Raiz: la ciudad es libre. ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
+  el.msg.querySelector('h1').textContent = mission && mission.beach ? 'NIVEL 4 COMPLETADO' : mission && mission.jungle ? 'NIVEL 3 COMPLETADO' : mission && mission.lab ? 'NIVEL 2 COMPLETADO' : mission && mission.facility ? 'NIVEL 1 COMPLETADO' : 'ESCAPASTE';
+  ps[0].textContent = mission && mission.beach ? 'Arrancaste la lancha y escapaste de la playa maldita. ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.jungle ? 'Destruiste las raices y derrotaste al Titan Raiz: la ciudad es libre. ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.lab ? 'Escapaste del Biolab ARGOS con la muestra, ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '.' : mission && mission.facility ? 'Escapaste de la Instalacion Kronos con ' + player.pts + ' puntos y ' + mission.alerts + ' alertas. Record: ' + best + '. El siguiente nivel llegara pronto.' : 'Completaste las ' + MISSIONS.length + ' misiones con ' + player.pts + ' puntos. Record: ' + best + '.';
   ps[1].textContent = ''; ps[2].textContent = ''; ps[3].textContent = '';
   el.start.textContent = 'JUGAR DE NUEVO'; el.startS.textContent = 'SUPERVIVENCIA';
   ps[0].textContent += coinMsg();
@@ -2498,6 +2837,7 @@ function destroyBarricade(r) {
 
 function nearestInteract() {
   if (!G || state !== 'playing') return null;
+  if (mission && mission.beach) return beachNearest();
   if (mission && mission.jungle) return jungleNearest();
   if (mission && mission.lab) return labNearest();
   if (player.tower) return { type:'tower', ref:player.tower, label:'E - Salir de la torre' };
@@ -2525,6 +2865,7 @@ function nearestInteract() {
 
 function interactPress() {
   if (state !== 'playing' || !G) return;
+  if (mission && mission.beach) { beachPress(); return; }
   if (mission && mission.jungle) { junglePress(); return; }
   if (mission && mission.lab) { labPress(); return; }
   const ia = nearestInteract(); if (!ia || ia.hold) return;
@@ -2577,6 +2918,7 @@ function driveUpdate(dt) {
 }
 
 function facilityUpdate(dt) {
+  if (mission.beach) { beachUpdate(dt); return; }
   if (mission.jungle) { jungleUpdate(dt); return; }
   if (mission.lab) { labUpdate(dt); return; }
   const M = mission, o = M.objs[M.cur];
@@ -2724,6 +3066,7 @@ function spawnZombie(type, pos, aggro = true, st, tx, ty, sense) {
     mode:'walk', mt:3, dx:0, dy:0, ph:rand(0, 6), aggro:!!(st ? st !== 'idle' : aggro), wt:0, wa:0, wm:0, slide:0, sx:0, sy:0,
     st:st || (t.boss || aggro ? 'chase' : 'idle'), face:rand(0, 6.283), tx:tx === undefined ? p.x : tx, ty:ty === undefined ? p.y : ty,
     alertT:0, lost:0, seeT:0, seesC:false, lx2:p.x, ly2:p.y, hx:p.x, hy:p.y, sense:sense || null, path:null, pi:0, plan:0 });
+  if (mission && mission.beach) { const bz = zombies[zombies.length - 1]; bz.zs = 'b' + Math.floor(Math.random() * 5); bz.bsk = Math.random() < 0.34 ? 'ring' : 'swim'; }
   if (t.boss) { Sfx.boss(); addShake(0.9); toast('JEFE: ' + bossName()); }
 }
 
@@ -2810,7 +3153,7 @@ function jump() {
 function fpSpread() { return clamp(Math.hypot(player.vx, player.vy) / 250, 0, 1.4) * 0.02 * (1 - 0.6 * crouchT) + (jumpZ > 0 ? 0.05 : 0); }
 
 function dash() {
-  if (player.tower || player.driving) return;
+  if (player.tower || player.driving || player.grab > 0) return;
   if (state !== 'playing' || player.dashCd > 0 || player.dashT > 0) return;
   const mi = moveInput(); let dx = mi.mx, dy = mi.my;
   if (!dx && !dy) { dx = Math.cos(player.angle); dy = Math.sin(player.angle); }
@@ -2934,7 +3277,7 @@ function gameOver() {
   const ps = el.msg.querySelectorAll('p');
   if (mode === 'mission') {
     el.msg.querySelector('h1').textContent = 'MISION FALLIDA';
-    ps[0].textContent = (mission.jungle ? 'Nivel 3: ' + mission.def.name + '.' : mission.lab ? 'Nivel 2: ' + mission.def.name + '.' : 'Mision ' + (missionIdx + 1) + ': ' + mission.def.name + '. Objetivo pendiente: ' + objText() + '.') + ' Puntos: ' + player.pts + ' | Record: ' + best + '.';
+    ps[0].textContent = (mission.beach ? 'Nivel 4: ' + mission.def.name + '.' : mission.jungle ? 'Nivel 3: ' + mission.def.name + '.' : mission.lab ? 'Nivel 2: ' + mission.def.name + '.' : 'Mision ' + (missionIdx + 1) + ': ' + mission.def.name + '. Objetivo pendiente: ' + objText() + '.') + ' Puntos: ' + player.pts + ' | Record: ' + best + '.';
     el.start.textContent = 'REINTENTAR MISION'; el.startS.textContent = 'SUPERVIVENCIA';
   } else {
     el.msg.querySelector('h1').textContent = 'HAS CAIDO';
@@ -3069,6 +3412,7 @@ function update(dt, now) {
   let top = player.speed * (player.sprinting ? 1.6 : 1) * (fp ? 1 - 0.45 * crouchT : 1) * (mi.mag !== undefined ? 0.3 + 0.7 * mi.mag : 1);
   const cw = WEAPONS[player.cur];
   if (mouse.down && cw.slow) top *= cw.slow;
+  if (player.grab > 0) { top = 0; player.dashT = 0; }
   if (player.dashT > 0) {
     player.dashT -= dt;
     player.vx = player.dashDx * 1150; player.vy = player.dashDy * 1150;
@@ -3447,7 +3791,7 @@ function limb(x1, y1, x2, y2, w, col) {
 // o: key,x,y,ang,mx,my,spd,ph,W,weapon(cur|null),recoil,flash,red,lunge
 function drawPuppet(o) {
   const P = PUPPET[o.key], c = P && CART[P.t]; if (!c) return false;
-  const sk = o.skin && SKINS[o.skin] && SKINS[o.skin].hue != null ? SKINS[o.skin] : null, W = o.W, ls = W / 68, im = sk ? skinImg(P.t, c.img, o.skin) : c.img, Hh = W * im.height / im.width, pal = sk ? Object.assign({}, P.pal, sk.pal) : P.pal;
+  const SKo = o.skin && (SKINS[o.skin] || ZSKIN[o.skin]), sk = SKo && SKo.hue != null ? SKo : null, W = o.W, ls = W / 68, im = sk ? skinImg(P.t, c.img, o.skin) : c.img, Hh = W * im.height / im.width, pal = sk ? Object.assign({}, P.pal, sk.pal) : P.pal;
   const flip = Math.cos(o.ang) < 0, ca = Math.cos(o.ang), sa = Math.sin(o.ang);
   const run = clamp((o.spd - 140) / 230, 0, 1), mov = clamp(o.spd / 80, 0, 1), fat = P.fat;
   let lx = o.mx * ca + o.my * sa, ly = -o.mx * sa + o.my * ca; if (flip) ly = -ly;
@@ -3615,9 +3959,10 @@ function drawZombie(z) {
   if (z.t0 === undefined) { z.t0 = nowT; z.x0 = z.x; z.y0 = z.y; z.vxs = 0; z.vys = 0; }
   const dtv = (nowT - z.t0) / 1000;
   if (dtv > 0.012) { const kk = Math.min(1, dtv * 9); z.vxs += (clamp((z.x - z.x0) / dtv, -700, 700) - z.vxs) * kk; z.vys += (clamp((z.y - z.y0) / dtv, -700, 700) - z.vys) * kk; z.x0 = z.x; z.y0 = z.y; z.t0 = nowT; }
-  if (!drawPuppet({ key:z.type, x:z.x, y:z.y, ang:z.fd, mx:z.vxs, my:z.vys, spd:Math.hypot(z.vxs, z.vys) * (z.mode === 'charge' ? 1.4 : 1), ph:z.ph, W:z.r * (PW[z.type] || 4), weapon:null, flash, red:0, lunge }))
+  if (!drawPuppet({ key:z.type, x:z.x, y:z.y, ang:z.fd, mx:z.vxs, my:z.vys, spd:Math.hypot(z.vxs, z.vys) * (z.mode === 'charge' ? 1.4 : 1), ph:z.ph, W:z.r * (PW[z.type] || 4), weapon:null, flash, red:0, lunge, skin:z.zs }))
    if (!drawCartoon(z.type, z.x, z.y, z.fd, z.r * (CWIDTH[z.type] || 4.7), z.ph, clamp(act, 0, 1.8), flash, 0, 1 + lunge * 0.18))
     drawFigure({ x:z.x, y:z.y, face:z.fd + lunge * 0.12 * (z.fl ? 1 : -1), move:z.fd, ph:z.ph, amp:clamp(act, 0, 1.8), s:z.r / 17 * 1.4, ...st, reach:1 + lunge, lunge, flash });
+  if (z.bsk) drawBeachGear(z);
   if (z.ranged) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; glow(z.x, z.y, z.r * 2.2, '#9acd32', 0.2); ctx.restore(); }
   if (z.hp < z.maxHp && !z.boss) {
     ctx.fillStyle = '#300'; ctx.fillRect(z.x - z.r, z.y - z.r - 9, z.r * 2, 3);
@@ -4165,6 +4510,7 @@ function makeLabTile() {
 }
 function metalFor(z) {
   if (METALZ[z]) return METALZ[z];
+  if (mission && mission.beach) return METALZ[z] = makeBeachTile(BKIND[z]);
   if (mission && mission.jungle) return METALZ[z] = makeJungleTile(JKIND[z]);
   const c = document.createElement('canvas'); c.width = c.height = 160; const g = c.getContext('2d');
   g.drawImage(METAL, 0, 0);
@@ -4200,7 +4546,7 @@ function drawFloorDeco(tNow, kind, inView) {
       for (const [w, c] of [[17, 'rgba(0,0,0,.4)'], [13, '#6e4528'], [8, '#b9783f'], [3, '#e7b07a']]) { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath(); pts.forEach((q, i) => i ? ctx.lineTo(q[0] * TS, q[1] * TS) : ctx.moveTo(q[0] * TS, q[1] * TS)); ctx.stroke(); }
       continue;
     }
-    if (d.t === 'walk' || d.t === 'path' || d.t === 'curb' || d.t === 'line' || d.t === 'dash' || d.t === 'zebra' || d.t === 'manhole' || d.t === 'crack') {
+    if (d.t === 'walk' || d.t === 'path' || d.t === 'curb' || d.t === 'line' || d.t === 'dash' || d.t === 'zebra' || d.t === 'manhole' || d.t === 'crack' || d.t === 'plank') {
       if (!inView(d.x - 20, d.y - 20, d.w + 40, d.h + 40)) continue;
       if (d.t === 'walk') { ctx.fillStyle = d.col; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.strokeStyle = 'rgba(40,46,36,.55)'; ctx.lineWidth = 2; const vert = d.h > d.w; for (let k = 0; k < (vert ? d.h : d.w); k += 80) { ctx.beginPath(); if (vert) { ctx.moveTo(d.x, d.y + k); ctx.lineTo(d.x + d.w, d.y + k); } else { ctx.moveTo(d.x + k, d.y); ctx.lineTo(d.x + k, d.y + d.h); } ctx.stroke(); } ctx.fillStyle = 'rgba(80,200,70,.35)'; for (let k = 0; k < 6; k++) { const q = hashT(Math.floor(d.x / 7) + k, Math.floor(d.y / 7) + k * 3); ctx.beginPath(); ctx.ellipse(d.x + (q % 100) / 100 * d.w, d.y + ((q >> 7) % 100) / 100 * d.h, 14, 9, 0.5, 0, 7); ctx.fill(); } }
       else if (d.t === 'path') { ctx.fillStyle = d.col; ctx.globalAlpha = 0.55; ctx.fillRect(d.x, d.y, d.w, d.h); ctx.globalAlpha = 1; }
@@ -4209,6 +4555,7 @@ function drawFloorDeco(tNow, kind, inView) {
       else if (d.t === 'dash') { ctx.shadowColor = d.col; ctx.shadowBlur = 10; ctx.fillStyle = d.col; const vert = d.h > d.w; for (let k = 0; k < (vert ? d.h : d.w); k += 90) { if (vert) ctx.fillRect(d.x, d.y + k, d.w, 50); else ctx.fillRect(d.x + k, d.y, 50, d.h); } ctx.shadowBlur = 0; }
       else if (d.t === 'zebra') { ctx.fillStyle = '#d8f4ff'; ctx.shadowColor = '#2be8f0'; ctx.shadowBlur = 8; ctx.globalAlpha = 0.8; if (d.w >= d.h) for (let k = 0; k < d.w - 10; k += 34) ctx.fillRect(d.x + k, d.y, 18, d.h); else for (let k = 0; k < d.h - 10; k += 34) ctx.fillRect(d.x, d.y + k, d.w, 18); ctx.globalAlpha = 1; ctx.shadowBlur = 0; }
       else if (d.t === 'manhole') { ctx.fillStyle = d.col; ctx.beginPath(); ctx.arc(d.x, d.y, 24, 0, 7); ctx.fill(); ctx.strokeStyle = '#6a6e76'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(d.x, d.y, 24, 0, 7); ctx.stroke(); ctx.lineWidth = 2; for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(d.x - 16, d.y + k * 8); ctx.lineTo(d.x + 16, d.y + k * 8); ctx.stroke(); } }
+      else if (d.t === 'plank') drawPlank(d);
       else if (d.t === 'crack') { ctx.strokeStyle = d.col; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(d.x, d.y); let px = d.x, py = d.y; for (let k = 0; k < 6; k++) { px += d.w / 6 + (hashT(k, Math.floor(d.x)) % 14 - 7); py += d.h / 6 + (hashT(k + 9, Math.floor(d.y)) % 14 - 7); ctx.lineTo(px, py); } ctx.stroke(); }
       continue;
     }
@@ -4237,6 +4584,7 @@ function drawFloorDeco(tNow, kind, inView) {
 }
 
 function drawFacilityWall(tx, ty) {
+  if (mission && mission.beach) { drawBeachWater(tx, ty); return; }
   const x = tx * TS, y = ty * TS, zi = G.wallZ[ty * GC + tx], Z = ZINFO[zi] || ZINFO[1], h = hashT(tx, ty);
   const southFloor = ty + 1 < GR && G.grid[(ty + 1) * GC + tx] !== 1, northFloor = ty > 0 && G.grid[(ty - 1) * GC + tx] !== 1;
   const westFloor = tx > 0 && G.grid[ty * GC + tx - 1] !== 1, eastFloor = tx + 1 < GC && G.grid[ty * GC + tx + 1] !== 1;
@@ -4271,7 +4619,7 @@ function dropChunksFor(r) { if (!G) return; for (let cy = Math.floor((r.y - 120)
 function getChunk(cx, cy) {
   const k = cy * 100 + cx;
   if (G.chunks[k]) return G.chunks[k];
-  if (!METAL) METAL = mission && mission.jungle ? makeJungleTile('concrete') : mission && mission.lab ? makeLabTile() : makeMetal();
+  if (!METAL) METAL = mission && mission.beach ? makeBeachTile('sand') : mission && mission.jungle ? makeJungleTile('concrete') : mission && mission.lab ? makeLabTile() : makeMetal();
   const sc = G.chs, size = Math.ceil((CHP + CHM * 2) * sc), cvs = document.createElement('canvas');
   cvs.width = cvs.height = size;
   const main = ctx; ctx = cvs.getContext('2d');
@@ -4292,11 +4640,13 @@ function getChunk(cx, cy) {
 }
 
 function drawFacilityGround(tNow) {
-  { const bg = ctx.createLinearGradient(0, cam.y, 0, cam.y + cam.vh); if (mission && mission.jungle) { bg.addColorStop(0, '#0a2a14'); bg.addColorStop(1, '#06180c'); } else if (mission && mission.lab) { bg.addColorStop(0, '#06323a'); bg.addColorStop(1, '#0a1f4a'); } else { bg.addColorStop(0, '#1c0a46'); bg.addColorStop(1, '#0c1450'); } ctx.fillStyle = bg; ctx.fillRect(cam.x - 40, cam.y - 40, cam.vw + 80, cam.vh + 80); }
+  { const bg = ctx.createLinearGradient(0, cam.y, 0, cam.y + cam.vh); if (mission && mission.beach) { bg.addColorStop(0, '#1aa0dc'); bg.addColorStop(1, '#0c5ca8'); } else if (mission && mission.jungle) { bg.addColorStop(0, '#0a2a14'); bg.addColorStop(1, '#06180c'); } else if (mission && mission.lab) { bg.addColorStop(0, '#06323a'); bg.addColorStop(1, '#0a1f4a'); } else { bg.addColorStop(0, '#1c0a46'); bg.addColorStop(1, '#0c1450'); } ctx.fillStyle = bg; ctx.fillRect(cam.x - 40, cam.y - 40, cam.vw + 80, cam.vh + 80); }
+  if (mission && mission.beach) drawOceanWaves(tNow);
   const c0 = Math.max(0, Math.floor(cam.x / CHP)), c1 = Math.min(Math.ceil(GC / CHN) - 1, Math.floor((cam.x + cam.vw) / CHP));
   const r0 = Math.max(0, Math.floor(cam.y / CHP)), r1 = Math.min(Math.ceil(GR / CHN) - 1, Math.floor((cam.y + cam.vh) / CHP));
   for (let cy = r0; cy <= r1; cy++) for (let cx = c0; cx <= c1; cx++) ctx.drawImage(getChunk(cx, cy), cx * CHP - CHM, cy * CHP - CHM, CHP + CHM * 2, CHP + CHM * 2);
   drawFloorDeco(tNow, 'dyn', vis);
+  if (mission && mission.beach) drawShadows(tNow);
   drawZapGrid(tNow);
   if (mission && mission.lab) drawGas(tNow);
   for (const r of rects) if (r.belt && vis(r.x, r.y, r.w, r.h)) drawConv(r, tNow);
@@ -4676,6 +5026,7 @@ function drawGround() {
 
 // marcadores de objetivo en el mundo
 function drawFacilityMarkers(tNow) {
+  if (mission.beach) { drawBeachMarkers(tNow); return; }
   if (mission.jungle) { drawJungleMarkers(tNow); return; }
   if (mission.lab) { drawLabMarkers(tNow); return; }
   const M = mission, o = M.objs[M.cur], pulse = 0.6 + Math.sin(tNow * 5) * 0.4;
@@ -5060,7 +5411,7 @@ function hud() {
   if (mode === 'mission' && mission) {
     el.left.textContent = aggroCount;
     const vis = player.hidden ? 'OCULTO' : player.sprinting ? 'ALTA' : Math.hypot(player.vx, player.vy) < 60 ? 'BAJA' : 'MEDIA';
-    el.objc.innerHTML = mission.jungle ? jungleObjHtml() : mission.lab ? labObjHtml() : (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
+    el.objc.innerHTML = mission.beach ? beachObjHtml() : mission.jungle ? jungleObjHtml() : mission.lab ? labObjHtml() : (mission.facility ? 'NIVEL 1 - ' + (ZINFO[mission.curZone] ? ZINFO[mission.curZone].name : '') : 'MISION ' + (mission.idx + 1) + ' - ' + mission.def.name) + '<br><b>' + (state === 'between' ? 'Completada' : objText()) + '</b><br><span style="opacity:.75">Visibilidad: ' + vis + ' | Alertas: ' + mission.alerts + (mission.facility ? ' | ' + (nightF() > 0.5 ? '<b style="color:#ff6a7a">EMERGENCIA</b>' : 'Energia normal') : '') + '</span>';
     drawMini();
   } else {
     el.left.textContent = zombies.length + spawnQueue.length;
@@ -5155,6 +5506,7 @@ el.startD.addEventListener('click', () => { diff = (diff + 1) % 3; try { localSt
 el.startS.addEventListener('click', () => { Sfx.init(); newGame('survival'); });
 el.startL2.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 2); });
 el.startL3.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 3); });
+el.startL4.addEventListener('click', () => { Sfx.init(); newGame('mission', false, 4); });
 /* ---- paneles del HUD: minimizar (boton o TAB) y mover (arrastrar la barra) ---- */
 const PAN_KEY = 'condenados_panels'; let panSt = {}; const panEls = [];
 try { panSt = JSON.parse(localStorage.getItem(PAN_KEY)) || {}; } catch (e) {}
